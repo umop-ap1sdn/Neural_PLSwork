@@ -26,4 +26,10 @@ public interface MatrixElement {
      * @return Object result of negation
      */
     public MatrixElement negate();
+
+    /**
+     * Function to create a deep copied element to ensure memory safety
+     * @return Copy of the matrix element
+     */
+    public MatrixElement copy();
 }
