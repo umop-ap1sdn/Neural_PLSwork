@@ -6,19 +6,24 @@ package neural_plswork.math;
  * to be used within Matrices by defining a Multiply and Add instruction for them
  */
 
-public interface MatrixElement<T> {
-
+public interface MatrixElement {
     /**
      * Function to multiply 2 objects. May be implemented in different ways per implemented class
      * @param other Other object to be multiplied with
      * @return Object result of multiplication
      */
-    public T multiply(T other);
+    public MatrixElement multiply(MatrixElement other);
 
     /**
      * Function to add 2 objects. May be implemented in different ways per implemented class
      * @param other Other object to be add with
      * @return Object result of addition
      */
-    public T add(T other);
+    public MatrixElement add(MatrixElement other);
+
+    /**
+     * Function to negate an object. May be implemented in different ways per implemented class
+     * @return Object result of negation
+     */
+    public MatrixElement negate();
 }
