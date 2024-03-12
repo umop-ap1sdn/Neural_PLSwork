@@ -1,5 +1,7 @@
 package neural_plswork.math;
 
+import java.util.Arrays;
+
 public class Matrix<T extends MatrixElement> {
     
     private final int rows;
@@ -14,7 +16,7 @@ public class Matrix<T extends MatrixElement> {
         this.rows = rows;
         this.columns = columns;
 
-        this.matrix = (T[][]) new Object[rows][columns];
+        this.matrix = (T[][]) new MatrixElement[rows][columns];
 
         for(int i = 0; i < rows; i++) {
             for(int j = 0; j < columns; j++) {
@@ -55,7 +57,7 @@ public class Matrix<T extends MatrixElement> {
         MatrixElement sum = new IdentityElement();
         
         for(int k = 0; k < this.columns; k++) {
-            MatrixElement adder = matrix[row][k].add(matrix[k][col]);
+            MatrixElement adder = matrix[row][k].multiply(matrix[k][col]);
             sum = sum.add(adder);
         }
 
@@ -103,6 +105,19 @@ public class Matrix<T extends MatrixElement> {
         return ret;
     }
 
+    @SuppressWarnings("unchecked")
+    public Matrix<T> copy() {
+        Matrix<T> ret = new Matrix<>(rows, columns);
+
+        for(int i = 0; i < rows; i++) {
+            for(int j = 0; j < columns; j++) {
+                ret.matrix[i][j] = (T) matrix[i][j].copy();
+            }
+        }
+
+        return ret;
+    }
+
     public void setValue(T value, int row, int col) throws ArrayIndexOutOfBoundsException {
         if(row < 0 || row >= rows) throw new ArrayIndexOutOfBoundsException("Matrix row index out of bounds");
         if(col < 0 || col >= columns) throw new ArrayIndexOutOfBoundsException("Matrix column index out of bounds");
@@ -115,5 +130,12 @@ public class Matrix<T extends MatrixElement> {
         if(col < 0 || col >= columns) throw new ArrayIndexOutOfBoundsException("Matrix column index out of bounds");
 
         return matrix[row][col];
+    }
+
+
+    public void simplePrint() {
+        for(T[] arr: matrix) {
+            System.out.println(Arrays.toString(arr));
+        }
     }
 }

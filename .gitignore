@@ -5,7 +5,7 @@
 *.class
 
 # Testing files
-/testing/
+testing/
 
 # Log file
 *.log
