@@ -2,6 +2,7 @@ package neural_plswork.math;
 
 import java.util.Arrays;
 
+import neural_plswork.math.constants.IdentityElement;
 import neural_plswork.math.exceptions.IllegalMatrixException;
 import neural_plswork.math.exceptions.IllegalVectorException;
 

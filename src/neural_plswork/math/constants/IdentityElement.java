@@ -1,6 +1,8 @@
-package neural_plswork.math;
+package neural_plswork.math.constants;
 
-public class IdentityElement implements MatrixElement {
+import neural_plswork.math.MatrixElement;
+
+public class IdentityElement implements ConstantElement {
 
     @Override
     public MatrixElement multiply(MatrixElement other) {
