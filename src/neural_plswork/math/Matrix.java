@@ -2,6 +2,8 @@ package neural_plswork.math;
 
 import java.util.Arrays;
 
+import neural_plswork.math.exceptions.IllegalMatrixException;
+
 public class Matrix<T extends MatrixElement> {
     
     private final int rows;

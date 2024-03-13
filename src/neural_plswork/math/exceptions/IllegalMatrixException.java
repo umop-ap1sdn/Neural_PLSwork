@@ -1,4 +1,4 @@
-package neural_plswork.math;
+package neural_plswork.math.exceptions;
 
 public class IllegalMatrixException extends Exception {
 
