@@ -57,7 +57,7 @@ public class Matrix<T extends MatrixElement> {
         MatrixElement sum = new IdentityElement();
         
         for(int k = 0; k < this.columns; k++) {
-            MatrixElement adder = matrix[row][k].multiply(matrix[k][col]);
+            MatrixElement adder = matrix[row][k].multiply(other.matrix[k][col]);
             sum = sum.add(adder);
         }
 
