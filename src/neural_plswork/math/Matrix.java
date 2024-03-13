@@ -36,7 +36,7 @@ public class Matrix<T extends MatrixElement> {
         this.rows = matrix.length;
         this.columns = matrix[0].length;
 
-        for(MatrixElement[]arr: matrix) {
+        for(MatrixElement[] arr: matrix) {
             if(arr.length != columns) throw new IllegalMatrixException("Cannot instantiate non-rectangular matrix");
         }
     }

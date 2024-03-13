@@ -25,5 +25,15 @@ public class Vector<T extends MatrixElement> extends Matrix<T> {
         }
 
         return ret;
-    } 
+    }
+
+    @SuppressWarnings("unchecked")
+    public T[] get1D() {
+        MatrixElement[] ret = new MatrixElement[matrix.length];
+        for(int i = 0; i < ret.length; i++) {
+            ret[i] = matrix[i][0];
+        }
+
+        return (T[]) ret;
+    }
 }
