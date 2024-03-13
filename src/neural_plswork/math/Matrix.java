@@ -3,6 +3,7 @@ package neural_plswork.math;
 import java.util.Arrays;
 
 import neural_plswork.math.exceptions.IllegalMatrixException;
+import neural_plswork.math.exceptions.IllegalVectorException;
 
 public class Matrix<T extends MatrixElement> {
     
@@ -134,6 +135,17 @@ public class Matrix<T extends MatrixElement> {
         return matrix[row][col];
     }
 
+    public Vector<T> getAsVector() throws IllegalVectorException {
+        try {
+            return new Vector<T>(matrix);
+
+        } catch (IllegalMatrixException m) {
+            
+            System.out.println("an error occured.");
+            System.out.println(m.getMessage());
+            return null;
+        }
+    }
 
     public void simplePrint() {
         for(T[] arr: matrix) {
