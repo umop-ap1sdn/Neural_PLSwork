@@ -138,9 +138,8 @@ public class Matrix<T extends MatrixElement> {
     public Vector<T> getAsVector() throws IllegalVectorException {
         try {
             return new Vector<T>(matrix);
-
-        } catch (IllegalMatrixException m) {
             
+        } catch (IllegalMatrixException m) {
             System.out.println("an error occured.");
             System.out.println(m.getMessage());
             return null;
