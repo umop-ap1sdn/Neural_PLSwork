@@ -9,7 +9,7 @@ public class Matrix<T extends MatrixElement> {
     private final int rows;
     private final int columns;
 
-    private final T[][] matrix;
+    protected final T[][] matrix;
 
     @SuppressWarnings("unchecked")
     public Matrix(int rows, int columns) throws IllegalArgumentException {
@@ -27,7 +27,7 @@ public class Matrix<T extends MatrixElement> {
         }
     }
 
-    public Matrix(T[][] matrix) throws Exception {
+    public Matrix(T[][] matrix) throws IllegalMatrixException {
         if(matrix.length == 0) throw new IllegalArgumentException("Cannot instantiate matrix with a dimension less than 1");
         if(matrix[0].length == 0) throw new IllegalArgumentException("Cannot instantiate matrix with a dimension less than 1");
         
