@@ -84,6 +84,21 @@ public class Matrix<T extends MatrixElement> {
     }
 
     @SuppressWarnings("unchecked")
+    public Matrix<T> pointwiseMultiply(Matrix<T> other) throws IllegalMatrixException {
+        if(this.rows != other.rows || this.columns != other.columns) throw new IllegalMatrixException("Matrices must be of the same size to be added");
+        
+        Matrix<T> ret = new Matrix<>(this.rows, this.columns);
+        
+        for(int i = 0; i < rows; i++) {
+            for(int j = 0; j < columns; j++) {
+                ret.matrix[i][j] = (T) matrix[i][j].multiply(other.matrix[i][j]);
+            }
+        }
+
+        return ret;
+    }
+
+    @SuppressWarnings("unchecked")
     public Matrix<T> transpose() {
         Matrix<T> ret = new Matrix<>(columns, rows);
 
