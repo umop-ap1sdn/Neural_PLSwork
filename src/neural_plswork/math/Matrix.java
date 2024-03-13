@@ -138,4 +138,12 @@ public class Matrix<T extends MatrixElement> {
             System.out.println(Arrays.toString(arr));
         }
     }
+
+    public int getRows() {
+        return rows;
+    }
+
+    public int getColumns() {
+        return columns;
+    }
 }
