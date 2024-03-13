@@ -2,7 +2,10 @@ package neural_plswork.math;
 
 import java.util.Arrays;
 
+import neural_plswork.math.constants.AdditiveIdentity;
+import neural_plswork.math.constants.ConstantElement;
 import neural_plswork.math.constants.IdentityElement;
+import neural_plswork.math.constants.MultiplicativeIdentity;
 import neural_plswork.math.exceptions.IllegalMatrixException;
 import neural_plswork.math.exceptions.IllegalVectorException;
 
@@ -41,6 +44,18 @@ public class Matrix<T extends MatrixElement> {
         for(MatrixElement[] arr: matrix) {
             if(arr.length != columns) throw new IllegalMatrixException("Cannot instantiate non-rectangular matrix");
         }
+    }
+
+    public static Matrix<ConstantElement> buildIdentityMatrix(int size) throws IllegalMatrixException {
+        ConstantElement[][] matrix = new ConstantElement[size][size];
+        for(int i = 0; i < size; i++) {
+            for(int j = 0; j < size; j++) {
+                if(i == j) matrix[i][j] = new MultiplicativeIdentity();
+                else matrix[i][j] = new AdditiveIdentity();
+            }
+        }
+
+        return new Matrix<ConstantElement>(matrix);
     }
 
     public Matrix<T> multiply(Matrix<T> other) throws IllegalMatrixException {
