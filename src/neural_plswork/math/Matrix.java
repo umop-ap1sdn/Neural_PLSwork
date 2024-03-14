@@ -58,9 +58,9 @@ public class Matrix<T extends MatrixElement> {
         return new Matrix<ConstantElement>(matrix);
     }
 
-    public <U extends MatrixElement> Matrix<U> multiply(Matrix<U> other) throws IllegalMatrixException {
+    public Matrix<T> multiply(Matrix<T> other) throws IllegalMatrixException {
         if(other.rows != this.columns) throw new IllegalMatrixException("Columns of matrix 0 does not match rows of matrix 1");
-        Matrix<U> ret = new Matrix<>(this.rows, other.columns);
+        Matrix<T> ret = new Matrix<>(this.rows, other.columns);
         
         for(int i = 0; i < ret.rows; i++) {
             for(int j = 0; j < ret.columns; j++) {
@@ -72,7 +72,7 @@ public class Matrix<T extends MatrixElement> {
     }
 
     @SuppressWarnings("unchecked")
-    private <U extends MatrixElement> U multiplyAtLocation(Matrix<U> other, int row, int col) {
+    private T multiplyAtLocation(Matrix<T> other, int row, int col) {
         MatrixElement sum = new IdentityElement();
         
         for(int k = 0; k < this.columns; k++) {
@@ -80,7 +80,7 @@ public class Matrix<T extends MatrixElement> {
             sum = sum.add(adder);
         }
 
-        return (U) sum;
+        return (T) sum;
     }
 
     @SuppressWarnings("unchecked")
@@ -100,7 +100,7 @@ public class Matrix<T extends MatrixElement> {
 
     @SuppressWarnings("unchecked")
     public Matrix<T> pointwiseMultiply(Matrix<T> other) throws IllegalMatrixException {
-        if(this.rows != other.rows || this.columns != other.columns) throw new IllegalMatrixException("Matrices must be of the same size to be added");
+        if(this.rows != other.rows || this.columns != other.columns) throw new IllegalMatrixException("Matrices must be of the same size to be pointwise multiplied");
         
         Matrix<T> ret = new Matrix<>(this.rows, this.columns);
         
