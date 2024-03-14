@@ -11,8 +11,8 @@ import neural_plswork.math.exceptions.IllegalVectorException;
 
 public class Matrix<T extends MatrixElement> {
     
-    private final int rows;
-    private final int columns;
+    protected final int rows;
+    protected final int columns;
 
     protected final T[][] matrix;
 
@@ -171,8 +171,8 @@ public class Matrix<T extends MatrixElement> {
             return new Vector<T>(matrix);
             
         } catch (IllegalMatrixException m) {
-            System.out.println("an error occured.");
-            System.out.println(m.getMessage());
+            System.err.println("an error occured.");
+            System.err.println(m.getMessage());
             return null;
         }
     }

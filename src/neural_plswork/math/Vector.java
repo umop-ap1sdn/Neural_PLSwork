@@ -17,6 +17,14 @@ public class Vector<T extends MatrixElement> extends Matrix<T> {
         super(vector);
         if(vector[0].length != 1) throw new IllegalVectorException("Vector must have a column length of 1");
     }
+
+    public void setValue(T value, int row) {
+        super.setValue(value, row, 1);
+    }
+
+    public T getValue(int row) {
+        return super.getValue(row, 1);
+    }
     
     private static MatrixElement[][] transposeTo2d(MatrixElement[] oneD) {
         MatrixElement[][] ret = new MatrixElement[oneD.length][1];
@@ -35,5 +43,9 @@ public class Vector<T extends MatrixElement> extends Matrix<T> {
         }
 
         return (T[]) ret;
+    }
+
+    public int getLength() {
+        return rows;
     }
 }
