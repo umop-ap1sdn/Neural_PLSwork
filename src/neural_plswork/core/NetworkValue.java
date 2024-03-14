@@ -9,7 +9,15 @@ public class NetworkValue implements MatrixElement {
         value = 0.0;
     }
 
-    protected NetworkValue(double value) {
+    public NetworkValue(double value) {
+        this.value = value;
+    }
+
+    public double getValue() {
+        return value;
+    }
+
+    public void setValue(double value) {
         this.value = value;
     }
 
