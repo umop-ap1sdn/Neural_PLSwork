@@ -58,9 +58,9 @@ public class Matrix<T extends MatrixElement> {
         return new Matrix<ConstantElement>(matrix);
     }
 
-    public Matrix<T> multiply(Matrix<T> other) throws IllegalMatrixException {
+    public <U extends MatrixElement> Matrix<U> multiply(Matrix<U> other) throws IllegalMatrixException {
         if(other.rows != this.columns) throw new IllegalMatrixException("Columns of matrix 0 does not match rows of matrix 1");
-        Matrix<T> ret = new Matrix<>(this.rows, other.columns);
+        Matrix<U> ret = new Matrix<>(this.rows, other.columns);
         
         for(int i = 0; i < ret.rows; i++) {
             for(int j = 0; j < ret.columns; j++) {
@@ -72,7 +72,7 @@ public class Matrix<T extends MatrixElement> {
     }
 
     @SuppressWarnings("unchecked")
-    private T multiplyAtLocation(Matrix<T> other, int row, int col) {
+    private <U extends MatrixElement> U multiplyAtLocation(Matrix<U> other, int row, int col) {
         MatrixElement sum = new IdentityElement();
         
         for(int k = 0; k < this.columns; k++) {
@@ -80,7 +80,7 @@ public class Matrix<T extends MatrixElement> {
             sum = sum.add(adder);
         }
 
-        return (T) sum;
+        return (U) sum;
     }
 
     @SuppressWarnings("unchecked")
