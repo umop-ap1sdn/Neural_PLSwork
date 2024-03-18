@@ -6,6 +6,7 @@ import neural_plswork.math.constants.AdditiveIdentity;
 import neural_plswork.math.constants.ConstantElement;
 import neural_plswork.math.constants.IdentityElement;
 import neural_plswork.math.constants.MultiplicativeIdentity;
+import neural_plswork.math.exceptions.ElementIncompatibleException;
 import neural_plswork.math.exceptions.IllegalMatrixException;
 import neural_plswork.math.exceptions.IllegalVectorException;
 
@@ -58,8 +59,13 @@ public class Matrix<T extends MatrixElement> {
         return new Matrix<ConstantElement>(matrix);
     }
 
-    public <U extends MatrixElement, V extends MatrixElement> Matrix<U> multiply(Matrix<V> other) throws IllegalMatrixException {
+    public <U extends MatrixElement, V extends MatrixElement> Matrix<U> multiply(Matrix<V> other) throws IllegalMatrixException, ElementIncompatibleException {
         if(other.rows != this.columns) throw new IllegalMatrixException("Columns of matrix 0 does not match rows of matrix 1");
+        if(!matrix[0][0].addable(other.matrix[0][0])) throw new ElementIncompatibleException("Cannot add these 2 types");
+        if(!matrix[0][0].multipliable(other.matrix[0][0])) throw new ElementIncompatibleException("Cannot multiply these 2 types");
+
+
+
         Matrix<U> ret = new Matrix<U>(this.rows, other.columns);
         
         for(int i = 0; i < ret.rows; i++) {
@@ -84,9 +90,11 @@ public class Matrix<T extends MatrixElement> {
     }
 
     @SuppressWarnings("unchecked")
-    public <U extends MatrixElement, V extends MatrixElement> Matrix<U> add(Matrix<V> other) throws IllegalMatrixException {
+    public <U extends MatrixElement, V extends MatrixElement> Matrix<U> add(Matrix<V> other) throws IllegalMatrixException, ElementIncompatibleException {
         if(this.rows != other.rows || this.columns != other.columns) throw new IllegalMatrixException("Matrices must be of the same size to be added");
+        if(!matrix[0][0].addable(other.matrix[0][0])) throw new ElementIncompatibleException("Cannot add these 2 types");
         
+
         Matrix<U> ret = new Matrix<>(this.rows, this.columns);
         
         for(int i = 0; i < rows; i++) {
@@ -99,9 +107,10 @@ public class Matrix<T extends MatrixElement> {
     }
 
     @SuppressWarnings("unchecked")
-    public <U extends MatrixElement, V extends MatrixElement> Matrix<U> pointwiseMultiply(Matrix<V> other) throws IllegalMatrixException {
+    public <U extends MatrixElement, V extends MatrixElement> Matrix<U> pointwiseMultiply(Matrix<V> other) throws IllegalMatrixException, ElementIncompatibleException {
         if(this.rows != other.rows || this.columns != other.columns) throw new IllegalMatrixException("Matrices must be of the same size to be pointwise multiplied");
-        
+        if(!matrix[0][0].multipliable(other.matrix[0][0])) throw new ElementIncompatibleException("Cannot multiply these 2 types");
+
         Matrix<U> ret = new Matrix<>(this.rows, this.columns);
         
         for(int i = 0; i < rows; i++) {

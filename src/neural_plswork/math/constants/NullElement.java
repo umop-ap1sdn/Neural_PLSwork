@@ -23,6 +23,15 @@ public class NullElement implements ConstantElement {
     public MatrixElement copy() {
         return new NullElement();
     }
-    
+
+    @Override
+    public boolean addable(MatrixElement other) {
+        return true;
+    }
+
+    @Override
+    public boolean multipliable(MatrixElement other) {
+        return true;
+    }
     
 }

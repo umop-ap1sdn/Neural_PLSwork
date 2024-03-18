@@ -33,8 +33,8 @@ public interface MatrixElement {
      */
     public MatrixElement copy();
 
-    public boolean addable(Class<? extends MatrixElement> other);
+    public boolean addable(MatrixElement other);
 
-    public boolean multipliable(Class<? extends MatrixElement> other);
+    public boolean multipliable(MatrixElement other);
 
 }

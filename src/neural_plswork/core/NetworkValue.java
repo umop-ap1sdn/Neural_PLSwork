@@ -1,18 +1,32 @@
 package neural_plswork.core;
 
+import java.util.HashSet;
+
 import neural_plswork.math.MatrixElement;
 import neural_plswork.math.Vector;
+import neural_plswork.math.constants.ConstantElement;
 import neural_plswork.math.exceptions.IllegalMatrixException;
 
 public class NetworkValue implements MatrixElement {
     protected double value = 0.0;
 
+    private static HashSet<Class<? extends MatrixElement>> compatible;
+
     protected NetworkValue() {
         value = 0.0;
+        initializeCompatible();
     }
 
     public NetworkValue(double value) {
         this.value = value;
+        initializeCompatible();
+    }
+
+    private static void initializeCompatible() {
+        if(compatible != null) return;
+
+        compatible.add(NetworkValue.class);
+        compatible.add(ConstantElement.class);
     }
 
     public double getValue() {
@@ -68,5 +82,15 @@ public class NetworkValue implements MatrixElement {
     @Override
     public MatrixElement copy() {
         return new NetworkValue(value);
+    }
+
+    @Override
+    public boolean addable(MatrixElement other) {
+        return compatible.contains(other.getClass());
+    }
+
+    @Override
+    public boolean multipliable(MatrixElement other) {
+        return compatible.contains(other.getClass());
     }
 }
