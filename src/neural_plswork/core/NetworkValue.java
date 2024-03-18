@@ -61,13 +61,7 @@ public class NetworkValue implements MatrixElement {
             netValArr[i] = new NetworkValue(arr[i]);
         }
         
-        try {
-            return new Vector<NetworkValue>(netValArr);
-        } catch (IllegalMatrixException e) {
-            System.err.println("an error occurred.");
-            System.err.println(e.getMessage());
-            return null;
-        }
+        return new Vector<NetworkValue>(netValArr);
     }
 
     @Override
