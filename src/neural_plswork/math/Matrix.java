@@ -176,14 +176,7 @@ public class Matrix<T extends MatrixElement> {
     }
 
     public Vector<T> getAsVector() throws IllegalVectorException {
-        try {
-            return new Vector<T>(matrix);
-            
-        } catch (IllegalMatrixException m) {
-            System.err.println("an error occured.");
-            System.err.println(m.getMessage());
-            return null;
-        }
+        return new Vector<T>(matrix);
     }
 
     public void simplePrint() {
