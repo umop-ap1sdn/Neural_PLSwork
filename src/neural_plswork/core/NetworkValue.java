@@ -9,7 +9,6 @@ import neural_plswork.math.constants.ConstantElement;
 import neural_plswork.math.constants.IdentityElement;
 import neural_plswork.math.constants.MultiplicativeIdentity;
 import neural_plswork.math.constants.NullElement;
-import neural_plswork.math.exceptions.IllegalMatrixException;
 
 public class NetworkValue implements MatrixElement {
     protected double value = 0.0;
