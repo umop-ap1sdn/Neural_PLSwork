@@ -4,7 +4,11 @@ import java.util.HashSet;
 
 import neural_plswork.math.MatrixElement;
 import neural_plswork.math.Vector;
+import neural_plswork.math.constants.AdditiveIdentity;
 import neural_plswork.math.constants.ConstantElement;
+import neural_plswork.math.constants.IdentityElement;
+import neural_plswork.math.constants.MultiplicativeIdentity;
+import neural_plswork.math.constants.NullElement;
 import neural_plswork.math.exceptions.IllegalMatrixException;
 
 public class NetworkValue implements MatrixElement {
@@ -27,6 +31,10 @@ public class NetworkValue implements MatrixElement {
 
         compatible.add(NetworkValue.class);
         compatible.add(ConstantElement.class);
+        compatible.add(NullElement.class);
+        compatible.add(IdentityElement.class);
+        compatible.add(MultiplicativeIdentity.class);
+        compatible.add(AdditiveIdentity.class);
     }
 
     public double getValue() {
