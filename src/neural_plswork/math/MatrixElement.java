@@ -32,4 +32,9 @@ public interface MatrixElement {
      * @return Copy of the matrix element
      */
     public MatrixElement copy();
+
+    public boolean addable(Class<? extends MatrixElement> other);
+
+    public boolean multipliable(Class<? extends MatrixElement> other);
+
 }
