@@ -84,14 +84,14 @@ public class Matrix<T extends MatrixElement> {
     }
 
     @SuppressWarnings("unchecked")
-    public Matrix<T> add(Matrix<T> other) throws IllegalMatrixException {
+    public <U extends MatrixElement, V extends MatrixElement> Matrix<U> add(Matrix<V> other) throws IllegalMatrixException {
         if(this.rows != other.rows || this.columns != other.columns) throw new IllegalMatrixException("Matrices must be of the same size to be added");
         
-        Matrix<T> ret = new Matrix<>(this.rows, this.columns);
+        Matrix<U> ret = new Matrix<>(this.rows, this.columns);
         
         for(int i = 0; i < rows; i++) {
             for(int j = 0; j < columns; j++) {
-                ret.matrix[i][j] = (T) matrix[i][j].add(other.matrix[i][j]);
+                ret.matrix[i][j] = (U) matrix[i][j].add(other.matrix[i][j]);
             }
         }
 
@@ -99,14 +99,14 @@ public class Matrix<T extends MatrixElement> {
     }
 
     @SuppressWarnings("unchecked")
-    public Matrix<T> pointwiseMultiply(Matrix<T> other) throws IllegalMatrixException {
+    public <U extends MatrixElement, V extends MatrixElement> Matrix<U> pointwiseMultiply(Matrix<V> other) throws IllegalMatrixException {
         if(this.rows != other.rows || this.columns != other.columns) throw new IllegalMatrixException("Matrices must be of the same size to be pointwise multiplied");
         
-        Matrix<T> ret = new Matrix<>(this.rows, this.columns);
+        Matrix<U> ret = new Matrix<>(this.rows, this.columns);
         
         for(int i = 0; i < rows; i++) {
             for(int j = 0; j < columns; j++) {
-                ret.matrix[i][j] = (T) matrix[i][j].multiply(other.matrix[i][j]);
+                ret.matrix[i][j] = (U) matrix[i][j].multiply(other.matrix[i][j]);
             }
         }
 
