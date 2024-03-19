@@ -18,6 +18,13 @@ public class IdentityMatrix extends Matrix<ConstantElement> {
         return (Vector<T>) other.copy();
     }
 
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T extends MatrixElement, U extends MatrixElement> Matrix<T> multiply(Matrix<U> other) throws IllegalMatrixException {
+        if(other.getRows() != size) throw new IllegalMatrixException("Matrices are incompatible for multiplication");
+        return (Matrix<T>) other.copy();
+    }
+
     public int getSize() {
         return size;
     }
