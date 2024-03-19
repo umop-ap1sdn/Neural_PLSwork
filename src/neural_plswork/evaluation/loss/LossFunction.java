@@ -1,4 +1,4 @@
-package neural_plswork.loss;
+package neural_plswork.evaluation.loss;
 
 import neural_plswork.core.NetworkValue;
 import neural_plswork.math.Vector;
