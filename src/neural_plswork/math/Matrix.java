@@ -150,19 +150,6 @@ public class Matrix<T extends MatrixElement> {
     }
 
     @SuppressWarnings("unchecked")
-    public Matrix<T> negate() {
-        Matrix<T> ret = new Matrix<>(rows, columns);
-
-        for(int i = 0; i < rows; i++) {
-            for(int j = 0; j < columns; j++) {
-                ret.matrix[i][j] = (T) matrix[i][j].negate();
-            }
-        }
-
-        return ret;
-    }
-
-    @SuppressWarnings("unchecked")
     public Matrix<T> copy() {
         Matrix<T> ret = new Matrix<>(rows, columns);
 

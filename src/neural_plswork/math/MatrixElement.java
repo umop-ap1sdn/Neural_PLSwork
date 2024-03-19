@@ -22,12 +22,6 @@ public interface MatrixElement {
     public MatrixElement add(MatrixElement other);
 
     /**
-     * Function to negate an object. May be implemented in different ways per implemented class
-     * @return Object result of negation
-     */
-    public MatrixElement negate();
-
-    /**
      * Function to create a deep copied element to ensure memory safety
      * @return Copy of the matrix element
      */

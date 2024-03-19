@@ -15,11 +15,6 @@ public class IdentityElement implements ConstantElement {
     }
 
     @Override
-    public MatrixElement negate() {
-        return this;
-    }
-
-    @Override
     public MatrixElement copy() {
         return new IdentityElement();
     }

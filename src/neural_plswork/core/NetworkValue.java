@@ -76,11 +76,6 @@ public class NetworkValue implements MatrixElement {
     }
 
     @Override
-    public MatrixElement negate() {
-        return new NetworkValue(-1 * value);
-    }
-
-    @Override
     public MatrixElement copy() {
         return new NetworkValue(value);
     }
