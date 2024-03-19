@@ -123,6 +123,20 @@ public class Matrix<T extends MatrixElement> {
     }
 
     @SuppressWarnings("unchecked")
+    public <U extends MatrixElement, V extends MatrixElement> Matrix<U> scale(V other) {
+        if(!other.multipliable(matrix[0][0])) throw new ElementIncompatibleException("Cannot multiply these 2 types");
+        Matrix<U> ret = new Matrix<>(this.rows, this.columns);
+        
+        for(int i = 0; i < rows; i++) {
+            for(int j = 0; j < columns; j++) {
+                ret.matrix[i][j] = (U) other.multiply(matrix[i][j]);
+            }
+        }
+
+        return ret;
+    }
+
+    @SuppressWarnings("unchecked")
     public Matrix<T> transpose() {
         Matrix<T> ret = new Matrix<>(columns, rows);
 
