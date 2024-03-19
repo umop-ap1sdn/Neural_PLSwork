@@ -1,10 +1,9 @@
-package neural_plswork.loss;
+package neural_plswork.evaluation.loss;
 
 public enum Loss {
     CUSTOM(0),
-    SSE(1),
-    MSE(2),
-    BCE(3),
+    MSE(1),
+    BCE(2),
     INVALID(-1);
 
 
@@ -18,10 +17,8 @@ public enum Loss {
             case 0:
                 return CUSTOM;
             case 1:
-                return SSE;
-            case 2:
                 return MSE;
-            case 3:
+            case 2:
                 return BCE;
             default:
                 return INVALID;
