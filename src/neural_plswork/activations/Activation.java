@@ -7,6 +7,7 @@ public enum Activation {
     RELU(2),
     SIGMOID(3),
     TANH(4),
+    SOFTMAX(5),
     INVALID(-1);
 
 
@@ -29,6 +30,8 @@ public enum Activation {
                 return SIGMOID;
             case 4:
                 return TANH;
+            case 5:
+                return SOFTMAX;
             default: 
                 return INVALID;
         }
