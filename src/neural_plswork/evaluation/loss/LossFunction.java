@@ -1,5 +1,6 @@
 package neural_plswork.evaluation.loss;
 
+import neural_plswork.activations.InvalidActivationException;
 import neural_plswork.core.NetworkValue;
 import neural_plswork.math.Vector;
 
@@ -15,6 +16,8 @@ public interface LossFunction {
     }
 
     public static LossFunction getFunction(Loss loss, int batchSize) throws InvalidLossException {
+        if(loss == null) throw new InvalidLossException("Activation enum is null");
+        
         switch(loss) {
             case CUSTOM: return null;
             case MSE: return new MeanSquaredError(batchSize);
