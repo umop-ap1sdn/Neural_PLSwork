@@ -1,6 +1,5 @@
 package neural_plswork.evaluation.loss;
 
-import neural_plswork.activations.InvalidActivationException;
 import neural_plswork.core.NetworkValue;
 import neural_plswork.math.Vector;
 
