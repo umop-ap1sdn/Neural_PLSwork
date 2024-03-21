@@ -1,6 +1,7 @@
 package neural_plswork.math;
 
 import java.util.Arrays;
+import java.util.Iterator;
 
 import neural_plswork.math.constants.AdditiveIdentity;
 import neural_plswork.math.constants.ConstantElement;
@@ -10,7 +11,7 @@ import neural_plswork.math.exceptions.ElementIncompatibleException;
 import neural_plswork.math.exceptions.IllegalMatrixException;
 import neural_plswork.math.exceptions.IllegalVectorException;
 
-public class Matrix<T extends MatrixElement> {
+public class Matrix<T extends MatrixElement> implements Iterable<T> {
     
     protected final int rows;
     protected final int columns;
@@ -192,5 +193,10 @@ public class Matrix<T extends MatrixElement> {
 
     public int getColumns() {
         return columns;
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        return new MatrixIterator<T>(this);
     }
 }
