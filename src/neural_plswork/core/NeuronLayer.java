@@ -90,6 +90,10 @@ public class NeuronLayer {
         return error.get(time);
     }
 
+    public int size() {
+        return layerSize;
+    }
+
     public boolean getBias() {
         return bias;
     }
