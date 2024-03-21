@@ -13,4 +13,15 @@ public interface LossFunction {
         for(NetworkValue n: errors) sum += n.getValue();
         return new NetworkValue(sum);
     }
+
+    public static LossFunction getFunction(Loss loss, int batchSize) throws InvalidLossException {
+        switch(loss) {
+            case CUSTOM: return null;
+            case MSE: return new MeanSquaredError(batchSize);
+            case BCE: return new BinaryCrossEntropy(batchSize);
+            case INVALID: throw new InvalidLossException();
+        }
+
+        return null;
+    }
 }
