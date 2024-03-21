@@ -26,7 +26,14 @@ public class MeanSquaredError implements LossFunction {
 
     @Override
     public Vector<NetworkValue> calculateDerivative(Vector<NetworkValue> target, Vector<NetworkValue> predicted) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'calculateDerivative'");
+        double[] targets = NetworkValue.vectorToArr(target);
+        double[] predicts = NetworkValue.vectorToArr(predicted);
+        double[] derivs = new double[predicts.length];
+
+        for(int i = 0; i < targets.length; i++) {
+            derivs[i] = 2 * (predicts[i] - targets[i]) / batchSize;
+        }
+
+        return NetworkValue.arrToVector(derivs);
     }
 }
