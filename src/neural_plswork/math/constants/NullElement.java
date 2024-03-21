@@ -15,11 +15,6 @@ public class NullElement implements ConstantElement {
     }
 
     @Override
-    public MatrixElement negate() {
-        return this;
-    }
-
-    @Override
     public MatrixElement copy() {
         return new NullElement();
     }
