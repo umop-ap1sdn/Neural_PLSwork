@@ -89,4 +89,9 @@ public class NetworkValue implements MatrixElement {
     public boolean multipliable(MatrixElement other) {
         return compatible.contains(other.getClass());
     }
+
+    @Override
+    public String toString() {
+        return String.format("%.3f", value);
+    }
 }
