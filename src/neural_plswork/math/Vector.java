@@ -19,17 +19,31 @@ public class Vector<T extends MatrixElement> extends Matrix<T> {
     }
 
     public void setValue(T value, int row) {
-        super.setValue(value, row, 1);
+        super.setValue(value, row, 0);
     }
 
     public T getValue(int row) {
-        return super.getValue(row, 1);
+        return super.getValue(row, 0);
     }
     
     private static MatrixElement[][] transposeTo2d(MatrixElement[] oneD) {
         MatrixElement[][] ret = new MatrixElement[oneD.length][1];
         for(int i = 0; i < oneD.length; i++) {
             ret[i][0] = oneD[i].copy();
+        }
+
+        return ret;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public Vector<T> copy() {
+        Vector<T> ret = new Vector<>(rows);
+
+        for(int i = 0; i < rows; i++) {
+            for(int j = 0; j < columns; j++) {
+                ret.matrix[i][j] = (T) matrix[i][j].copy();
+            }
         }
 
         return ret;

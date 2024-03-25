@@ -33,9 +33,11 @@ public class Softmax implements ActivationFunction {
                 if(i == j) derivs[i] += arr[i] * (1 - arr[i]);
                 else derivs[i] -= arr[i] * arr[j];
             }
+
+            System.out.println(derivs[i]);
         }
 
-        return NetworkValue.arrToVector(arr);
+        return NetworkValue.arrToVector(derivs);
     }
     
 }

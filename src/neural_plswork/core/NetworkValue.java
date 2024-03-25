@@ -28,6 +28,8 @@ public class NetworkValue implements MatrixElement {
     private static void initializeCompatible() {
         if(compatible != null) return;
 
+        compatible = new HashSet<>();
+
         compatible.add(NetworkValue.class);
         compatible.add(ConstantElement.class);
         compatible.add(NullElement.class);
