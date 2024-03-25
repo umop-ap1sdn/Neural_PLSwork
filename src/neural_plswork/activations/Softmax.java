@@ -9,15 +9,16 @@ public class Softmax implements ActivationFunction {
 
     @Override
     public Vector<NetworkValue> activate(Vector<NetworkValue> unactivated) {
-        double[] arr = NetworkValue.vectorToArr(unactivated);
+        Vector<NetworkValue> vector = (Vector<NetworkValue>) unactivated.copy();
+        
         double divisor = 0;
-        for(double d: arr) divisor += Math.exp(d);
+        for(NetworkValue n: vector) divisor += Math.exp(n.getValue());
 
-        for(int i = 0; i < arr.length; i++) {
-            arr[i] = Math.exp(arr[i]) / divisor;
+        for(NetworkValue n: vector) {
+            n.setValue(Math.exp(n.getValue()) / divisor);
         }
 
-        return NetworkValue.arrToVector(arr);
+        return vector;
     }
 
     @Override

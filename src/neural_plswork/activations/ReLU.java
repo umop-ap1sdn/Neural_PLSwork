@@ -7,18 +7,23 @@ public class ReLU implements ActivationFunction {
 
     @Override
     public Vector<NetworkValue> activate(Vector<NetworkValue> unactivated) {
-        double[] unacArray = NetworkValue.vectorToArr(unactivated);
-        for(int i = 0; i < unacArray.length; i++) unacArray[i] = Math.max(unacArray[i], 0);
+        Vector<NetworkValue> vector = (Vector<NetworkValue>) unactivated.copy();
+        for(NetworkValue n: vector) {
+            n.setValue(Math.max(n.getValue(), 0.0));
+        }
 
-        return NetworkValue.arrToVector(unacArray);
+        return vector;
     }
 
     @Override
     public Vector<NetworkValue> derivative(Vector<NetworkValue> unactivated) {
-        double[] unacArray = NetworkValue.vectorToArr(unactivated);
-        for(int i = 0; i < unacArray.length; i++) unacArray[i] = (unacArray[i] > 0) ? 1.0 : 0.0;
+        Vector<NetworkValue> vector = (Vector<NetworkValue>) unactivated.copy();
+        for(NetworkValue n: vector) {
+            if(n.getValue() <= 0) n.setValue(0.0);
+            else n.setValue(1.0);
+        }
 
-        return NetworkValue.arrToVector(unacArray);
+        return vector;
     }
     
 }

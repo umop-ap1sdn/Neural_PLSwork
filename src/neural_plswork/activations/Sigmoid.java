@@ -7,16 +7,22 @@ public class Sigmoid implements ActivationFunction {
 
     @Override
     public Vector<NetworkValue> activate(Vector<NetworkValue> unactivated) {
-        double[] arr = NetworkValue.vectorToArr(unactivated);
-        for(int i = 0; i < arr.length; i++) arr[i] = sigmoid(arr[i]);
-        return NetworkValue.arrToVector(arr);
+        Vector<NetworkValue> vector = (Vector<NetworkValue>) unactivated.copy();
+        for(NetworkValue n: vector) {
+            n.setValue(sigmoid(n.getValue()));
+        }
+
+        return vector;
     }
 
     @Override
     public Vector<NetworkValue> derivative(Vector<NetworkValue> unactivated) {
-        double[] arr = NetworkValue.vectorToArr(unactivated);
-        for(int i = 0; i < arr.length; i++) arr[i] = sigmoid(arr[i]) * (1 - sigmoid(arr[i]));
-        return NetworkValue.arrToVector(arr);
+        Vector<NetworkValue> vector = (Vector<NetworkValue>) unactivated.copy();
+        for(NetworkValue n: vector) {
+            n.setValue(sigmoid(n.getValue()) * (1 - sigmoid(n.getValue())));
+        }
+
+        return vector;
     }
 
     private static double sigmoid(double x) {
