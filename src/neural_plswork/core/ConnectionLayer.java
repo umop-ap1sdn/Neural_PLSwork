@@ -59,4 +59,8 @@ public class ConnectionLayer {
         Matrix<NetworkValue> added = multiplied.add(biasVector);
         return added.getAsVector();
     }
+
+    public Vector<NetworkValue> forwardPass() {
+        return forwardPass(srcLayer.getRecentValues());
+    }
 }

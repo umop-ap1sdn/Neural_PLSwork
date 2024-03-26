@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 
 import neural_plswork.activations.ActivationFunction;
+import neural_plswork.math.Matrix;
 import neural_plswork.math.Vector;
 
 public class NeuronLayer {
@@ -57,15 +58,26 @@ public class NeuronLayer {
         
     }
 
+    public Vector<NetworkValue> calculateError(Vector<NetworkValue> nextErrs, Matrix<NetworkValue> weightsT, int time) {
+        // WeightsT may be changed to MatrixElement in the future, to allow for identity matrices to be used
+        Matrix<NetworkValue> multiplied = weightsT.multiply(nextErrs);
+        Matrix<NetworkValue> pointwise = multiplied.pointwiseMultiply(derivative.get(time));
+        return pointwise.getAsVector();
+    }
+
     public void setErrors(Vector<NetworkValue> errors, int time) {
         error.set(time, errors);
     }
 
     public void purgeErrors(int times) {
+        double[] empty = new double[layerSize];
+        Arrays.fill(empty, 0);
+        
+        Vector<NetworkValue> zeros = NetworkValue.arrToVector(empty);
+
+        // Check to ensure no shallow copy errors occur here
         for(int i = 0; i < times; i++) {
-            double[] empty = new double[layerSize];
-            Arrays.fill(empty, 0);
-            error.addLast(NetworkValue.arrToVector(empty));
+            error.addLast(zeros);
             error.pollFirst();
         }
     }
