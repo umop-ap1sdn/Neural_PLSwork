@@ -65,8 +65,8 @@ public class NeuronLayer {
         return pointwise.getAsVector();
     }
 
-    public void setEvals(Vector<NetworkValue> errors, int time) {
-        eval.set(time, errors);
+    public void setEvals(Vector<NetworkValue> evals, int time) {
+        eval.set(time, evals);
     }
 
     public void purgeEval(int times) {
