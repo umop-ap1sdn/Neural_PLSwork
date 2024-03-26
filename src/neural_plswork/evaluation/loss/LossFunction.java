@@ -1,11 +1,10 @@
 package neural_plswork.evaluation.loss;
 
 import neural_plswork.core.NetworkValue;
+import neural_plswork.evaluation.Evaluation;
 import neural_plswork.math.Vector;
 
-public interface LossFunction {
-    
-    public Vector<NetworkValue> calculateError(Vector<NetworkValue> target, Vector<NetworkValue> predicted);
+public interface LossFunction extends Evaluation {
     
     public static NetworkValue calculateOverallLoss(Vector<NetworkValue> errors) {
         double sum = 0;
