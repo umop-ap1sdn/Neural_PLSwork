@@ -1,5 +1,7 @@
 package neural_plswork.initialize;
 
+import neural_plswork.core.NetworkValue;
+
 public class ConstantInitializer implements Initializer {
     private final double constant;
 
@@ -11,7 +13,7 @@ public class ConstantInitializer implements Initializer {
         constant = 0;
     }
 
-    public double getNextWeight() {
-        return constant;
+    public NetworkValue getNextWeight(int row, int col) {
+        return new NetworkValue(constant);
     }
 }

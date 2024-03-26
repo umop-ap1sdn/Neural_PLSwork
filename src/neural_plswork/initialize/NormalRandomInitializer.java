@@ -2,6 +2,8 @@ package neural_plswork.initialize;
 
 import java.util.Random;
 
+import neural_plswork.core.NetworkValue;
+
 public class NormalRandomInitializer implements Initializer {
     private final Random rand;
     private final double mean;
@@ -51,10 +53,10 @@ public class NormalRandomInitializer implements Initializer {
     }
 
     @Override
-    public double getNextWeight() {
+    public NetworkValue getNextWeight(int row, int col) {
         double random = rand.nextGaussian();
         random -= mean;
         random *= sigma;
-        return random;
+        return new NetworkValue(random);
     }
 }

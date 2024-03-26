@@ -38,7 +38,7 @@ public class ConnectionLayer {
 
         for(int i = 0; i < rows; i++) {
             for(int j = 0; j < cols; j++) {
-                matrix[i][j] = new NetworkValue(initializer.getNextWeight());
+                matrix[i][j] = initializer.getNextWeight(i, j);
             }
         }
 
@@ -47,7 +47,7 @@ public class ConnectionLayer {
         NetworkValue[] vector = new NetworkValue[rows];
 
         for(int i = 0; i < rows; i++) {
-            if(srcLayer.getBias()) vector[i] = new NetworkValue(initializer.getNextWeight());
+            if(srcLayer.getBias()) vector[i] = initializer.getNextWeight(i, 0);
             else vector[i] = new NetworkValue();
         }
 

@@ -1,5 +1,7 @@
 package neural_plswork.initialize;
 
+import neural_plswork.core.NetworkValue;
+
 public interface Initializer {
-    public double getNextWeight();
+    public NetworkValue getNextWeight(int row, int column);
 }
