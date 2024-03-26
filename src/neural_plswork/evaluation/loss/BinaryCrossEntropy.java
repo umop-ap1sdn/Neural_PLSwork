@@ -1,9 +1,10 @@
 package neural_plswork.evaluation.loss;
 
 import neural_plswork.core.NetworkValue;
+import neural_plswork.evaluation.Differentiable;
 import neural_plswork.math.Vector;
 
-public class BinaryCrossEntropy implements LossFunction {
+public class BinaryCrossEntropy implements LossFunction, Differentiable {
     
     private static final double EPSILON = 1e-7;
     private final int batchSize;

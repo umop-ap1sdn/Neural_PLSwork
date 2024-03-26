@@ -1,9 +1,10 @@
 package neural_plswork.evaluation.loss;
 
 import neural_plswork.core.NetworkValue;
+import neural_plswork.evaluation.Differentiable;
 import neural_plswork.math.Vector;
 
-public class MeanSquaredError implements LossFunction {
+public class MeanSquaredError implements LossFunction, Differentiable {
     private final int batchSize;    
 
     protected MeanSquaredError(int batchSize) {
