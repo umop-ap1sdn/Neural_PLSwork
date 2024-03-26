@@ -12,7 +12,7 @@ public class NeuronLayer {
     private LinkedList<Vector<NetworkValue>> unactivated;
     private LinkedList<Vector<NetworkValue>> activated;
     private LinkedList<Vector<NetworkValue>> derivative;
-    private LinkedList<Vector<NetworkValue>> error;
+    private LinkedList<Vector<NetworkValue>> eval;
 
     private final ActivationFunction activation;
 
@@ -34,7 +34,7 @@ public class NeuronLayer {
         unactivated = new LinkedList<>();
         activated = new LinkedList<>();
         derivative = new LinkedList<>();
-        error = new LinkedList<>();
+        eval = new LinkedList<>();
 
         for(int i = 0; i < historySize; i++) {
             double[] initialVector = new double[layerSize];
@@ -42,7 +42,7 @@ public class NeuronLayer {
             unactivated.addLast(NetworkValue.arrToVector(initialVector));
             activated.addLast(NetworkValue.arrToVector(initialVector));
             derivative.addLast(NetworkValue.arrToVector(initialVector));
-            error.addLast(NetworkValue.arrToVector(initialVector));
+            eval.addLast(NetworkValue.arrToVector(initialVector));
             
         }
     }
@@ -58,18 +58,18 @@ public class NeuronLayer {
         
     }
 
-    public Vector<NetworkValue> calculateError(Vector<NetworkValue> nextErrs, Matrix<NetworkValue> weightsT, int time) {
+    public Vector<NetworkValue> calculateEval(Vector<NetworkValue> nextErrs, Matrix<NetworkValue> weightsT, int time) {
         // WeightsT may be changed to MatrixElement in the future, to allow for identity matrices to be used
         Matrix<NetworkValue> multiplied = weightsT.multiply(nextErrs);
         Matrix<NetworkValue> pointwise = multiplied.pointwiseMultiply(derivative.get(time));
         return pointwise.getAsVector();
     }
 
-    public void setErrors(Vector<NetworkValue> errors, int time) {
-        error.set(time, errors);
+    public void setEvals(Vector<NetworkValue> errors, int time) {
+        eval.set(time, errors);
     }
 
-    public void purgeErrors(int times) {
+    public void purgeEval(int times) {
         double[] empty = new double[layerSize];
         Arrays.fill(empty, 0);
         
@@ -77,8 +77,8 @@ public class NeuronLayer {
 
         // Check to ensure no shallow copy errors occur here
         for(int i = 0; i < times; i++) {
-            error.addLast(zeros);
-            error.pollFirst();
+            eval.addLast(zeros);
+            eval.pollFirst();
         }
     }
 
@@ -98,8 +98,8 @@ public class NeuronLayer {
         return derivative.get(time);
     }
 
-    public Vector<NetworkValue> getError(int time) {
-        return error.get(time);
+    public Vector<NetworkValue> getEval(int time) {
+        return eval.get(time);
     }
 
     public int size() {
