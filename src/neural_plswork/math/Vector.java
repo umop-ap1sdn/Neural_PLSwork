@@ -18,6 +18,10 @@ public class Vector<T extends MatrixElement> extends Matrix<T> {
         if(vector[0].length != 1) throw new IllegalVectorException("Vector must have a column length of 1");
     }
 
+    protected Vector(T[][] vector, boolean override) {
+        super(vector, override);
+    }
+
     public void setValue(T value, int row) {
         super.setValue(value, row, 0);
     }

@@ -48,6 +48,13 @@ public class Matrix<T extends MatrixElement> implements Iterable<T> {
         }
     }
 
+    protected Matrix(T[][] matrix, boolean override) throws IllegalMatrixException {
+        this.matrix = matrix;
+
+        this.rows = matrix.length;
+        this.columns = matrix[0].length;
+    }
+
     public static Matrix<ConstantElement> buildIdentityMatrix(int size) throws IllegalMatrixException {
         ConstantElement[][] matrix = new ConstantElement[size][size];
         for(int i = 0; i < size; i++) {
@@ -178,7 +185,8 @@ public class Matrix<T extends MatrixElement> implements Iterable<T> {
     }
 
     public Vector<T> getAsVector() throws IllegalVectorException {
-        return new Vector<T>(matrix);
+        if(columns != 1) throw new IllegalVectorException("Vector must have a column length of 1");
+        return new Vector<T>(matrix, true);
     }
 
     public void simplePrint() {
