@@ -18,15 +18,16 @@ public class BinaryCrossEntropy implements LossFunction, Differentiable {
         double[] targets = NetworkValue.vectorToArr(target);
         double[] predicts = NetworkValue.vectorToArr(predicted);
 
-        double[] errors = new double[targets.length];
+        Vector<NetworkValue> errors = new Vector<>(targets.length);
         
         for(int i = 0; i < targets.length; i++) {
             double oneErr = Math.log((predicts[i]) + EPSILON) / Math.log(2);
             double zeroErr = Math.log((1 - predicts[i]) + EPSILON) / Math.log(2);
-            errors[i] = -1 * ((targets[i] * oneErr) + ((1 - targets[i]) * zeroErr)) / batchSize;
+            double error = -1 * ((targets[i] * oneErr) + ((1 - targets[i]) * zeroErr)) / batchSize;
+            errors.setValue(new NetworkValue(error), i);
         }
 
-        return NetworkValue.arrToVector(errors);
+        return errors;
     }
 
     @Override
@@ -34,17 +35,18 @@ public class BinaryCrossEntropy implements LossFunction, Differentiable {
         double[] targets = NetworkValue.vectorToArr(target);
         double[] predicts = NetworkValue.vectorToArr(predicted);
 
-        double[] derivs = new double[targets.length];
+        Vector<NetworkValue> derivs = new Vector<>(targets.length);
 
         double divisor = batchSize * (Math.log(2) / Math.log(Math.E));
         
         for(int i = 0; i < targets.length; i++) {
             double oneDeriv = 1.0 / ((predicts[i] + EPSILON) * divisor);
             double zeroDeriv = -1.0 / (((1 - predicts[i]) + EPSILON) * divisor);
-            derivs[i] = -1 * ((targets[i] * oneDeriv) + ((1 - targets[i]) * zeroDeriv));
+            double deriv = -1 * ((targets[i] * oneDeriv) + ((1 - targets[i]) * zeroDeriv));
+            derivs.setValue(new NetworkValue(deriv), i);
         }
 
-        return NetworkValue.arrToVector(derivs);
+        return derivs;
     }
 
 
