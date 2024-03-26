@@ -15,15 +15,14 @@ public class BinaryCrossEntropy implements LossFunction, Differentiable {
 
     @Override
     public Vector<NetworkValue> calculateError(Vector<NetworkValue> target, Vector<NetworkValue> predicted) {
-        double[] targets = NetworkValue.vectorToArr(target);
-        double[] predicts = NetworkValue.vectorToArr(predicted);
-
-        Vector<NetworkValue> errors = new Vector<>(targets.length);
+        Vector<NetworkValue> errors = new Vector<>(target.getLength());
         
-        for(int i = 0; i < targets.length; i++) {
-            double oneErr = Math.log((predicts[i]) + EPSILON) / Math.log(2);
-            double zeroErr = Math.log((1 - predicts[i]) + EPSILON) / Math.log(2);
-            double error = -1 * ((targets[i] * oneErr) + ((1 - targets[i]) * zeroErr)) / batchSize;
+        for(int i = 0; i < target.getLength(); i++) {
+            double targ = target.getValue(i).getValue();
+            double pred = predicted.getValue(i).getValue();
+            double oneErr = Math.log((pred) + EPSILON) / Math.log(2);
+            double zeroErr = Math.log((1 - pred) + EPSILON) / Math.log(2);
+            double error = -1 * ((targ * oneErr) + ((1 - targ) * zeroErr)) / batchSize;
             errors.setValue(new NetworkValue(error), i);
         }
 
@@ -32,17 +31,16 @@ public class BinaryCrossEntropy implements LossFunction, Differentiable {
 
     @Override
     public Vector<NetworkValue> calculateDerivative(Vector<NetworkValue> target, Vector<NetworkValue> predicted) {
-        double[] targets = NetworkValue.vectorToArr(target);
-        double[] predicts = NetworkValue.vectorToArr(predicted);
-
-        Vector<NetworkValue> derivs = new Vector<>(targets.length);
+        Vector<NetworkValue> derivs = new Vector<>(target.getLength());
 
         double divisor = batchSize * (Math.log(2) / Math.log(Math.E));
         
-        for(int i = 0; i < targets.length; i++) {
-            double oneDeriv = 1.0 / ((predicts[i] + EPSILON) * divisor);
-            double zeroDeriv = -1.0 / (((1 - predicts[i]) + EPSILON) * divisor);
-            double deriv = -1 * ((targets[i] * oneDeriv) + ((1 - targets[i]) * zeroDeriv));
+        for(int i = 0; i < target.getLength(); i++) {
+            double targ = target.getValue(i).getValue();
+            double pred = predicted.getValue(i).getValue();
+            double oneDeriv = 1.0 / ((pred + EPSILON) * divisor);
+            double zeroDeriv = -1.0 / (((1 - pred) + EPSILON) * divisor);
+            double deriv = -1 * ((targ * oneDeriv) + ((1 - targ) * zeroDeriv));
             derivs.setValue(new NetworkValue(deriv), i);
         }
 
