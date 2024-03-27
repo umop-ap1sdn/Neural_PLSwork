@@ -14,7 +14,7 @@ public class MeanSquaredError implements LossFunction, Differentiable {
     }
 
     @Override
-    public Vector<NetworkValue> calculateError(Vector<NetworkValue> target, Vector<NetworkValue> predicted) {
+    public Vector<NetworkValue> calculateEval(Vector<NetworkValue> target, Vector<NetworkValue> predicted) {
         /* 
         double[] targets = NetworkValue.vectorToArr(target);
         double[] predicts = NetworkValue.vectorToArr(predicted);

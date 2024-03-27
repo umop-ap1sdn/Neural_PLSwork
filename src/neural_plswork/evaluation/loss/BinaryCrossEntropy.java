@@ -14,7 +14,7 @@ public class BinaryCrossEntropy implements LossFunction, Differentiable {
     }
 
     @Override
-    public Vector<NetworkValue> calculateError(Vector<NetworkValue> target, Vector<NetworkValue> predicted) {
+    public Vector<NetworkValue> calculateEval(Vector<NetworkValue> target, Vector<NetworkValue> predicted) {
         Vector<NetworkValue> errors = new Vector<>(target.getLength());
         
         for(int i = 0; i < target.getLength(); i++) {
