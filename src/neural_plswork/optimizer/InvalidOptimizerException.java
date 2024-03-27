@@ -6,6 +6,6 @@ public class InvalidOptimizerException extends RuntimeException {
     }
 
     protected InvalidOptimizerException() {
-        super("Invalid Optimizer Function");
+        super("Invalid Optimizer");
     }
 }

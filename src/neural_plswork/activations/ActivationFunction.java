@@ -23,8 +23,7 @@ public interface ActivationFunction {
             case TANH: return new Tanh();
             case SOFTMAX: return new Softmax();
             case INVALID: throw new InvalidActivationException();
+            default: throw new InvalidActivationException();
         }
-
-        return null;
     }
 }
