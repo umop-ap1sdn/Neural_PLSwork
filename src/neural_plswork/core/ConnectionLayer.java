@@ -5,6 +5,8 @@ import neural_plswork.layers.basic.InputLayer;
 import neural_plswork.layers.basic.OutputLayer;
 import neural_plswork.math.Matrix;
 import neural_plswork.math.Vector;
+import neural_plswork.optimizer.OptimizationFunction;
+import neural_plswork.regularization.penalize.Penalty;
 
 public class ConnectionLayer {
     
@@ -16,7 +18,12 @@ public class ConnectionLayer {
 
     private Initializer initializer;
 
-    public ConnectionLayer(NeuronLayer srcLayer, NeuronLayer destLayer, Initializer initializer) throws InvalidNetworkConstructionException {
+    private OptimizationFunction primaryOptimizer;
+    private OptimizationFunction biasOptimizer;
+    
+    private Penalty penalty;
+
+    public ConnectionLayer(NeuronLayer srcLayer, NeuronLayer destLayer, Initializer initializer, OptimizationFunction primaryOptimizer, OptimizationFunction biasOptimizer, Penalty penalty) throws InvalidNetworkConstructionException {
         if(srcLayer instanceof OutputLayer) 
             throw new InvalidNetworkConstructionException("Cannot use Output Layer as Source Layer");
         if(destLayer instanceof InputLayer)
@@ -26,8 +33,46 @@ public class ConnectionLayer {
         this.destLayer = destLayer;
         this.initializer = initializer;
 
+        this.primaryOptimizer = primaryOptimizer;
+        this.biasOptimizer = biasOptimizer;
+        this.penalty = penalty;
+
         this.initialize();
 
+    }
+
+    public ConnectionLayer(NeuronLayer srcLayer, NeuronLayer destLayer, Matrix<NetworkValue> primaryLayer, Vector<NetworkValue> biasVector, OptimizationFunction primaryOptimizer, OptimizationFunction biasOptimizer, Penalty penalty) throws InvalidNetworkConstructionException {
+        if(srcLayer instanceof OutputLayer) 
+            throw new InvalidNetworkConstructionException("Cannot use Output Layer as Source Layer");
+        if(destLayer instanceof InputLayer)
+            throw new InvalidNetworkConstructionException("Cannot use Input Layer as Dest Layer");
+        
+        this.srcLayer = srcLayer;
+        this.destLayer = destLayer;
+        
+        this.primaryLayer = primaryLayer;
+        this.biasVector = biasVector;
+
+        this.primaryOptimizer = primaryOptimizer;
+        this.biasOptimizer = biasOptimizer;
+        this.penalty = penalty;
+    }
+
+    public ConnectionLayer(NeuronLayer srcLayer, NeuronLayer destLayer, NetworkValue[][] primaryLayer, NetworkValue[] biasVector, OptimizationFunction primaryOptimizer, OptimizationFunction biasOptimizer, Penalty penalty) throws InvalidNetworkConstructionException {
+        if(srcLayer instanceof OutputLayer) 
+            throw new InvalidNetworkConstructionException("Cannot use Output Layer as Source Layer");
+        if(destLayer instanceof InputLayer)
+            throw new InvalidNetworkConstructionException("Cannot use Input Layer as Dest Layer");
+        
+        this.srcLayer = srcLayer;
+        this.destLayer = destLayer;
+        
+        this.primaryLayer = new Matrix<>(primaryLayer);
+        this.biasVector = new Vector<>(biasVector);
+
+        this.primaryOptimizer = primaryOptimizer;
+        this.biasOptimizer = biasOptimizer;
+        this.penalty = penalty;
     }
 
     private void initialize() {
@@ -62,5 +107,29 @@ public class ConnectionLayer {
 
     public Vector<NetworkValue> forwardPass() {
         return forwardPass(srcLayer.getRecentValues());
+    }
+
+    public void adjustWeights(double learning_rate, int steps, boolean descending) {
+        for(int time = 0; time < steps; time++) {
+            Matrix<NetworkValue> transposed = srcLayer.getValues(time).transpose();
+            Matrix<NetworkValue> primaryPenalty = penalty.getDerivative(primaryLayer);
+            if(!descending) primaryPenalty = primaryPenalty.scale(new NetworkValue(-1.0));
+
+            Matrix<NetworkValue> primaryGradients = destLayer.getEval(time).multiply(transposed);
+            primaryGradients = primaryGradients.add(primaryLayer);
+            Matrix<NetworkValue> primaryDeltas = primaryOptimizer.computeDeltas(primaryGradients, learning_rate);
+            if(descending) primaryDeltas = primaryDeltas.scale(new NetworkValue(-1.0));
+
+            
+        }
+    }
+
+    public void setOptimizer(OptimizationFunction primaryOptimizer, OptimizationFunction biasOptimizer) {
+        this.primaryOptimizer = primaryOptimizer;
+        this.biasOptimizer = biasOptimizer;
+    }
+
+    public void setPenalty(Penalty penalty) {
+        this.penalty = penalty;
     }
 }
