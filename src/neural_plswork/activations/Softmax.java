@@ -1,8 +1,7 @@
 package neural_plswork.activations;
 
-import java.util.Arrays;
-
 import neural_plswork.core.NetworkValue;
+import neural_plswork.math.Matrix;
 import neural_plswork.math.Vector;
 
 public class Softmax implements ActivationFunction {
@@ -22,22 +21,24 @@ public class Softmax implements ActivationFunction {
     }
 
     @Override
-    public Vector<NetworkValue> derivative(Vector<NetworkValue> unactivated) {
+    public Matrix<NetworkValue> derivative(Vector<NetworkValue> unactivated) {
         Vector<NetworkValue> activated = activate(unactivated);
-        double[] arr = NetworkValue.vectorToArr(activated);
-        double[] derivs = new double[arr.length];
-        Arrays.fill(derivs, 0);
+        
+        Matrix<NetworkValue> jacobian = new Matrix<>(unactivated.getLength(), unactivated.getLength());
+        for(int i = 0; i < jacobian.getRows(); i++) {
+            for(int j = 0; j < jacobian.getColumns(); j++) {
+                double value;
+                if(i == j) {
+                    value = activated.getValue(i).getValue() * (1.0 - activated.getValue(i).getValue());
+                } else {
+                    value = -1 * activated.getValue(i).getValue() * activated.getValue(j).getValue();
+                }
 
-        for(int i = 0; i < arr.length; i++) {
-            for(int j = 0; j < arr.length; j++) {
-                if(i == j) derivs[i] += arr[i] * (1 - arr[i]);
-                else derivs[i] -= arr[i] * arr[j];
+                jacobian.setValue(new NetworkValue(value), i, j);
             }
-
-            System.out.println(derivs[i]);
         }
 
-        return NetworkValue.arrToVector(derivs);
+        return jacobian;
     }
     
 }

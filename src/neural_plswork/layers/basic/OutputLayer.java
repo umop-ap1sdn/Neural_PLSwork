@@ -27,7 +27,7 @@ public class OutputLayer extends NeuronLayer {
     @Override
     public Vector<NetworkValue> calculateEval(Vector<NetworkValue> target, Matrix<NetworkValue> unused, int time) {
         Vector<NetworkValue> eval = evaluation.calculateDerivative(target, getValues(time));
-        Matrix<NetworkValue> evalMat = eval.pointwiseMultiply(getDerivatives(time));
+        Matrix<NetworkValue> evalMat = getDerivatives(time).multiply(eval);
         return evalMat.getAsVector();
     }
 

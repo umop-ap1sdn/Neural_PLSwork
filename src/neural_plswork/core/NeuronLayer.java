@@ -11,7 +11,7 @@ public class NeuronLayer {
     
     private LinkedList<Vector<NetworkValue>> unactivated;
     private LinkedList<Vector<NetworkValue>> activated;
-    private LinkedList<Vector<NetworkValue>> derivative;
+    private LinkedList<Matrix<NetworkValue>> derivative;
     private LinkedList<Vector<NetworkValue>> eval;
 
     private final ActivationFunction activation;
@@ -41,9 +41,16 @@ public class NeuronLayer {
             Arrays.fill(initialVector, 0);
             unactivated.addLast(NetworkValue.arrToVector(initialVector));
             activated.addLast(NetworkValue.arrToVector(initialVector));
-            derivative.addLast(NetworkValue.arrToVector(initialVector));
             eval.addLast(NetworkValue.arrToVector(initialVector));
             
+        }
+
+        for(int i = 0; i < historySize; i++) {
+            NetworkValue[][] initialMatrix = new NetworkValue[layerSize][layerSize];
+            for(int j = 0; j < layerSize; j++) {
+                Arrays.fill(initialMatrix[j], new NetworkValue());
+            }
+            derivative.addLast(new Matrix<NetworkValue>(initialMatrix));
         }
     }
 
@@ -61,8 +68,9 @@ public class NeuronLayer {
     public Vector<NetworkValue> calculateEval(Vector<NetworkValue> nextErrs, Matrix<NetworkValue> weightsT, int time) {
         // WeightsT may be changed to MatrixElement in the future, to allow for identity matrices to be used
         Matrix<NetworkValue> multiplied = weightsT.multiply(nextErrs);
-        Matrix<NetworkValue> pointwise = multiplied.pointwiseMultiply(derivative.get(time));
-        return pointwise.getAsVector();
+        // Matrix<NetworkValue> pointwise = multiplied.pointwiseMultiply(derivative.get(time));
+        multiplied = derivative.get(time).multiply(multiplied);
+        return multiplied.getAsVector();
     }
 
     public void setEvals(Vector<NetworkValue> evals, int time) {
@@ -86,7 +94,7 @@ public class NeuronLayer {
         return activated.getLast();
     }
 
-    public Vector<NetworkValue> getRecentDerivative() {
+    public Matrix<NetworkValue> getRecentDerivative() {
         return derivative.getLast();
     }
 
@@ -94,7 +102,7 @@ public class NeuronLayer {
         return activated.get(time);
     }
 
-    public Vector<NetworkValue> getDerivatives(int time) {
+    public Matrix<NetworkValue> getDerivatives(int time) {
         return derivative.get(time);
     }
 

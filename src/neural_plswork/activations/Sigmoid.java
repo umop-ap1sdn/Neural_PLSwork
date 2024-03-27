@@ -1,6 +1,7 @@
 package neural_plswork.activations;
 
 import neural_plswork.core.NetworkValue;
+import neural_plswork.math.Matrix;
 import neural_plswork.math.Vector;
 
 public class Sigmoid implements ActivationFunction {
@@ -16,13 +17,19 @@ public class Sigmoid implements ActivationFunction {
     }
 
     @Override
-    public Vector<NetworkValue> derivative(Vector<NetworkValue> unactivated) {
-        Vector<NetworkValue> vector = (Vector<NetworkValue>) unactivated.copy();
-        for(NetworkValue n: vector) {
-            n.setValue(sigmoid(n.getValue()) * (1 - sigmoid(n.getValue())));
+    public Matrix<NetworkValue> derivative(Vector<NetworkValue> unactivated) {
+        Matrix<NetworkValue> jacobian = new Matrix<>(unactivated.getLength(), unactivated.getLength());
+        for(int i = 0; i < jacobian.getRows(); i++) {
+            for(int j = 0; j < jacobian.getColumns(); j++) {
+                if(i == j) {
+                    double value = sigmoid(unactivated.getValue(i).getValue()) * (1.0 - sigmoid(unactivated.getValue(i).getValue()));
+                    jacobian.setValue(new NetworkValue(value), i, j);
+                }
+                else jacobian.setValue(new NetworkValue(0.0), i, j);
+            }
         }
 
-        return vector;
+        return jacobian;
     }
 
     private static double sigmoid(double x) {
