@@ -7,7 +7,7 @@ public interface Penalty {
     public Matrix<NetworkValue> getPenalty(Matrix<NetworkValue> weights);
     public Matrix<NetworkValue> getDerivative(Matrix<NetworkValue> weights);
 
-    public static Penalty getPenalty(WeightPenalizer penalty, double l1, double l2) {
+    public static Penalty getPenalty(WeightPenalizer penalty, double l1, double l2) throws InvalidPenaltyException {
         switch(penalty) {
             case CUSTOM: return null;
             case NONE: return new None();
