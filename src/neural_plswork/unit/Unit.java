@@ -42,4 +42,5 @@ public abstract class Unit {
 
     public abstract ConnectionLayer[] getEntryConnections();
     public abstract NeuronLayer[] getEntryLayers();
+    public abstract NeuronLayer[] getExitLayers();
 }

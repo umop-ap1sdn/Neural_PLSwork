@@ -35,7 +35,7 @@ public class HiddenUnit extends Unit {
             nLayers[0].setEvals(eval, i, thread);
         }
     }
-    
+
     @Override
     public ConnectionLayer[] getEntryConnections() {
         return cLayers;
@@ -43,6 +43,11 @@ public class HiddenUnit extends Unit {
 
     @Override
     public NeuronLayer[] getEntryLayers() {
+        return nLayers;
+    }
+
+    @Override
+    public NeuronLayer[] getExitLayers() {
         return nLayers;
     }
 

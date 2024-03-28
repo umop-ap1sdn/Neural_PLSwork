@@ -51,4 +51,9 @@ public class OutputUnit extends Unit {
         return nLayers;
     }
 
+    @Override
+    public NeuronLayer[] getExitLayers() {
+        return nLayers;
+    }
+
 }
