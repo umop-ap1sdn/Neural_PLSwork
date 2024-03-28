@@ -1,18 +1,18 @@
 package neural_plswork.core;
 
 import java.util.Arrays;
-import java.util.LinkedList;
 
 import neural_plswork.activations.ActivationFunction;
 import neural_plswork.math.Matrix;
 import neural_plswork.math.Vector;
+import neural_plswork.rollingqueue.RollingQueue;
 
 public class NeuronLayer {
     
-    private LinkedList<Vector<NetworkValue>> unactivated;
-    private LinkedList<Vector<NetworkValue>> activated;
-    private LinkedList<Matrix<NetworkValue>> derivative;
-    private LinkedList<Vector<NetworkValue>> eval;
+    private RollingQueue<Vector<NetworkValue>> unactivated;
+    private RollingQueue<Vector<NetworkValue>> activated;
+    private RollingQueue<Matrix<NetworkValue>> derivative;
+    private RollingQueue<Vector<NetworkValue>> eval;
 
     private final ActivationFunction activation;
 
@@ -31,17 +31,17 @@ public class NeuronLayer {
 
     private void initLists() {
 
-        unactivated = new LinkedList<>();
-        activated = new LinkedList<>();
-        derivative = new LinkedList<>();
-        eval = new LinkedList<>();
+        unactivated = new RollingQueue<>(historySize);
+        activated = new RollingQueue<>(historySize);
+        derivative = new RollingQueue<>(historySize);
+        eval = new RollingQueue<>(historySize);
 
         for(int i = 0; i < historySize; i++) {
             double[] initialVector = new double[layerSize];
             Arrays.fill(initialVector, 0);
-            unactivated.addLast(NetworkValue.arrToVector(initialVector));
-            activated.addLast(NetworkValue.arrToVector(initialVector));
-            eval.addLast(NetworkValue.arrToVector(initialVector));
+            unactivated.push(NetworkValue.arrToVector(initialVector));
+            activated.push(NetworkValue.arrToVector(initialVector));
+            eval.push(NetworkValue.arrToVector(initialVector));
             
         }
 
@@ -50,18 +50,20 @@ public class NeuronLayer {
             for(int j = 0; j < layerSize; j++) {
                 Arrays.fill(initialMatrix[j], new NetworkValue());
             }
-            derivative.addLast(new Matrix<NetworkValue>(initialMatrix));
+            derivative.push(new Matrix<NetworkValue>(initialMatrix));
         }
     }
 
     public void activate(Vector<NetworkValue> netSum) {
-        unactivated.addLast(netSum);
-        activated.addLast(activation.activate(netSum));
-        derivative.addLast(activation.derivative(netSum));
+        if(unactivated.size() >= historySize) unactivated.pop();
+        if(activated.size() >= historySize) activated.pop();
+        if(derivative.size() >= historySize) derivative.pop();
+        
+        unactivated.push(netSum);
+        activated.push(activation.activate(netSum));
+        derivative.push(activation.derivative(netSum));
 
-        if(unactivated.size() > historySize) unactivated.pollFirst();
-        if(activated.size() > historySize) activated.pollFirst();
-        if(derivative.size() > historySize) derivative.pollFirst();
+        
         
     }
 
@@ -85,8 +87,8 @@ public class NeuronLayer {
 
         // Check to ensure no shallow copy errors occur here
         for(int i = 0; i < times; i++) {
-            eval.addLast(zeros);
-            eval.pollFirst();
+            eval.pop();
+            eval.push(zeros);
         }
     }
 
