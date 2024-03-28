@@ -53,4 +53,10 @@ public class RollingQueue<T> {
     public int size() {
         return size;
     }
+
+    public void clear() {
+        head = 0;
+        tail = 0;
+        size = 0;
+    }
 }

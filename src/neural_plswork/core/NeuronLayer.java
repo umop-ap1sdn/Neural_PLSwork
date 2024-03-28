@@ -49,10 +49,16 @@ public class NeuronLayer {
     }
 
     public void clear(int thread) {
-        unactivated[thread] = new RollingQueue<Vector<NetworkValue>>(historySize);
-        activated[thread] = new RollingQueue<Vector<NetworkValue>>(historySize);
-        derivative[thread] = new RollingQueue<Matrix<NetworkValue>>(historySize);
-        eval[thread] = new RollingQueue<Vector<NetworkValue>>(historySize);
+        unactivated[thread].clear();
+        activated[thread].clear();
+        derivative[thread].clear();
+        eval[thread].clear();
+    }
+
+    public void clear() {
+        for(int i = 0; i < MAX_THREADS; i++) {
+            clear(i);
+        }
     }
 
     public void activate(Vector<NetworkValue> netSum, int thread) {
