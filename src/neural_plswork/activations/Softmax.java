@@ -9,6 +9,17 @@ public class Softmax implements ActivationFunction {
     @Override
     public Vector<NetworkValue> activate(Vector<NetworkValue> unactivated) {
         Vector<NetworkValue> vector = (Vector<NetworkValue>) unactivated.copy();
+
+        double maxValue = Double.MIN_VALUE;
+        for(NetworkValue n: vector) {
+            if(n.getValue() > maxValue) maxValue = n.getValue();
+        }
+
+        NetworkValue max = new NetworkValue(-1 * maxValue);
+
+        for(int i = 0; i < vector.getLength(); i++) {
+            vector.setValue((NetworkValue) vector.getValue(i).add(max), i);
+        }
         
         double divisor = 0;
         for(NetworkValue n: vector) divisor += Math.exp(n.getValue());
