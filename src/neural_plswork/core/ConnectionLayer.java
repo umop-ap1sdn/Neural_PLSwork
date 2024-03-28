@@ -4,6 +4,7 @@ import neural_plswork.initialize.Initializer;
 import neural_plswork.layers.basic.InputLayer;
 import neural_plswork.layers.basic.OutputLayer;
 import neural_plswork.math.Matrix;
+import neural_plswork.math.MatrixElement;
 import neural_plswork.math.Vector;
 import neural_plswork.optimizer.OptimizationFunction;
 import neural_plswork.regularization.penalize.Penalty;
@@ -112,15 +113,30 @@ public class ConnectionLayer {
     public void adjustWeights(double learning_rate, int steps, boolean descending) {
         for(int time = 0; time < steps; time++) {
             Matrix<NetworkValue> transposed = srcLayer.getValues(time).transpose();
+            
             Matrix<NetworkValue> primaryPenalty = penalty.getDerivative(primaryLayer);
-            if(!descending) primaryPenalty = primaryPenalty.scale(new NetworkValue(-1.0));
+            Vector<NetworkValue> biasPenalty = penalty.getDerivative(biasVector).getAsVector();
+            if(!descending) {
+                primaryPenalty = primaryPenalty.scale(new NetworkValue(-1.0));
+                biasPenalty = biasPenalty.<NetworkValue, MatrixElement>scale(new NetworkValue(-1.0)).getAsVector();
+            }
 
             Matrix<NetworkValue> primaryGradients = destLayer.getEval(time).multiply(transposed);
-            primaryGradients = primaryGradients.add(primaryLayer);
-            Matrix<NetworkValue> primaryDeltas = primaryOptimizer.computeDeltas(primaryGradients, learning_rate);
-            if(descending) primaryDeltas = primaryDeltas.scale(new NetworkValue(-1.0));
+            primaryGradients = primaryGradients.add(primaryPenalty);
+            Vector<NetworkValue> biasGradients = destLayer.getEval(time).copy();
+            biasGradients = biasGradients.<NetworkValue, NetworkValue>add(biasPenalty).getAsVector();
 
-            
+            Matrix<NetworkValue> primaryDeltas = primaryOptimizer.computeDeltas(primaryGradients, learning_rate);
+            Vector<NetworkValue> biasDeltas = biasOptimizer.computeDeltas(biasGradients, learning_rate).getAsVector();
+
+            if(descending) {
+                primaryDeltas = primaryDeltas.scale(new NetworkValue(-1.0));
+                biasDeltas = biasDeltas.<NetworkValue, MatrixElement>scale(new NetworkValue(-1.0)).getAsVector();
+            }
+
+            primaryLayer = primaryLayer.add(primaryDeltas);
+            biasVector = biasVector.<NetworkValue, NetworkValue>add(biasDeltas).getAsVector();
+
         }
     }
 
