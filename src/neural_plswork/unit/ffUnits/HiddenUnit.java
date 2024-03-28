@@ -35,6 +35,7 @@ public class HiddenUnit extends Unit {
             nLayers[0].setEvals(eval, i, thread);
         }
     }
+    
     @Override
     public ConnectionLayer[] getEntryConnections() {
         return cLayers;
