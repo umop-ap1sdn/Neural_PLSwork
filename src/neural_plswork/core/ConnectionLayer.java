@@ -146,9 +146,9 @@ public class ConnectionLayer {
         }
     }
 
-    public void setOptimizer(OptimizationFunction primaryOptimizer, OptimizationFunction biasOptimizer) {
-        this.primaryOptimizer = primaryOptimizer;
-        this.biasOptimizer = biasOptimizer;
+    public void setOptimizer(OptimizationFunction optimizer) {
+        this.primaryOptimizer = optimizer;
+        this.biasOptimizer = optimizer.copy();
     }
 
     public void setPenalty(Penalty penalty) {
