@@ -8,6 +8,8 @@ public interface Penalty {
     public Matrix<NetworkValue> getDerivative(Matrix<NetworkValue> weights);
 
     public static Penalty getPenalty(WeightPenalizer penalty, double l1, double l2) throws InvalidPenaltyException {
+        if(penalty == null) throw new InvalidPenaltyException("Penalty enum is null");
+
         switch(penalty) {
             case CUSTOM: return null;
             case NONE: return new None();
