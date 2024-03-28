@@ -10,4 +10,8 @@ public class StochasticGradientDescent implements OptimizationFunction {
 		return gradients.scale(new NetworkValue(learning_rate));
 	}
     
+	@Override
+	public StochasticGradientDescent copy() {
+		return new StochasticGradientDescent();
+	}
 }
