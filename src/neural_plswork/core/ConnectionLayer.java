@@ -26,7 +26,7 @@ public class ConnectionLayer {
     
     private Penalty penalty;
 
-    public ConnectionLayer(NeuronLayer srcLayer, NeuronLayer destLayer, Initializer initializer, OptimizationFunction primaryOptimizer, OptimizationFunction biasOptimizer, Penalty penalty) throws InvalidNetworkConstructionException {
+    public ConnectionLayer(NeuronLayer srcLayer, NeuronLayer destLayer, Initializer initializer, OptimizationFunction optimizer, Penalty penalty) throws InvalidNetworkConstructionException {
         if(srcLayer instanceof OutputLayer) 
             throw new InvalidNetworkConstructionException("Cannot use Output Layer as Source Layer");
         if(destLayer instanceof InputLayer)
@@ -36,15 +36,15 @@ public class ConnectionLayer {
         this.destLayer = destLayer;
         this.initializer = initializer;
 
-        this.primaryOptimizer = primaryOptimizer;
-        this.biasOptimizer = biasOptimizer;
+        this.primaryOptimizer = optimizer;
+        this.biasOptimizer = optimizer.copy();
         this.penalty = penalty;
 
         this.initialize();
 
     }
 
-    public ConnectionLayer(NeuronLayer srcLayer, NeuronLayer destLayer, Matrix<NetworkValue> primaryLayer, Vector<NetworkValue> biasVector, OptimizationFunction primaryOptimizer, OptimizationFunction biasOptimizer, Penalty penalty) throws InvalidNetworkConstructionException {
+    public ConnectionLayer(NeuronLayer srcLayer, NeuronLayer destLayer, Matrix<NetworkValue> primaryLayer, Vector<NetworkValue> biasVector, OptimizationFunction optimizer, Penalty penalty) throws InvalidNetworkConstructionException {
         if(srcLayer instanceof OutputLayer) 
             throw new InvalidNetworkConstructionException("Cannot use Output Layer as Source Layer");
         if(destLayer instanceof InputLayer)
@@ -56,12 +56,12 @@ public class ConnectionLayer {
         this.primaryLayer = primaryLayer;
         this.biasVector = biasVector;
 
-        this.primaryOptimizer = primaryOptimizer;
-        this.biasOptimizer = biasOptimizer;
+        this.primaryOptimizer = optimizer;
+        this.biasOptimizer = optimizer.copy();
         this.penalty = penalty;
     }
 
-    public ConnectionLayer(NeuronLayer srcLayer, NeuronLayer destLayer, NetworkValue[][] primaryLayer, NetworkValue[] biasVector, OptimizationFunction primaryOptimizer, OptimizationFunction biasOptimizer, Penalty penalty) throws InvalidNetworkConstructionException {
+    public ConnectionLayer(NeuronLayer srcLayer, NeuronLayer destLayer, NetworkValue[][] primaryLayer, NetworkValue[] biasVector, OptimizationFunction optimizer, Penalty penalty) throws InvalidNetworkConstructionException {
         if(srcLayer instanceof OutputLayer) 
             throw new InvalidNetworkConstructionException("Cannot use Output Layer as Source Layer");
         if(destLayer instanceof InputLayer)
@@ -73,8 +73,8 @@ public class ConnectionLayer {
         this.primaryLayer = new Matrix<>(primaryLayer);
         this.biasVector = new Vector<>(biasVector);
 
-        this.primaryOptimizer = primaryOptimizer;
-        this.biasOptimizer = biasOptimizer;
+        this.primaryOptimizer = optimizer;
+        this.biasOptimizer = optimizer.copy();
         this.penalty = penalty;
     }
 
