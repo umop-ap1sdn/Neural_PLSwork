@@ -86,7 +86,7 @@ public class NeuronLayer {
         eval[thread].set(time, evals);
     }
 
-    public void purgeEval(int times, int thread) {
+    public void purgeEval(int thread, int times) {
         double[] empty = new double[layerSize];
         Arrays.fill(empty, 0);
         
@@ -97,6 +97,10 @@ public class NeuronLayer {
             eval[thread].pop();
             eval[thread].push(zeros);
         }
+    }
+
+    public void purgeEval(int thread) {
+        purgeEval(thread, historySize);
     }
 
     public Vector<NetworkValue> getRecentValues(int thread) {

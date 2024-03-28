@@ -50,6 +50,14 @@ public class RollingQueue<T> {
         size++;
     }
 
+    public void pushHead(T value) throws IllegalStateException {
+        if(size >= capacity) throw new IllegalStateException("Cannot push to a full queue");
+        queue[head] = value;
+        head--;
+        if(head < 0) head += capacity;
+        size++;
+    }
+
     public int size() {
         return size;
     }

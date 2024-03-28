@@ -153,4 +153,8 @@ public class ConnectionLayer {
     public void setPenalty(Penalty penalty) {
         this.penalty = penalty;
     }
+
+    public Matrix<NetworkValue> getLayer() {
+        return this.primaryLayer;
+    }
 }
