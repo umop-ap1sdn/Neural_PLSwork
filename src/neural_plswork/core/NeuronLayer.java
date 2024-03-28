@@ -30,28 +30,10 @@ public class NeuronLayer {
     }
 
     private void initLists() {
-
         unactivated = new RollingQueue<>(historySize);
         activated = new RollingQueue<>(historySize);
         derivative = new RollingQueue<>(historySize);
         eval = new RollingQueue<>(historySize);
-
-        for(int i = 0; i < historySize; i++) {
-            double[] initialVector = new double[layerSize];
-            Arrays.fill(initialVector, 0);
-            unactivated.push(NetworkValue.arrToVector(initialVector));
-            activated.push(NetworkValue.arrToVector(initialVector));
-            eval.push(NetworkValue.arrToVector(initialVector));
-            
-        }
-
-        for(int i = 0; i < historySize; i++) {
-            NetworkValue[][] initialMatrix = new NetworkValue[layerSize][layerSize];
-            for(int j = 0; j < layerSize; j++) {
-                Arrays.fill(initialMatrix[j], new NetworkValue());
-            }
-            derivative.push(new Matrix<NetworkValue>(initialMatrix));
-        }
     }
 
     public void activate(Vector<NetworkValue> netSum) {
