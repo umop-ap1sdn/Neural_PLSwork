@@ -4,10 +4,10 @@ import neural_plswork.core.ConnectionLayer;
 import neural_plswork.core.NeuronLayer;
 
 public abstract class Unit {
-    final NeuronLayer[] nLayers;
-    final ConnectionLayer[] cLayers;
+    final protected NeuronLayer[] nLayers;
+    final protected ConnectionLayer[] cLayers;
 
-    final int batchSize;
+    final protected int batchSize;
 
     public Unit(NeuronLayer[] nLayers, ConnectionLayer[] cLayers, int batchSize) {
         this.nLayers = nLayers;
@@ -40,5 +40,6 @@ public abstract class Unit {
     public abstract void forwardPass(int thread);
     public abstract void calcEvals(Unit next, int thread);
 
-    abstract ConnectionLayer[] getEntryConnections();
+    public abstract ConnectionLayer[] getEntryConnections();
+    public abstract NeuronLayer[] getEntryLayers();
 }
