@@ -62,6 +62,7 @@ public class Adam implements OptimizationFunction {
             }
         }
         
+        iteration++;
 
         return ret;
 
