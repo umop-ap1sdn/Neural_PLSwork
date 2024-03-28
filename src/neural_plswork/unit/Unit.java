@@ -38,7 +38,7 @@ public abstract class Unit {
     }
     
     public abstract void forwardPass(int thread);
-    public abstract void calcEvals(int thread);
+    public abstract void calcEvals(Unit next, int thread);
 
     abstract ConnectionLayer[] getEntryConnections();
 }

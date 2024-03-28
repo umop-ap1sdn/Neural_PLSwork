@@ -23,6 +23,7 @@ public class ConnectionLayer {
     private OptimizationFunction primaryOptimizer;
     private OptimizationFunction biasOptimizer;
     
+    
     private Penalty penalty;
 
     public ConnectionLayer(NeuronLayer srcLayer, NeuronLayer destLayer, Initializer initializer, OptimizationFunction primaryOptimizer, OptimizationFunction biasOptimizer, Penalty penalty) throws InvalidNetworkConstructionException {
@@ -103,8 +104,8 @@ public class ConnectionLayer {
 
     public Vector<NetworkValue> forwardPass(Vector<NetworkValue> input) {
         Matrix<NetworkValue> multiplied = primaryLayer.multiply(input);
-        Matrix<NetworkValue> added = multiplied.add(biasVector);
-        return added.getAsVector();
+        if(srcLayer.getBias()) multiplied = multiplied.add(biasVector);
+        return multiplied.getAsVector();
     }
 
     public Vector<NetworkValue> forwardPass(int thread) {
@@ -140,7 +141,7 @@ public class ConnectionLayer {
             }
 
             primaryLayer = primaryLayer.add(primaryDeltas);
-            biasVector = biasVector.<NetworkValue, NetworkValue>add(biasDeltas).getAsVector();
+            if(srcLayer.getBias()) biasVector = biasVector.<NetworkValue, NetworkValue>add(biasDeltas).getAsVector();
 
         }
     }
