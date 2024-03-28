@@ -9,10 +9,10 @@ import neural_plswork.rollingqueue.RollingQueue;
 
 public class NeuronLayer {
     
-    private RollingQueue<Vector<NetworkValue>> unactivated;
-    private RollingQueue<Vector<NetworkValue>> activated;
-    private RollingQueue<Matrix<NetworkValue>> derivative;
-    private RollingQueue<Vector<NetworkValue>> eval;
+    private RollingQueue<Vector<NetworkValue>>[] unactivated;
+    private RollingQueue<Vector<NetworkValue>>[] activated;
+    private RollingQueue<Matrix<NetworkValue>>[] derivative;
+    private RollingQueue<Vector<NetworkValue>>[] eval;
 
     private final ActivationFunction activation;
 
@@ -20,48 +20,67 @@ public class NeuronLayer {
     private final int historySize;
     private final boolean bias;
 
-    public NeuronLayer(ActivationFunction activation, int layerSize, int historySize, boolean bias) {
+    private final int MAX_THREADS;
+
+    public NeuronLayer(ActivationFunction activation, int layerSize, int historySize, boolean bias, int MAX_THREADS) {
         this.activation = activation;
         this.layerSize = layerSize;
         this.historySize = historySize;
         this.bias = bias;
 
+        this.MAX_THREADS = MAX_THREADS;
+
         initLists();
     }
 
+    @SuppressWarnings("unchecked")
     private void initLists() {
-        unactivated = new RollingQueue<>(historySize);
-        activated = new RollingQueue<>(historySize);
-        derivative = new RollingQueue<>(historySize);
-        eval = new RollingQueue<>(historySize);
+        unactivated = new RollingQueue[MAX_THREADS];
+        activated = new RollingQueue[MAX_THREADS];
+        derivative = new RollingQueue[MAX_THREADS];
+        eval = new RollingQueue[MAX_THREADS];
+
+        for(int i = 0; i < MAX_THREADS; i++) {
+            unactivated[i] = new RollingQueue<Vector<NetworkValue>>(historySize);
+            activated[i] = new RollingQueue<Vector<NetworkValue>>(historySize);
+            derivative[i] = new RollingQueue<Matrix<NetworkValue>>(historySize);
+            eval[i] = new RollingQueue<Vector<NetworkValue>>(historySize);
+        }
     }
 
-    public void activate(Vector<NetworkValue> netSum) {
-        if(unactivated.size() >= historySize) unactivated.pop();
-        if(activated.size() >= historySize) activated.pop();
-        if(derivative.size() >= historySize) derivative.pop();
+    public void clear(int thread) {
+        unactivated[thread] = new RollingQueue<Vector<NetworkValue>>(historySize);
+        activated[thread] = new RollingQueue<Vector<NetworkValue>>(historySize);
+        derivative[thread] = new RollingQueue<Matrix<NetworkValue>>(historySize);
+        eval[thread] = new RollingQueue<Vector<NetworkValue>>(historySize);
+    }
+
+    public void activate(Vector<NetworkValue> netSum, int thread) {
+        if(unactivated[thread].size() >= historySize) unactivated[thread].pop();
+        if(activated[thread].size() >= historySize) activated[thread].pop();
+        if(derivative[thread].size() >= historySize) derivative[thread].pop();
         
-        unactivated.push(netSum);
-        activated.push(activation.activate(netSum));
-        derivative.push(activation.derivative(netSum));
+        unactivated[thread].push(netSum);
+        activated[thread].push(activation.activate(netSum));
+        derivative[thread].push(activation.derivative(netSum));
 
         
         
     }
 
-    public Vector<NetworkValue> calculateEval(Vector<NetworkValue> nextErrs, Matrix<NetworkValue> weightsT, int time) {
+    public Vector<NetworkValue> calculateEval(Vector<NetworkValue> nextErrs, Matrix<NetworkValue> weightsT, int time, int thread) {
         // WeightsT may be changed to MatrixElement in the future, to allow for identity matrices to be used
         Matrix<NetworkValue> multiplied = weightsT.multiply(nextErrs);
         // Matrix<NetworkValue> pointwise = multiplied.pointwiseMultiply(derivative.get(time));
-        multiplied = derivative.get(time).multiply(multiplied);
+        multiplied = derivative[thread].get(time).multiply(multiplied);
         return multiplied.getAsVector();
     }
 
-    public void setEvals(Vector<NetworkValue> evals, int time) {
-        eval.set(time, evals);
+    public void setEvals(Vector<NetworkValue> evals, int time, int thread) {
+        eval[thread].set(time, evals);
     }
 
-    public void purgeEval(int times) {
+    public void purgeEval(int times, int thread) {
         double[] empty = new double[layerSize];
         Arrays.fill(empty, 0);
         
@@ -69,29 +88,29 @@ public class NeuronLayer {
 
         // Check to ensure no shallow copy errors occur here
         for(int i = 0; i < times; i++) {
-            eval.pop();
-            eval.push(zeros);
+            eval[thread].pop();
+            eval[thread].push(zeros);
         }
     }
 
-    public Vector<NetworkValue> getRecentValues() {
-        return activated.getLast();
+    public Vector<NetworkValue> getRecentValues(int thread) {
+        return activated[thread].getLast();
     }
 
-    public Matrix<NetworkValue> getRecentDerivative() {
-        return derivative.getLast();
+    public Matrix<NetworkValue> getRecentDerivative(int thread) {
+        return derivative[thread].getLast();
     }
 
-    public Vector<NetworkValue> getValues(int time) {
-        return activated.get(time);
+    public Vector<NetworkValue> getValues(int time, int thread) {
+        return activated[thread].get(time);
     }
 
-    public Matrix<NetworkValue> getDerivatives(int time) {
-        return derivative.get(time);
+    public Matrix<NetworkValue> getDerivatives(int time, int thread) {
+        return derivative[thread].get(time);
     }
 
-    public Vector<NetworkValue> getEval(int time) {
-        return eval.get(time);
+    public Vector<NetworkValue> getEval(int time, int thread) {
+        return eval[thread].get(time);
     }
 
     public int size() {

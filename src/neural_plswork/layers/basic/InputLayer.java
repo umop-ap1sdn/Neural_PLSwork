@@ -10,16 +10,16 @@ import neural_plswork.math.Vector;
 
 public class InputLayer extends NeuronLayer {
     
-    public InputLayer(int layerSize, int historySize, boolean bias) {
-        super(new Linear(), layerSize, historySize, bias);
+    public InputLayer(int layerSize, int historySize, boolean bias, int MAX_THREADS) {
+        super(new Linear(), layerSize, historySize, bias, MAX_THREADS);
     }
 
-    public void setInputs(Vector<NetworkValue> inputs) {
-        super.activate(inputs);
+    public void setInputs(Vector<NetworkValue> inputs, int thread) {
+        super.activate(inputs, thread);
     }
 
     @Override
-    public Vector<NetworkValue> calculateEval(Vector<NetworkValue> unused0, Matrix<NetworkValue> unused1, int time) {
+    public Vector<NetworkValue> calculateEval(Vector<NetworkValue> unused0, Matrix<NetworkValue> unused1, int time, int thread) {
         double[] errors = new double[super.size()];
         Arrays.fill(errors, 0);
         return NetworkValue.arrToVector(errors);

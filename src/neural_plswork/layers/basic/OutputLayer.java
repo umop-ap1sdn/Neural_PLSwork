@@ -11,23 +11,23 @@ public class OutputLayer extends NeuronLayer {
 
     private Differentiable evaluation;
 
-    public OutputLayer(Differentiable evaluation, ActivationFunction activation, int layerSize, int historySize) {
-        super(activation, layerSize, historySize, false);
+    public OutputLayer(Differentiable evaluation, ActivationFunction activation, int layerSize, int historySize, int MAX_THREADS) {
+        super(activation, layerSize, historySize, false, MAX_THREADS);
         this.evaluation = evaluation;
     }
 
-    public Vector<NetworkValue> getOutput() {
-        return super.getRecentValues();
+    public Vector<NetworkValue> getOutput(int thread) {
+        return super.getRecentValues(thread);
     }
 
-    public Vector<NetworkValue> getOutput(int time) {
-        return super.getValues(time);
+    public Vector<NetworkValue> getOutput(int time, int thread) {
+        return super.getValues(time, thread);
     }
 
     @Override
-    public Vector<NetworkValue> calculateEval(Vector<NetworkValue> target, Matrix<NetworkValue> unused, int time) {
-        Vector<NetworkValue> eval = evaluation.calculateDerivative(target, getValues(time));
-        Matrix<NetworkValue> evalMat = getDerivatives(time).multiply(eval);
+    public Vector<NetworkValue> calculateEval(Vector<NetworkValue> target, Matrix<NetworkValue> unused, int time, int thread) {
+        Vector<NetworkValue> eval = evaluation.calculateDerivative(target, getValues(time, thread));
+        Matrix<NetworkValue> evalMat = getDerivatives(time, thread).multiply(eval);
         return evalMat.getAsVector();
     }
 

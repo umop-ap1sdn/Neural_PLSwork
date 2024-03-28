@@ -106,13 +106,13 @@ public class ConnectionLayer {
         return added.getAsVector();
     }
 
-    public Vector<NetworkValue> forwardPass() {
-        return forwardPass(srcLayer.getRecentValues());
+    public Vector<NetworkValue> forwardPass(int thread) {
+        return forwardPass(srcLayer.getRecentValues(thread));
     }
 
-    public void adjustWeights(double learning_rate, int steps, boolean descending) {
+    public void adjustWeights(double learning_rate, int steps, boolean descending, int thread) {
         for(int time = 0; time < steps; time++) {
-            Matrix<NetworkValue> transposed = srcLayer.getValues(time).transpose();
+            Matrix<NetworkValue> transposed = srcLayer.getValues(time, thread).transpose();
             
             Matrix<NetworkValue> primaryPenalty = penalty.getDerivative(primaryLayer);
             Vector<NetworkValue> biasPenalty = penalty.getDerivative(biasVector).getAsVector();
@@ -121,9 +121,9 @@ public class ConnectionLayer {
                 biasPenalty = biasPenalty.<NetworkValue, MatrixElement>scale(new NetworkValue(-1.0)).getAsVector();
             }
 
-            Matrix<NetworkValue> primaryGradients = destLayer.getEval(time).multiply(transposed);
+            Matrix<NetworkValue> primaryGradients = destLayer.getEval(time, thread).multiply(transposed);
             primaryGradients = primaryGradients.add(primaryPenalty);
-            Vector<NetworkValue> biasGradients = destLayer.getEval(time).copy();
+            Vector<NetworkValue> biasGradients = destLayer.getEval(time, thread).copy();
             biasGradients = biasGradients.<NetworkValue, NetworkValue>add(biasPenalty).getAsVector();
 
             Matrix<NetworkValue> primaryDeltas = primaryOptimizer.computeDeltas(primaryGradients, learning_rate);
