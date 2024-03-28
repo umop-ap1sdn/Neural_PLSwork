@@ -4,6 +4,7 @@ public enum Loss {
     CUSTOM(0),
     MSE(1),
     BCE(2),
+    CE(3),
     INVALID(-1);
 
 
@@ -20,6 +21,8 @@ public enum Loss {
                 return MSE;
             case 2:
                 return BCE;
+            case 3:
+                return CE;
             default:
                 return INVALID;
         }

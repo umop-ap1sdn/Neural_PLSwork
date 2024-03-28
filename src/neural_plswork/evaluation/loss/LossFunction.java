@@ -13,15 +13,15 @@ public interface LossFunction extends Evaluation {
     }
 
     public static LossFunction getFunction(Loss loss, int batchSize) throws InvalidLossException {
-        if(loss == null) throw new InvalidLossException("Activation enum is null");
+        if(loss == null) throw new InvalidLossException("Loss enum is null");
         
         switch(loss) {
             case CUSTOM: return null;
             case MSE: return new MeanSquaredError(batchSize);
             case BCE: return new BinaryCrossEntropy(batchSize);
+            case CE: return new CrossEntropy(batchSize);
             case INVALID: throw new InvalidLossException();
+            default: throw new InvalidLossException();
         }
-
-        return null;
     }
 }
