@@ -9,14 +9,19 @@ import neural_plswork.unit.Unit;
 
 public class HiddenUnit extends Unit {
     
-    public HiddenUnit(NeuronLayer nLayer, ConnectionLayer cLayer, int batchSize) {
-        super(new NeuronLayer[]{nLayer}, new ConnectionLayer[]{cLayer}, batchSize);
+    public HiddenUnit(NeuronLayer nLayer, ConnectionLayer[] cLayers, int batchSize) {
+        super(new NeuronLayer[]{nLayer}, cLayers, batchSize);
         
     }
     
     @Override
     public void forwardPass(int thread) {
-        Vector<NetworkValue> netSum = cLayers[0].forwardPass(thread);
+        Vector<NetworkValue> netSum = null;
+        for(ConnectionLayer c: cLayers) {
+            if(netSum == null) netSum = c.forwardPass(thread);
+            else netSum = netSum.<NetworkValue, NetworkValue>add(c.forwardPass(thread)).getAsVector();
+        }
+
         nLayers[0].activate(netSum, thread);
     }
 
