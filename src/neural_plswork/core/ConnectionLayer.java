@@ -6,6 +6,7 @@ import neural_plswork.layers.basic.OutputLayer;
 import neural_plswork.math.Matrix;
 import neural_plswork.math.MatrixElement;
 import neural_plswork.math.Vector;
+import neural_plswork.network.InvalidNetworkConstructionException;
 import neural_plswork.optimizer.OptimizationFunction;
 import neural_plswork.regularization.penalize.None;
 import neural_plswork.regularization.penalize.Penalty;
