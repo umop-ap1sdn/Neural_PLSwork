@@ -52,8 +52,12 @@ public class NetworkBuilder {
         this.penalty = Penalty.getPenalty(penalizer, l1, l2);
     }
 
-    public void setEvaluator(Loss loss) {
-        this.evaluator = (Differentiable) LossFunction.getFunction(loss, BATCH_SIZE);
+    public void setEvaluator(Loss loss) throws InvalidNetworkConstructionException {
+        try {
+            this.evaluator = (Differentiable) LossFunction.getFunction(loss, BATCH_SIZE);
+        } catch (ClassCastException e) {
+            throw new InvalidNetworkConstructionException("Evaluation function must be Differentiable");
+        }
     }
 
     public void setEvaluator(Differentiable eval) {
