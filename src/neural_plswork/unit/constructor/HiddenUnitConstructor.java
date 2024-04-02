@@ -19,7 +19,7 @@ public class HiddenUnitConstructor implements UnitConstructor {
         // HiddenUnit constructor
         if(activation.length != 1 || layerSize.length != 1 || bias.length != 1) 
             throw new InvalidNetworkConstructionException("HiddenUnit can only have 1 layer");
-        if(initializer.length != prior.length && optimizer.length != prior.length)
+        if(initializer.length != prior.length && optimizer.length != prior.length || penalty.length != prior.length)
             throw new InvalidNetworkConstructionException("ConnectionLayer parameters must be equal to number of ConnectionLayers");
         
         NeuronLayer hiddenLayer = new NeuronLayer(activation[0], layerSize[0], historyLength, bias[0], MAX_THREADS);
