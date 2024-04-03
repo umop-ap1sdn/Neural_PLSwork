@@ -9,7 +9,7 @@ import neural_plswork.regularization.penalize.Penalty;
 import neural_plswork.unit.Unit;
 
 public interface UnitConstructor {
-    public Unit construct(NeuronLayer[] prior, ActivationFunction[] activation, int[] layerSize, 
-            boolean[] bias, Initializer[] initializer, Penalty[] penalty,
+    public Unit construct(NeuronLayer[] prior, ActivationFunction[] activation, Integer[] layerSize, 
+            Boolean[] bias, Initializer[] initializer, Penalty[] penalty,
             OptimizationFunction[] optimizer, int historyLength, int MAX_THREADS) throws InvalidNetworkConstructionException;
 }

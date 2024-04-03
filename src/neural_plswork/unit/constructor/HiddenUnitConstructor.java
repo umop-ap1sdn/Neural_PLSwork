@@ -12,8 +12,8 @@ import neural_plswork.unit.ffUnits.HiddenUnit;
 public class HiddenUnitConstructor implements UnitConstructor {
 
     @Override
-    public HiddenUnit construct(NeuronLayer[] prior, ActivationFunction[] activation, int[] layerSize,
-            boolean[] bias, Initializer[] initializer, Penalty[] penalty,
+    public HiddenUnit construct(NeuronLayer[] prior, ActivationFunction[] activation, Integer[] layerSize,
+            Boolean[] bias, Initializer[] initializer, Penalty[] penalty,
             OptimizationFunction[] optimizer, int historyLength, int MAX_THREADS) throws InvalidNetworkConstructionException {
         // HiddenUnit constructor
         if(activation.length != 1 || layerSize.length != 1 || bias.length != 1) 

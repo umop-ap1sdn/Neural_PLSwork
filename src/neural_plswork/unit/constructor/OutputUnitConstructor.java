@@ -20,8 +20,8 @@ public class OutputUnitConstructor implements UnitConstructor {
     }
 
     @Override
-    public OutputUnit construct(NeuronLayer[] prior, ActivationFunction[] activation, int[] layerSize,
-            boolean[] bias, Initializer[] initializer, Penalty[] penalty,
+    public OutputUnit construct(NeuronLayer[] prior, ActivationFunction[] activation, Integer[] layerSize,
+            Boolean[] bias, Initializer[] initializer, Penalty[] penalty,
             OptimizationFunction[] optimizer, int historyLength, int MAX_THREADS) throws InvalidNetworkConstructionException {
         // HiddenUnit constructor
         if(activation.length != 1 || layerSize.length != 1 || bias.length != 0) 
