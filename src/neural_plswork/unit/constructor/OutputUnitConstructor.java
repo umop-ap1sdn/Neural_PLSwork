@@ -26,18 +26,19 @@ public class OutputUnitConstructor implements UnitConstructor {
         // HiddenUnit constructor
         if(activation.length != 1 || layerSize.length != 1 || bias.length != 0) 
             throw new InvalidNetworkConstructionException("OutputUnit can only have 1 layer and no bias");
-        if(initializer.length != prior.length && optimizer.length != prior.length || penalty.length != prior.length)
-            throw new InvalidNetworkConstructionException("ConnectionLayer parameters must be equal to number of ConnectionLayers");
+        // if(initializer.length != prior.length && optimizer.length != prior.length || penalty.length != prior.length)
+        //   throw new InvalidNetworkConstructionException("ConnectionLayer parameters must be equal to number of ConnectionLayers");
         
-        OutputLayer hiddenLayer = new OutputLayer(eval, activation[0], layerSize[0], historyLength, MAX_THREADS);
+        OutputLayer outputLayer = new OutputLayer(eval, activation[0], layerSize[0], historyLength, MAX_THREADS);
 
         ConnectionLayer[] cLayers = new ConnectionLayer[prior.length];
 
         for(int i = 0; i < cLayers.length; i++) {
-            cLayers[i] = new ConnectionLayer(prior[i], hiddenLayer, initializer[i], optimizer[i], penalty[i]);
+            cLayers[i] = new ConnectionLayer(prior[i], outputLayer, initializer[i % cLayers.length], 
+                optimizer[i % cLayers.length], penalty[i % cLayers.length]);
         }
 
-        return new OutputUnit(hiddenLayer, cLayers, historyLength);
+        return new OutputUnit(outputLayer, cLayers, historyLength);
     }
     
 }
