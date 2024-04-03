@@ -130,4 +130,12 @@ public class NeuronLayer {
     public boolean getBias() {
         return bias;
     }
+
+    public final int HISTORY_SIZE() {
+        return this.historySize;
+    }
+
+    public final int MAX_THREADS() {
+        return this.MAX_THREADS;
+    }
 }

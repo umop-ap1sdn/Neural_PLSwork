@@ -36,6 +36,14 @@ public abstract class Unit {
             c.adjustWeights(lr, batchSize, descending, thread);
         }
     }
+
+    public final boolean validityCheck(int historySize, int MAX_THREADS) {
+        for(NeuronLayer n: nLayers) {
+            if(n.HISTORY_SIZE() != historySize || n.MAX_THREADS() != MAX_THREADS) return false;
+        }
+
+        return true;
+    }
     
     public abstract void forwardPass(int thread);
     public abstract void calcEvals(Unit next, int thread);
