@@ -28,5 +28,10 @@ public class None implements Penalty {
 
         return new Matrix<>(ret);
 	}
+
+    @Override
+    public None copy() {
+        return new None();
+    }
     
 }

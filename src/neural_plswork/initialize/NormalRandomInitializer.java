@@ -59,4 +59,9 @@ public class NormalRandomInitializer implements Initializer {
         random *= sigma;
         return new NetworkValue(random);
     }
+
+    @Override
+    public NormalRandomInitializer copy() {
+        return new NormalRandomInitializer(rand, mean, variance);
+    }
 }

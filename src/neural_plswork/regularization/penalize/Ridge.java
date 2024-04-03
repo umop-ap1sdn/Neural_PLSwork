@@ -32,5 +32,9 @@ public class Ridge implements Penalty {
         return derivative;
 	}
 
+    @Override
+    public Ridge copy() {
+        return new Ridge(lambda);
+    }
     
 }

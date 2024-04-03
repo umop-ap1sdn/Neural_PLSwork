@@ -1,11 +1,13 @@
 package neural_plswork.regularization.penalize;
 
+import neural_plswork.core.Copiable;
 import neural_plswork.core.NetworkValue;
 import neural_plswork.math.Matrix;
 
-public interface Penalty {
+public interface Penalty extends Copiable {
     public Matrix<NetworkValue> getPenalty(Matrix<NetworkValue> weights);
     public Matrix<NetworkValue> getDerivative(Matrix<NetworkValue> weights);
+    public Penalty copy();
 
     public static Penalty getPenalty(WeightPenalizer penalty, double l1, double l2) throws InvalidPenaltyException {
         if(penalty == null) throw new InvalidPenaltyException("Penalty enum is null");

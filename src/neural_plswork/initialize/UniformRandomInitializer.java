@@ -55,4 +55,9 @@ public class UniformRandomInitializer implements Initializer {
 
         return new NetworkValue(random);
     }
+
+    @Override
+    public UniformRandomInitializer copy() {
+        return new UniformRandomInitializer(rand, min, max);
+    }
 }

@@ -13,7 +13,13 @@ public class ConstantInitializer implements Initializer {
         constant = 0;
     }
 
+    @Override
     public NetworkValue getNextWeight(int row, int col) {
         return new NetworkValue(constant);
+    }
+
+    @Override
+    public ConstantInitializer copy() {
+        return new ConstantInitializer(constant);
     }
 }

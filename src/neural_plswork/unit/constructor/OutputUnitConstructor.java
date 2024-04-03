@@ -34,8 +34,8 @@ public class OutputUnitConstructor implements UnitConstructor {
         ConnectionLayer[] cLayers = new ConnectionLayer[prior.length];
 
         for(int i = 0; i < cLayers.length; i++) {
-            cLayers[i] = new ConnectionLayer(prior[i], outputLayer, initializer[i % cLayers.length], 
-                optimizer[i % cLayers.length], penalty[i % cLayers.length]);
+            cLayers[i] = new ConnectionLayer(prior[i], outputLayer, initializer[i % cLayers.length].copy(), 
+                optimizer[i % cLayers.length].copy(), penalty[i % cLayers.length].copy());
         }
 
         return new OutputUnit(outputLayer, cLayers, historyLength);

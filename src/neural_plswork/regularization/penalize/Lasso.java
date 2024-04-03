@@ -37,5 +37,8 @@ public class Lasso implements Penalty {
         return new Matrix<NetworkValue>(derivative);
 	}
 
-    
+    @Override
+    public Lasso copy() {
+        return new Lasso(lambda);
+    }
 }
