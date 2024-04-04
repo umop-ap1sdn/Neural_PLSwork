@@ -96,9 +96,13 @@ public class NetworkBuilder {
         
         Object[][] prepedParams = parseParams(params);
 
-        Initializer[] initArgs = (Initializer[]) prepedParams[0];
-        Penalty[] penArgs = (Penalty[]) prepedParams[1];
-        OptimizationFunction[] optimArgs = (OptimizationFunction[]) prepedParams[2];
+        Initializer[] initArgs = new Initializer[prepedParams[0].length];
+        Penalty[] penArgs = new Penalty[prepedParams[1].length];
+        OptimizationFunction[] optimArgs = new OptimizationFunction[prepedParams[2].length];
+
+        for(int i = 0; i < initArgs.length; i++) initArgs[i] = (Initializer) prepedParams[0][i];
+        for(int i = 0; i < penArgs.length; i++) penArgs[i] = (Penalty) prepedParams[1][i];
+        for(int i = 0; i < optimArgs.length; i++) optimArgs[i] = (OptimizationFunction) prepedParams[2][i];
         
         NeuronLayer[] prior = {input};
         if(hidden.size() > 0) prior = hidden.get(hidden.size() - 1).getExitLayers();
@@ -117,9 +121,14 @@ public class NetworkBuilder {
         ActivationFunction[] activations = convert(activation);
         Object[][] prepedParams = parseParams(params);
 
-        Initializer[] initArgs = (Initializer[]) prepedParams[0];
-        Penalty[] penArgs = (Penalty[]) prepedParams[1];
-        OptimizationFunction[] optimArgs = (OptimizationFunction[]) prepedParams[2];
+        Initializer[] initArgs = new Initializer[prepedParams[0].length];
+        Penalty[] penArgs = new Penalty[prepedParams[1].length];
+        OptimizationFunction[] optimArgs = new OptimizationFunction[prepedParams[2].length];
+
+        for(int i = 0; i < initArgs.length; i++) initArgs[i] = (Initializer) prepedParams[0][i];
+        for(int i = 0; i < penArgs.length; i++) penArgs[i] = (Penalty) prepedParams[1][i];
+        for(int i = 0; i < optimArgs.length; i++) optimArgs[i] = (OptimizationFunction) prepedParams[2][i];
+        
         
         NeuronLayer[] prior = {input};
         if(hidden.size() > 0) prior = hidden.get(hidden.size() - 1).getExitLayers();
@@ -136,12 +145,16 @@ public class NetworkBuilder {
     
         Object[][] prepedParams = parseParams(params);
 
-        Initializer[] initArgs = (Initializer[]) prepedParams[0];
-        Penalty[] penArgs = (Penalty[]) prepedParams[1];
-        OptimizationFunction[] optimArgs = (OptimizationFunction[]) prepedParams[2];
+        Initializer[] initArgs = new Initializer[prepedParams[0].length];
+        Penalty[] penArgs = new Penalty[prepedParams[1].length];
+        OptimizationFunction[] optimArgs = new OptimizationFunction[prepedParams[2].length];
+
+        for(int i = 0; i < initArgs.length; i++) initArgs[i] = (Initializer) prepedParams[0][i];
+        for(int i = 0; i < penArgs.length; i++) penArgs[i] = (Penalty) prepedParams[1][i];
+        for(int i = 0; i < optimArgs.length; i++) optimArgs[i] = (OptimizationFunction) prepedParams[2][i];
         
         NeuronLayer[] prior = {input};
-        if(hidden.size() > 0) prior = hidden.get(hidden.size() - 1).getExitLayers();
+        if(hidden.size() > 0) prior = hidden.get (hidden.size() - 1).getExitLayers();
         
         output = new OutputUnitConstructor(evaluator).construct(prior, activations, layerSizes, bias, initArgs, penArgs, optimArgs, BATCH_SIZE, MAX_THREADS);
         
@@ -156,9 +169,13 @@ public class NetworkBuilder {
         ActivationFunction[] activation = convert(activations);
         Object[][] prepedParams = parseParams(params);
 
-        Initializer[] initArgs = (Initializer[]) prepedParams[0];
-        Penalty[] penArgs = (Penalty[]) prepedParams[1];
-        OptimizationFunction[] optimArgs = (OptimizationFunction[]) prepedParams[2];
+        Initializer[] initArgs = new Initializer[prepedParams[0].length];
+        Penalty[] penArgs = new Penalty[prepedParams[1].length];
+        OptimizationFunction[] optimArgs = new OptimizationFunction[prepedParams[2].length];
+
+        for(int i = 0; i < initArgs.length; i++) initArgs[i] = (Initializer) prepedParams[0][i];
+        for(int i = 0; i < penArgs.length; i++) penArgs[i] = (Penalty) prepedParams[1][i];
+        for(int i = 0; i < optimArgs.length; i++) optimArgs[i] = (OptimizationFunction) prepedParams[2][i];
         
         NeuronLayer[] prior = {input};
         if(hidden.size() > 0) prior = hidden.get(hidden.size() - 1).getExitLayers();
@@ -175,7 +192,7 @@ public class NetworkBuilder {
             if(i < params.length) {
                 switch(i) {
                     case 0:
-                        if(params[i] instanceof WeightInitializer[]) ret[i] = convert((WeightInitializer[]) params[i]);
+                        if(params[i] instanceof WeightInitializer[]) ret[i] = (Initializer[]) convert((WeightInitializer[]) params[i]);
                         else ret[i] = params[i];
                         break;
                     case 1:
