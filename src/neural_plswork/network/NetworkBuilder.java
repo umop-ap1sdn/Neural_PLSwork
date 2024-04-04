@@ -91,7 +91,7 @@ public class NetworkBuilder {
     public boolean appendHiddenUnit(HiddenUnitConstructor constructor, ActivationFunction[] activations, Integer[] layerSizes, 
         Boolean[] bias, Object[]...params) throws InvalidNetworkConstructionException {
         
-        if(input == null) throw new InvalidNetworkConstructionException("Must be created after instantiating InputLayer");
+        if(input == null) throw new InvalidNetworkConstructionException("Hidden Unit must only be created after instantiating InputLayer");
         if(output != null) throw new InvalidNetworkConstructionException("Cannot add hidden layers after output has been instantiated");
         
         Object[][] prepedParams = parseParams(params);
@@ -115,7 +115,7 @@ public class NetworkBuilder {
     public boolean appendHiddenUnit(HiddenUnitConstructor constructor, Activation[] activation, Integer[] layerSizes, 
         Boolean[] bias, Object[]...params) throws InvalidNetworkConstructionException {
         
-        if(input == null) throw new InvalidNetworkConstructionException("Must be created after instantiating InputLayer");
+        if(input == null) throw new InvalidNetworkConstructionException("Hidden Unit must only be created after instantiating InputLayer");
         if(output != null) throw new InvalidNetworkConstructionException("Cannot add hidden layers after output has been instantiated");
         
         ActivationFunction[] activations = convert(activation);
@@ -138,10 +138,10 @@ public class NetworkBuilder {
         return true;
     }
 
-    public boolean appendOutputUnit(ActivationFunction[] activations, Integer[] layerSizes, Boolean[] bias, 
+    public boolean appendOutputUnit(ActivationFunction activation, Integer layerSize, 
         Object[]... params) throws InvalidNetworkConstructionException {
 
-        if(input == null) throw new InvalidNetworkConstructionException("Must be created after instantiating InputLayer");
+        if(input == null) throw new InvalidNetworkConstructionException("Output must only be created after instantiating InputLayer");
     
         Object[][] prepedParams = parseParams(params);
 
@@ -156,17 +156,17 @@ public class NetworkBuilder {
         NeuronLayer[] prior = {input};
         if(hidden.size() > 0) prior = hidden.get (hidden.size() - 1).getExitLayers();
         
-        output = new OutputUnitConstructor(evaluator).construct(prior, activations, layerSizes, bias, initArgs, penArgs, optimArgs, BATCH_SIZE, MAX_THREADS);
+        output = new OutputUnitConstructor(evaluator).construct(prior, new ActivationFunction[]{activation}, new Integer[]{layerSize}, new Boolean[]{}, initArgs, penArgs, optimArgs, BATCH_SIZE, MAX_THREADS);
         
         return true;
     }
 
-    public boolean appendOutputUnit(Activation[] activations, Integer[] layerSizes, Boolean[] bias, 
+    public boolean appendOutputUnit(Activation activate, Integer layerSize, 
         Object[]... params) throws InvalidNetworkConstructionException {
 
-        if(input == null) throw new InvalidNetworkConstructionException("Must be created after instantiating InputLayer");
+        if(input == null) throw new InvalidNetworkConstructionException("Output must only be created after instantiating InputLayer");
         
-        ActivationFunction[] activation = convert(activations);
+        ActivationFunction[] activation = new ActivationFunction[]{ActivationFunction.getFunction(activate)};
         Object[][] prepedParams = parseParams(params);
 
         Initializer[] initArgs = new Initializer[prepedParams[0].length];
@@ -180,7 +180,7 @@ public class NetworkBuilder {
         NeuronLayer[] prior = {input};
         if(hidden.size() > 0) prior = hidden.get(hidden.size() - 1).getExitLayers();
         
-        output = new OutputUnitConstructor(evaluator).construct(prior, activation, layerSizes, bias, initArgs, penArgs, optimArgs, BATCH_SIZE, MAX_THREADS);
+        output = new OutputUnitConstructor(evaluator).construct(prior, activation, new Integer[]{layerSize}, new Boolean[]{}, initArgs, penArgs, optimArgs, BATCH_SIZE, MAX_THREADS);
         
         return true;
     }
