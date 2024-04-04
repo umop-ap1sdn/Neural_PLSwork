@@ -7,10 +7,10 @@ public interface Initializer extends Copiable {
     public NetworkValue getNextWeight(int row, int column);
     public Initializer copy();
 
-    public static Initializer getInitializer(WeightInitializer intiializer) throws InvalidInitializationException {
-        if(intiializer == null) throw new InvalidInitializationException("Penalty enum is null");
+    public static Initializer getInitializer(WeightInitializer initializer) throws InvalidInitializationException {
+        if(initializer == null) throw new InvalidInitializationException("Penalty enum is null");
 
-        switch(intiializer) {
+        switch(initializer) {
             case CUSTOM: return null;
             case UNIF: return new UniformRandomInitializer();
             case NORMAL: return new UniformRandomInitializer();

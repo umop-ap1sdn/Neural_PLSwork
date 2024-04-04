@@ -24,13 +24,12 @@ import neural_plswork.unit.constructor.OutputUnitConstructor;
 import neural_plswork.unit.ffUnits.OutputUnit;
 
 public class NetworkBuilder {
-    private final Initializer DEFAULT_INITIALIZER;
-    private static final Penalty DEFAULT_PENALTY = Penalty.getPenalty(WeightPenalizer.NONE, 0, 0);
-    private static final OptimizationFunction DEFAULT_OPTIMIZER = OptimizationFunction.getFunction(Optimizer.SGD);
+    private Initializer DEFAULT_INITIALIZER;
+    private Penalty DEFAULT_PENALTY = Penalty.getPenalty(WeightPenalizer.NONE, 0, 0);
+    private OptimizationFunction DEFAULT_OPTIMIZER = OptimizationFunction.getFunction(Optimizer.SGD);
     private final Differentiable DEFAULT_TRAINING_EVALUATOR;
     private final Evaluation DEFAULT_REPORTING_EVALUATOR;
 
-    private Penalty penalty;
     private Differentiable evaluator;
     private Evaluation reporter;
 
@@ -53,7 +52,6 @@ public class NetworkBuilder {
         DEFAULT_TRAINING_EVALUATOR = (Differentiable) LossFunction.getFunction(Loss.MSE, BATCH_SIZE);
         DEFAULT_REPORTING_EVALUATOR = LossFunction.getFunction(Loss.MSE, BATCH_SIZE);
 
-        this.penalty = DEFAULT_PENALTY;
         this.evaluator = DEFAULT_TRAINING_EVALUATOR;
         this.reporter = DEFAULT_REPORTING_EVALUATOR;
 
@@ -70,7 +68,6 @@ public class NetworkBuilder {
         DEFAULT_TRAINING_EVALUATOR = (Differentiable) LossFunction.getFunction(Loss.MSE, BATCH_SIZE);
         DEFAULT_REPORTING_EVALUATOR = LossFunction.getFunction(Loss.MSE, BATCH_SIZE);
 
-        this.penalty = DEFAULT_PENALTY;
         this.evaluator = DEFAULT_TRAINING_EVALUATOR;
         this.reporter = DEFAULT_REPORTING_EVALUATOR;
 
@@ -266,10 +263,6 @@ public class NetworkBuilder {
         return ret;
     }
 
-    public void setPenalty(WeightPenalizer penalizer, double l1, double l2) {
-        this.penalty = Penalty.getPenalty(penalizer, l1, l2);
-    }
-
     public void setEvaluator(Loss loss) throws InvalidNetworkConstructionException {
         try {
             this.evaluator = (Differentiable) LossFunction.getFunction(loss, BATCH_SIZE);
@@ -290,8 +283,32 @@ public class NetworkBuilder {
         this.reporter = eval;
     }
 
+    public void setDefaultInitializer(Initializer initializer) {
+        this.DEFAULT_INITIALIZER = initializer;
+    }
+
+    public void setDefaultInitializer(WeightInitializer initializer) {
+        this.DEFAULT_INITIALIZER = Initializer.getInitializer(initializer);
+    }
+
+    public void setDefaultOptimizer(OptimizationFunction optimizer) {
+        this.DEFAULT_OPTIMIZER = optimizer;
+    }
+
+    public void setDefaultOptimizer(Optimizer optimizer) {
+        this.DEFAULT_OPTIMIZER = OptimizationFunction.getFunction(optimizer);
+    }
+
     public void setDefaultLambdas(double l1, double l2) {
         DEFAULT_L1 = l1;
         DEFAULT_L2 = l2;
+    }
+
+    public void setDefaultPenalty(Penalty penalty) {
+        this.DEFAULT_PENALTY = penalty;
+    }
+
+    public void setDefaultPenalty(WeightPenalizer penalty) {
+        this.DEFAULT_PENALTY = Penalty.getPenalty(penalty, DEFAULT_L1, DEFAULT_L2);
     }
 }
