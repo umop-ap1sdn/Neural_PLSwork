@@ -37,5 +37,24 @@ public class CrossEntropy implements LossFunction, Differentiable {
 
         return new Vector<>(derivs);
     }
+
+    @Override
+    public double calculateEval(double[][] y_true, double[][] y_pred) {
+        if(y_true.length != y_pred.length) throw new IllegalArgumentException("Input arrays must be of the same size");
+        
+        double errSum = 0;
+        for(int i = 0; i < y_true.length; i++) {
+            double subSum = 0;
+            for(int j = 0; j < y_true[i].length; j++) {
+                if(y_pred[i].length != y_true[i].length) throw new IllegalArgumentException("Input arrays must be of the same size");
+                double oneErr = Math.log(y_pred[i][j] + EPSILON);
+                subSum += -1 * (y_true[i][j] * oneErr);
+            }
+
+            errSum += subSum;
+        }
+
+        return errSum / y_true.length;
+    }
     
 }

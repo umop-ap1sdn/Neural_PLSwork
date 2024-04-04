@@ -28,7 +28,7 @@ public class MeanSquaredError implements LossFunction, Differentiable {
         return NetworkValue.arrToVector(errors);
         */
 
-        Matrix<NetworkValue> intermediate = predicted.scale(new NetworkValue(-1));
+        Matrix<NetworkValue> intermediate = predicted.scale(new NetworkValue(-1.0));
         intermediate = intermediate.add(target);
         intermediate = intermediate.pointwiseMultiply(intermediate);
         intermediate.scale(new NetworkValue(1.0 / batchSize));
@@ -50,10 +50,27 @@ public class MeanSquaredError implements LossFunction, Differentiable {
 
         */
 
-        Matrix<NetworkValue> intermediate = target.scale(new NetworkValue(-1));
+        Matrix<NetworkValue> intermediate = target.scale(new NetworkValue(-1.0));
         intermediate = intermediate.add(predicted);
         intermediate.scale(new NetworkValue(2.0 / batchSize));
         return intermediate.getAsVector();
+    }
 
+    @Override
+    public double calculateEval(double[][] y_true, double[][] y_pred) {
+        if(y_true.length != y_pred.length) throw new IllegalArgumentException("Input arrays must be of the same size");
+        
+        double errSum = 0;
+        for(int i = 0; i < y_true.length; i++) {
+            double subSum = 0;
+            for(int j = 0; j < y_true[i].length; j++) {
+                if(y_pred[i].length != y_true[i].length) throw new IllegalArgumentException("Input arrays must be of the same size");
+                subSum += Math.pow((y_true[i][j] - y_pred[i][j]), 2);
+            }
+
+            errSum += subSum;
+        }
+
+        return errSum / y_true.length;
     }
 }
