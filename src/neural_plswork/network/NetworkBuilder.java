@@ -18,9 +18,9 @@ import neural_plswork.neuron.evaluation.Differentiable;
 import neural_plswork.neuron.evaluation.Evaluation;
 import neural_plswork.neuron.evaluation.loss.Loss;
 import neural_plswork.neuron.evaluation.loss.LossFunction;
-import neural_plswork.unit.Unit;
 import neural_plswork.unit.constructor.HiddenUnitConstructor;
 import neural_plswork.unit.constructor.OutputUnitConstructor;
+import neural_plswork.unit.ffUnits.HiddenUnit;
 import neural_plswork.unit.ffUnits.OutputUnit;
 
 public class NetworkBuilder {
@@ -37,7 +37,7 @@ public class NetworkBuilder {
     private final int BATCH_SIZE;
 
     private InputLayer input;
-    private ArrayList<Unit> hidden;
+    private ArrayList<HiddenUnit> hidden;
     private OutputUnit output;
 
     private Random rand;
@@ -180,6 +180,11 @@ public class NetworkBuilder {
         output = new OutputUnitConstructor(evaluator).construct(prior, activation, new Integer[]{layerSize}, new Boolean[]{}, initArgs, penArgs, optimArgs, BATCH_SIZE, MAX_THREADS);
         
         return true;
+    }
+
+    public Network construct() {
+        HiddenUnit[] hiddenArray = new HiddenUnit[hidden.size()];
+        return new Network(input, hidden.toArray(hiddenArray), output, evaluator, reporter, DEFAULT_PENALTY);
     }
 
     private Object[][] parseParams(Object[][] params) throws InvalidNetworkConstructionException {
