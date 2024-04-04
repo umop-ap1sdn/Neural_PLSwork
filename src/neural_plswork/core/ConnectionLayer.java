@@ -1,15 +1,15 @@
 package neural_plswork.core;
 
-import neural_plswork.initialize.Initializer;
+import neural_plswork.connection.initialize.Initializer;
+import neural_plswork.connection.optimizer.OptimizationFunction;
+import neural_plswork.connection.penalize.None;
+import neural_plswork.connection.penalize.Penalty;
 import neural_plswork.layers.basic.InputLayer;
 import neural_plswork.layers.basic.OutputLayer;
 import neural_plswork.math.Matrix;
 import neural_plswork.math.MatrixElement;
 import neural_plswork.math.Vector;
 import neural_plswork.network.InvalidNetworkConstructionException;
-import neural_plswork.optimizer.OptimizationFunction;
-import neural_plswork.regularization.penalize.None;
-import neural_plswork.regularization.penalize.Penalty;
 
 public class ConnectionLayer {
     

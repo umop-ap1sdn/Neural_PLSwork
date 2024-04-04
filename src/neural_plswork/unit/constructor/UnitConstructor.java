@@ -1,11 +1,11 @@
 package neural_plswork.unit.constructor;
 
-import neural_plswork.activations.ActivationFunction;
 import neural_plswork.network.InvalidNetworkConstructionException;
+import neural_plswork.neuron.activations.ActivationFunction;
+import neural_plswork.connection.initialize.Initializer;
+import neural_plswork.connection.optimizer.OptimizationFunction;
+import neural_plswork.connection.penalize.Penalty;
 import neural_plswork.core.NeuronLayer;
-import neural_plswork.initialize.Initializer;
-import neural_plswork.optimizer.OptimizationFunction;
-import neural_plswork.regularization.penalize.Penalty;
 import neural_plswork.unit.Unit;
 
 public interface UnitConstructor {

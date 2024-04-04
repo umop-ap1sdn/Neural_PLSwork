@@ -2,9 +2,9 @@ package neural_plswork.core;
 
 import java.util.Arrays;
 
-import neural_plswork.activations.ActivationFunction;
 import neural_plswork.math.Matrix;
 import neural_plswork.math.Vector;
+import neural_plswork.neuron.activations.ActivationFunction;
 import neural_plswork.rollingqueue.RollingQueue;
 
 public class NeuronLayer {

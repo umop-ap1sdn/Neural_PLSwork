@@ -1,11 +1,11 @@
 package neural_plswork.layers.basic;
 
-import neural_plswork.activations.ActivationFunction;
 import neural_plswork.core.NetworkValue;
 import neural_plswork.core.NeuronLayer;
-import neural_plswork.evaluation.Differentiable;
 import neural_plswork.math.Matrix;
 import neural_plswork.math.Vector;
+import neural_plswork.neuron.activations.ActivationFunction;
+import neural_plswork.neuron.evaluation.Differentiable;
 
 public class OutputLayer extends NeuronLayer {
 
