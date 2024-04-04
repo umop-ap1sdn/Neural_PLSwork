@@ -147,6 +147,24 @@ public class ConnectionLayer {
         }
     }
 
+    public double getPenaltySum() {
+        Matrix<NetworkValue> primaryPenalty = penalty.getPenalty(primaryLayer);
+        Matrix<NetworkValue> biasPenalty = penalty.getPenalty(biasVector);
+
+        double sum = 0.0;
+        for(int i = 0; i < primaryPenalty.getRows(); i++) {
+            for(int j = 0; j < primaryPenalty.getColumns(); j++) {
+                sum += primaryPenalty.getValue(i, j).getValue();
+            }
+        }
+
+        for(int i = 0; i < biasPenalty.getRows(); i++) {
+            sum += biasPenalty.getValue(i, 0).getValue();
+        }
+
+        return sum;
+    }
+
     public void setOptimizer(OptimizationFunction optimizer) {
         this.primaryOptimizer = optimizer;
         this.biasOptimizer = optimizer.copy();
