@@ -21,4 +21,8 @@ public class ThreadedTrainingDataset {
             dataset_thread[i] = dataset.slice(i * threaded_size, (i + 1) * threaded_size);
         }
     }
+
+    public TrainingDataset getDataset(int thread) {
+        return dataset_thread[thread];
+    }
 }

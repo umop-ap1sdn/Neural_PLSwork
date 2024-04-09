@@ -1,12 +1,14 @@
 package neural_plswork.datasets;
 
+import java.util.Iterator;
+
 import neural_plswork.core.NetworkValue;
 import neural_plswork.math.Vector;
 
-public class TrainingDataset {
+public class TrainingDataset implements Iterable<Vector<NetworkValue>[]> {
     
-    private final Vector<NetworkValue>[] inputs;
-    private final Vector<NetworkValue>[] labels;
+    protected final Vector<NetworkValue>[] inputs;
+    protected final Vector<NetworkValue>[] labels;
 
     private final int length;
     private final int inputSize;
@@ -54,6 +56,19 @@ public class TrainingDataset {
         return new TrainingDataset(inputs, labels);
     }
 
+    public Vector<NetworkValue> getInputSample(int index) {
+        return inputs[index];
+    }
+
+    public Vector<NetworkValue> getLabelSample(int index) {
+        return labels[index];
+    }
+
+    @SuppressWarnings("unchecked")
+    public Vector<NetworkValue>[] getSample(int index) {
+        return new Vector[]{inputs[index], labels[index]};
+    }
+
     public int getInputSize() {
         return inputSize;
     }
@@ -64,5 +79,11 @@ public class TrainingDataset {
 
     public int length() {
         return length;
+    }
+
+    @Override
+    public Iterator<Vector<NetworkValue>[]> iterator() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'iterator'");
     }
 }
