@@ -64,6 +64,14 @@ public class TrainingDataset implements Iterable<Vector<NetworkValue>[]> {
         return labels[index];
     }
 
+    public Vector<NetworkValue>[] getInputs() {
+        return inputs;
+    }
+
+    public Vector<NetworkValue>[] getLabels() {
+        return labels;
+    }
+
     @SuppressWarnings("unchecked")
     public Vector<NetworkValue>[] getSample(int index) {
         return new Vector[]{inputs[index], labels[index]};

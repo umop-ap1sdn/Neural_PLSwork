@@ -42,6 +42,10 @@ public class BatchedTrainingDataset implements Iterable<TrainingDataset> {
         return dataset_batch[thread];
     }
 
+    public int batch_num() {
+        return BATCH_NUM;
+    }
+
     @Override
     public Iterator<TrainingDataset> iterator() {
         return new BatchedDatasetIterator(this);
