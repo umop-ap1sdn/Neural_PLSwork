@@ -25,6 +25,7 @@ public class TrainingDatasetIterator implements Iterator<Vector<NetworkValue>[]>
     public Vector<NetworkValue>[] next() {
         Vector<NetworkValue> input = td.inputs[index];
         Vector<NetworkValue> label = td.labels[index];
+        index++;
 
         return new Vector[]{input, label};
     }
