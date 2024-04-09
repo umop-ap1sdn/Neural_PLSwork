@@ -35,7 +35,7 @@ public class Adam implements OptimizationFunction {
     }
     
     @Override
-    public Matrix<NetworkValue> computeDeltas(Matrix<NetworkValue> gradients, double learning_rate) {
+    public synchronized Matrix<NetworkValue> computeDeltas(Matrix<NetworkValue> gradients, double learning_rate) {
         Matrix<NetworkValue> g2 = gradients.copy();
         for(NetworkValue n: g2) {
             n.setValue(Math.pow(n.getValue(), 2));

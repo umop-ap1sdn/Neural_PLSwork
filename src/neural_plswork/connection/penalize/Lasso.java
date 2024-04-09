@@ -11,7 +11,7 @@ public class Lasso implements Penalty {
     }
 
 	@Override
-	public Matrix<NetworkValue> getPenalty(Matrix<NetworkValue> weights) {
+	public synchronized Matrix<NetworkValue> getPenalty(Matrix<NetworkValue> weights) {
 		Matrix<NetworkValue> penalty = weights.copy();
         
         for(NetworkValue n: penalty) {
@@ -22,7 +22,7 @@ public class Lasso implements Penalty {
 	}
 
 	@Override
-	public Matrix<NetworkValue> getDerivative(Matrix<NetworkValue> weights) {
+	public synchronized Matrix<NetworkValue> getDerivative(Matrix<NetworkValue> weights) {
 		NetworkValue[][] derivative = new NetworkValue[weights.getRows()][weights.getColumns()];
         for(int i = 0; i < weights.getRows(); i++) {
             for(int j = 0; j < weights.getColumns(); j++) {

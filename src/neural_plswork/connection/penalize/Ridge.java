@@ -11,7 +11,7 @@ public class Ridge implements Penalty {
     }
 
 	@Override
-	public Matrix<NetworkValue> getPenalty(Matrix<NetworkValue> weights) {
+	public synchronized Matrix<NetworkValue> getPenalty(Matrix<NetworkValue> weights) {
 		Matrix<NetworkValue> penalty = weights.copy();
         
         for(NetworkValue n: penalty) {
@@ -22,7 +22,7 @@ public class Ridge implements Penalty {
 	}
 
 	@Override
-	public Matrix<NetworkValue> getDerivative(Matrix<NetworkValue> weights) {
+	public synchronized Matrix<NetworkValue> getDerivative(Matrix<NetworkValue> weights) {
 		Matrix<NetworkValue> derivative = weights.copy();
         
         for(NetworkValue n: derivative) {

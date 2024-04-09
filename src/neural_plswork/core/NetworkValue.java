@@ -66,19 +66,19 @@ public class NetworkValue implements MatrixElement {
     }
 
     @Override
-    public MatrixElement add(MatrixElement other) {
+    public synchronized MatrixElement add(MatrixElement other) {
         if(!(other instanceof NetworkValue)) return other.add(this);
         return new NetworkValue(value + ((NetworkValue)other).value);
     }
 
     @Override
-    public MatrixElement multiply(MatrixElement other) {
+    public synchronized MatrixElement multiply(MatrixElement other) {
         if(!(other instanceof NetworkValue)) return other.multiply(this);
         return new NetworkValue(value * ((NetworkValue)other).value);
     }
 
     @Override
-    public MatrixElement copy() {
+    public synchronized MatrixElement copy() {
         return new NetworkValue(value);
     }
 

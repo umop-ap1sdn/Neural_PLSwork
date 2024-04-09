@@ -20,12 +20,12 @@ public class Elastic implements Penalty {
     }
 
 	@Override
-	public Matrix<NetworkValue> getPenalty(Matrix<NetworkValue> weights) {
+	public synchronized Matrix<NetworkValue> getPenalty(Matrix<NetworkValue> weights) {
 		return l1.getPenalty(weights).add(l2.getPenalty(weights));
 	}
 
 	@Override
-	public Matrix<NetworkValue> getDerivative(Matrix<NetworkValue> weights) {
+	public synchronized Matrix<NetworkValue> getDerivative(Matrix<NetworkValue> weights) {
 		return l1.getDerivative(weights).add(l2.getDerivative(weights));
 	}
 
