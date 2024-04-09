@@ -93,4 +93,31 @@ public class TrainingDataset implements Iterable<Vector<NetworkValue>[]> {
     public Iterator<Vector<NetworkValue>[]> iterator() {
         return new TrainingDatasetIterator(this);
     }
+
+    class TrainingDatasetIterator implements Iterator<Vector<NetworkValue>[]> {
+        private int index = 0;
+        private final TrainingDataset td;
+    
+        private TrainingDatasetIterator(TrainingDataset td) {
+            this.td = td;
+            index = 0;
+        }
+    
+    
+        @Override
+        public boolean hasNext() {
+            return index < td.length;
+        }
+    
+        @Override
+        @SuppressWarnings("unchecked")
+        public Vector<NetworkValue>[] next() {
+            Vector<NetworkValue> input = td.inputs[index];
+            Vector<NetworkValue> label = td.labels[index];
+            index++;
+    
+            return new Vector[]{input, label};
+        }
+        
+    }
 }

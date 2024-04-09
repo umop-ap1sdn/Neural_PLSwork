@@ -207,4 +207,33 @@ public class Matrix<T extends MatrixElement> implements Iterable<T> {
     public Iterator<T> iterator() {
         return new MatrixIterator<T>(this);
     }
+
+    @SuppressWarnings("hiding")
+    class MatrixIterator<T extends MatrixElement> implements Iterator<T> {
+
+        private final Matrix<T> iterate;
+        private int row;
+        private int col;
+    
+        private MatrixIterator(Matrix<T> iterate) {
+            this.iterate = iterate;
+            row = 0;
+            col = 0;
+        }
+    
+        @Override
+        public boolean hasNext() {
+            if(row == iterate.rows) return false;
+            return true;
+        }
+    
+        @Override
+        public T next() {
+            T next = iterate.getValue(row, col);
+            col = (col + 1) % iterate.columns;
+            if(col == 0) row++;
+            return next;
+        }
+        
+    }
 }
