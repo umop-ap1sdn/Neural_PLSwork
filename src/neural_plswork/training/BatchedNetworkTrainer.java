@@ -58,7 +58,7 @@ public class BatchedNetworkTrainer extends NeuralNetworkTrainer {
 
             TrainingDataset td = train_set.getDataset(i);
             for(Vector<NetworkValue>[] sample: td) {
-                y_pred[y_pred_idx++] = nn.predict(sample[0], i);
+                y_pred[y_pred_idx++] = nn.predict(sample[0], 0);
             }
 
             eval += nn.calculateEval(td.getLabels(), y_pred);
@@ -78,7 +78,7 @@ public class BatchedNetworkTrainer extends NeuralNetworkTrainer {
 
             TrainingDataset td = test_set.getDataset(i);
             for(Vector<NetworkValue>[] sample: td) {
-                y_pred[y_pred_idx++] = nn.predict(sample[0], i);
+                y_pred[y_pred_idx++] = nn.predict(sample[0], 0);
             }
 
             eval += nn.calculateEval(td.getLabels(), y_pred);
