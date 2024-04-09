@@ -2,7 +2,7 @@ package neural_plswork.datasets;
 
 public class TrainTestSplit {
     
-    public TrainingDataset[] train_test_split(TrainingDataset td, double training_ratio) {
+    public static TrainingDataset[] train_test_split(TrainingDataset td, double training_ratio) {
         int train_len = (int)(training_ratio * td.length);
         TrainingDataset[] ret = new TrainingDataset[2];
         ret[0] = td.slice(0, train_len);
@@ -10,7 +10,7 @@ public class TrainTestSplit {
         return ret;
     }
 
-    public BatchedTrainingDataset[] train_test_split(BatchedTrainingDataset btd, double training_ratio) {
+    public static BatchedTrainingDataset[] train_test_split(BatchedTrainingDataset btd, double training_ratio) {
         int training_len = (int)(training_ratio * btd.BATCH_NUM);
         BatchedTrainingDataset[] ret = new BatchedTrainingDataset[2];
         ret[0] = btd.slice(0, training_len);
