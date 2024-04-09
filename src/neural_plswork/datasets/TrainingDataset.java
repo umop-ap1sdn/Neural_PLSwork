@@ -10,7 +10,7 @@ public class TrainingDataset implements Iterable<Vector<NetworkValue>[]> {
     protected final Vector<NetworkValue>[] inputs;
     protected final Vector<NetworkValue>[] labels;
 
-    private final int length;
+    protected final int length;
     private final int inputSize;
     private final int outputSize;
 
@@ -83,7 +83,6 @@ public class TrainingDataset implements Iterable<Vector<NetworkValue>[]> {
 
     @Override
     public Iterator<Vector<NetworkValue>[]> iterator() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'iterator'");
+        return new TrainingDatasetIterator(this);
     }
 }

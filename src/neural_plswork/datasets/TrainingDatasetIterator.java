@@ -17,7 +17,7 @@ public class TrainingDatasetIterator implements Iterator<Vector<NetworkValue>[]>
 
     @Override
     public boolean hasNext() {
-        return index < td.length();
+        return index < td.length;
     }
 
     @Override
