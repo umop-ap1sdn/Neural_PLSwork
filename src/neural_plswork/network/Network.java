@@ -58,6 +58,57 @@ public class Network {
         return ret;
     }
 
+    public Vector<NetworkValue> predict(Vector<NetworkValue> inputs, int thread) {
+        input.setInputs(inputs, thread);
+        for(Unit u: hidden) u.forwardPass(thread);
+        output.forwardPass(thread);
+        return output.getOutputs(thread);
+    }
+
+    public void calcEvals(Vector<NetworkValue> y_true, int thread, int time) {
+        output.calcEvals(y_true, thread, time);
+    }
+
+    public void passEvals(int thread) {
+        for(int i = hidden.length - 1; i >= 0; i--) {
+            Unit next = output;
+            if(i < hidden.length - 1) next = hidden[i + 1];
+            hidden[i].calcEvals(next, thread);
+        }
+    }
+
+    public void adjustWeights(int thread) {
+        boolean descending = evaluator instanceof LossFunction;
+        output.adjustWeights(learning_rate, descending, thread);
+        for(int i = hidden.length - 1; i >= 0; i--) {
+            hidden[i].adjustWeights(learning_rate, descending, thread);
+        }
+    }
+
+    public void purgeEval(int thread) {
+        input.purgeEval(thread);
+        for(Unit u: hidden) u.purgeEval(thread);
+        output.purgeEval(thread);
+    }
+
+    public void purgeEval(int thread, int times) {
+        input.purgeEval(thread, times);
+        for(Unit u: hidden) u.purgeEval(thread, times);
+        output.purgeEval(thread, times);
+    }
+
+    public void clear(int thread) {
+        input.clear(thread);
+        for(Unit u: hidden) u.clear(thread);
+        output.clear(thread);
+    }
+
+    public void clear() {
+        input.clear();
+        for(Unit u: hidden) u.clear();
+        output.clear();
+    }
+
     public double calculateEval(double[][] y_true, double[][] y_pred) {
         double eval = reporter.calculateEval(y_true, y_pred);
         eval += output.getPenaltySum();
