@@ -105,6 +105,7 @@ public class NetworkBuilder {
         if(hidden.size() > 0) prior = hidden.get(hidden.size() - 1).getExitLayers();
         
         hidden.add(constructor.construct(prior, activations, layerSizes, bias, initArgs, penArgs, optimArgs, BATCH_SIZE, MAX_THREADS));
+        if(!hidden.get(hidden.size() - 1).validityCheck(BATCH_SIZE, MAX_THREADS)) throw new InvalidNetworkConstructionException("Mismatching batch_size/max_threads found");
         
         return true;
     }
@@ -131,6 +132,7 @@ public class NetworkBuilder {
         if(hidden.size() > 0) prior = hidden.get(hidden.size() - 1).getExitLayers();
         
         hidden.add(constructor.construct(prior, activations, layerSizes, bias, initArgs, penArgs, optimArgs, BATCH_SIZE, MAX_THREADS));
+        if(!hidden.get(hidden.size() - 1).validityCheck(BATCH_SIZE, MAX_THREADS)) throw new InvalidNetworkConstructionException("Mismatching batch_size/max_threads found");
         
         return true;
     }
@@ -154,7 +156,8 @@ public class NetworkBuilder {
         if(hidden.size() > 0) prior = hidden.get (hidden.size() - 1).getExitLayers();
         
         output = new OutputUnitConstructor(evaluator).construct(prior, new ActivationFunction[]{activation}, new Integer[]{layerSize}, new Boolean[]{}, initArgs, penArgs, optimArgs, BATCH_SIZE, MAX_THREADS);
-        
+        if(output.validityCheck(BATCH_SIZE, MAX_THREADS)) throw new InvalidNetworkConstructionException("Mismatching batch_size/max_threads found");
+
         return true;
     }
 
@@ -178,13 +181,14 @@ public class NetworkBuilder {
         if(hidden.size() > 0) prior = hidden.get(hidden.size() - 1).getExitLayers();
         
         output = new OutputUnitConstructor(evaluator).construct(prior, activation, new Integer[]{layerSize}, new Boolean[]{}, initArgs, penArgs, optimArgs, BATCH_SIZE, MAX_THREADS);
-        
+        if(output.validityCheck(BATCH_SIZE, MAX_THREADS)) throw new InvalidNetworkConstructionException("Mismatching batch_size/max_threads found");
+
         return true;
     }
 
     public Network construct() {
         HiddenUnit[] hiddenArray = new HiddenUnit[hidden.size()];
-        return new Network(input, hidden.toArray(hiddenArray), output, evaluator, reporter, DEFAULT_PENALTY);
+        return new Network(input, hidden.toArray(hiddenArray), output, evaluator, reporter, BATCH_SIZE, MAX_THREADS);
     }
 
     private Object[][] parseParams(Object[][] params) throws InvalidNetworkConstructionException {

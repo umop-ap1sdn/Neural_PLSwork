@@ -5,6 +5,7 @@ import neural_plswork.core.NetworkValue;
 import neural_plswork.core.NeuronLayer;
 import neural_plswork.layers.basic.OutputLayer;
 import neural_plswork.math.Vector;
+import neural_plswork.neuron.evaluation.Differentiable;
 import neural_plswork.unit.Unit;
 
 public class OutputUnit extends Unit {
@@ -40,6 +41,10 @@ public class OutputUnit extends Unit {
 
     public Vector<NetworkValue> getOutputs(int thread) {
         return layer.getOutput(thread);
+    }
+
+    public void setEvaluation(Differentiable eval) {
+        layer.setEvaluation(eval);
     }
 
     @Override
