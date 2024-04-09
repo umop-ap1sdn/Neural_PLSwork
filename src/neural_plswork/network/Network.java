@@ -36,4 +36,13 @@ public class Network {
 
         return NetworkValue.vectorToArr(output.getOutputs(0));
     }
+
+    public double[][] predict(double[][] inputs) {
+        double[][] ret = new double[inputs.length][];
+        for(int i = 0; i < ret.length; i++) {
+            ret[i] = test(inputs[i]);
+        }
+
+        return ret;
+    }
 }
