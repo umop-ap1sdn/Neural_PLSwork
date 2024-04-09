@@ -8,19 +8,23 @@ import neural_plswork.network.Network;
 
 public class MultithreadedTrainer extends NeuralNetworkTrainer {
 
-    private final BatchedTrainingDataset btd;
+    private final BatchedTrainingDataset train_set;
+    private final BatchedTrainingDataset test_set;
     private final ThreadedAgent[] agents;
+    private final ThreadedAgent[] test_agents;
     private final Thread[] threads;
     private int index = 0;
 
     private HashSet<Integer> running;
     private HashSet<Integer> finished;
 
-    public MultithreadedTrainer(Network nn, BatchedTrainingDataset btd) {
+    public MultithreadedTrainer(Network nn, BatchedTrainingDataset train_set, BatchedTrainingDataset test_set) {
         super(nn);
-        this.btd = btd;
-        this.agents = new ThreadedAgent[btd.batch_num()];
-        this.threads = new Thread[btd.batch_num()];
+        this.train_set = train_set;
+        this.test_set = test_set;
+        this.agents = new ThreadedAgent[train_set.batch_num()];
+        this.test_agents = new ThreadedAgent[test_set.batch_num()];
+        this.threads = new Thread[train_set.batch_num()];
 
         running = new HashSet<>();
         finished = new HashSet<>();
@@ -29,10 +33,14 @@ public class MultithreadedTrainer extends NeuralNetworkTrainer {
 
     private void prepareThreads() {
         int index = 0;
-        for(TrainingDataset td: btd) {
+        for(TrainingDataset td: train_set) {
             ThreadedAgent ta = new ThreadedAgent(nn, this, td, index);
             agents[index] = ta;
             threads[index++] = new Thread(ta);
+        }
+
+        for(TrainingDataset td: test_set) {
+            ThreadedAgent ta = new ThreadedAgent(nn, this, td, index++);
         }
     }
 
@@ -82,14 +90,21 @@ public class MultithreadedTrainer extends NeuralNetworkTrainer {
 
     @Override
     public double computeTrainingEval() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'computeTrainingEval'");
+        double eval = 0;
+        for(ThreadedAgent ta: agents) {
+            eval += ta.computeTrainingEval();
+        }
+        return eval;
     }
 
     @Override
     public double computeValidationEval() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'computeValidationEval'");
+        double eval = 0;
+        for(ThreadedAgent ta: test_agents) {
+            eval += ta.computeValidationEval();
+        }
+
+        return eval;
     }
 
     protected void finish(int threadID) {
