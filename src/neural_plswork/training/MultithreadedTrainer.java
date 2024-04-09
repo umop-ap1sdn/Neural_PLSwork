@@ -39,8 +39,10 @@ public class MultithreadedTrainer extends NeuralNetworkTrainer {
             threads[index++] = new Thread(ta);
         }
 
+        index = 0;
         for(TrainingDataset td: test_set) {
-            ThreadedAgent ta = new ThreadedAgent(nn, this, td, index++);
+            ThreadedAgent ta = new ThreadedAgent(nn, this, td, index);
+            test_agents[index++] = ta;
         }
     }
 
