@@ -67,4 +67,18 @@ public class RollingQueue<T> {
         tail = 0;
         size = 0;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("[");
+        for(int i = 0; i < size; i++) {
+            int index = (i + head) % capacity;
+            sb.append(queue[index]);
+            if(i < size - 1) sb.append(", ");
+        }
+
+        sb.append("]");
+        return sb.toString();
+    }
 }

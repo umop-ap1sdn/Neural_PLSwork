@@ -14,10 +14,8 @@ public class MultithreadedTrainer extends NeuralNetworkTrainer {
     private final ThreadedAgent[] agents;
     private final ThreadedAgent[] test_agents;
     private final Thread[] threads;
-    private int index = 0;
-
-    private HashSet<Integer> running;
-    private HashSet<Integer> finished;
+    
+    private HashSet<Thread> running;
     private RollingQueue<Integer> availableThreads;
 
     public MultithreadedTrainer(Network nn, BatchedTrainingDataset train_set, BatchedTrainingDataset test_set) {
@@ -30,8 +28,8 @@ public class MultithreadedTrainer extends NeuralNetworkTrainer {
         this.threads = new Thread[train_set.batch_num()];
 
         running = new HashSet<>();
-        finished = new HashSet<>();
-        availableThreads = new RollingQueue<>(nn.max_threads());
+        // finished = new HashSet<>();
+        availableThreads = new RollingQueue<>(nn.max_threads() + 1);
         prepareThreads();
     }
 
@@ -58,55 +56,57 @@ public class MultithreadedTrainer extends NeuralNetworkTrainer {
 
     @Override
     public void train_batch() {
-        if(running.size() >= nn.max_threads()) return;
-        agents[index].setTrain(0);
-        threads[index].run();
-        running.add(index);
-        while(!finished.contains(index));
-        finished.remove(index);
-        agents[index].setAdjust(0);
-        threads[index].run();
-        running.add(index);
-        while(!finished.contains(index));
-        finished.remove(index);
-        index = (index + 1) % agents.length;
+        
     }
 
     @Override
     public void train_epoch() {
-        running.clear();
-        finished.clear();
 
         int index = 0;
-        while(finished.size() < agents.length) {
+        while(index < agents.length) {
             while(availableThreads.size() > 0 && index < agents.length) {
-                running.add(index);
                 agents[index].setTrain(availableThreads.pop());
                 threads[index] = new Thread(agents[index]);
-                threads[index++].start();
-                
+                running.add(threads[index]);
+                threads[index].start();
+                index++;
             }
-            //if(index >= agents.length) System.out.println(finished.size());
-        }
+            
+            for(Thread t: running) {
+                try {
+                    t.join();
+                } catch (InterruptedException e) {
+                    System.err.println(e.getMessage());
+                }
+            }
 
-        running.clear();
-        finished.clear();
+            running.clear();
+        }
 
         index = 0;
+        running.clear();
 
-        while(finished.size() < agents.length) {
+        // System.out.println(availableThreads);
+        while(index < agents.length) {
+            
             while(availableThreads.size() > 0 && index < agents.length) {
-                running.add(index);
                 agents[index].setAdjust(availableThreads.pop());
                 threads[index] = new Thread(agents[index]);
-                threads[index++].start();
-            
+                running.add(threads[index]);
+                threads[index].start();
+                index++;
             }
             
-        }
+            for(Thread t: running) {
+                try {
+                    t.join();
+                } catch (InterruptedException e) {
+                    System.err.println(e.getMessage());
+                }
+            }
 
-        running.clear();
-        finished.clear();
+            running.clear();
+        }
     }
 
     @Override
@@ -129,11 +129,7 @@ public class MultithreadedTrainer extends NeuralNetworkTrainer {
     }
 
     protected synchronized void finish(int threadID, int threadIndex) {
-        availableThreads.push(threadIndex);
-        
-        running.remove(threadID);
-        finished.add(threadID);
-
+        availableThreads.push(threadIndex);  
     }
     
 }
