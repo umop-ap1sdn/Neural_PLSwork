@@ -18,6 +18,7 @@ public class MultithreadedTrainer extends NeuralNetworkTrainer {
     
     private HashSet<Thread> running;
     private RollingQueue<Integer> availableThreads;
+    boolean allowPush = false;
 
     int index = 0;
 
@@ -59,19 +60,20 @@ public class MultithreadedTrainer extends NeuralNetworkTrainer {
     @Override
     public void train_batch() {
         try {
-            agents[index].setTrain(availableThreads.pop());
+            allowPush = false;
+            agents[index].setTrain(0);
             threads[index] = new Thread(agents[index]);
             threads[index].start();
 
             threads[index].join();
 
-            agents[index].setAdjust(availableThreads.pop());
+            agents[index].setAdjust(0);
             threads[index] = new Thread(agents[index]);
             threads[index].start();
 
             threads[index].join();
 
-            index = (index + 1) % nn.max_threads();
+            index = (index + 1) % agents.length;
         } catch (InterruptedException e) {
             System.err.println(e.getMessage());
         }
@@ -79,7 +81,7 @@ public class MultithreadedTrainer extends NeuralNetworkTrainer {
 
     @Override
     public void train_epoch() {
-
+        allowPush = true;
         int index = 0;
         while(index < agents.length) {
             while(availableThreads.size() > 0 && index < agents.length) {
@@ -147,7 +149,7 @@ public class MultithreadedTrainer extends NeuralNetworkTrainer {
     }
 
     protected synchronized void finish(int threadID, int threadIndex) {
-        availableThreads.push(threadIndex);  
+        if(allowPush) availableThreads.push(threadIndex);  
     }
     
 }
