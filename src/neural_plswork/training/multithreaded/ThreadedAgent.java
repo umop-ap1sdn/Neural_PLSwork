@@ -1,9 +1,10 @@
-package neural_plswork.training;
+package neural_plswork.training.multithreaded;
 
 import neural_plswork.core.NetworkValue;
 import neural_plswork.datasets.TrainingDataset;
 import neural_plswork.math.Vector;
 import neural_plswork.network.Network;
+import neural_plswork.training.NeuralNetworkTrainer;
 
 public class ThreadedAgent extends NeuralNetworkTrainer implements Runnable {
     private final MultithreadedTrainer parent;

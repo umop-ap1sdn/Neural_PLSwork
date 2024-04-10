@@ -1,4 +1,4 @@
-package neural_plswork.training;
+package neural_plswork.training.multithreaded;
 
 import java.util.HashSet;
 
@@ -6,6 +6,7 @@ import neural_plswork.datasets.BatchedTrainingDataset;
 import neural_plswork.datasets.TrainingDataset;
 import neural_plswork.network.Network;
 import neural_plswork.rollingqueue.RollingQueue;
+import neural_plswork.training.NeuralNetworkTrainer;
 
 public class MultithreadedTrainer extends NeuralNetworkTrainer {
 
@@ -17,6 +18,8 @@ public class MultithreadedTrainer extends NeuralNetworkTrainer {
     
     private HashSet<Thread> running;
     private RollingQueue<Integer> availableThreads;
+
+    int index = 0;
 
     public MultithreadedTrainer(Network nn, BatchedTrainingDataset train_set, BatchedTrainingDataset test_set) {
         super(nn);
@@ -37,8 +40,7 @@ public class MultithreadedTrainer extends NeuralNetworkTrainer {
         int index = 0;
         for(TrainingDataset td: train_set) {
             ThreadedAgent ta = new ThreadedAgent(nn, this, td, index);
-            agents[index] = ta;
-            threads[index++] = new Thread(ta);
+            agents[index++] = ta;
         }
 
         index = 0;
@@ -56,7 +58,23 @@ public class MultithreadedTrainer extends NeuralNetworkTrainer {
 
     @Override
     public void train_batch() {
-        
+        try {
+            agents[index].setTrain(availableThreads.pop());
+            threads[index] = new Thread(agents[index]);
+            threads[index].start();
+
+            threads[index].join();
+
+            agents[index].setAdjust(availableThreads.pop());
+            threads[index] = new Thread(agents[index]);
+            threads[index].start();
+
+            threads[index].join();
+
+            index = (index + 1) % nn.max_threads();
+        } catch (InterruptedException e) {
+            System.err.println(e.getMessage());
+        }
     }
 
     @Override
