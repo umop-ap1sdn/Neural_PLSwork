@@ -19,7 +19,7 @@ public class Adam implements OptimizationFunction {
         this.BETA_2 = BETA_2;
         this.EPSILON = EPSILON;
 
-        iteration = 0;
+        iteration = 1;
         m_t = null;
         v_t = null;
     }
@@ -29,7 +29,7 @@ public class Adam implements OptimizationFunction {
         this.BETA_2 = 0.999;
         this.EPSILON = 1e-7;
 
-        iteration = 0;
+        iteration = 1;
         m_t = null;
         v_t = null;
     }

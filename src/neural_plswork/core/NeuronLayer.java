@@ -111,14 +111,17 @@ public class NeuronLayer {
     }
 
     public Vector<NetworkValue> getValues(int time, int thread) {
+        if(activated[thread].size() <= time) return null;
         return activated[thread].get(time);
     }
 
     public Matrix<NetworkValue> getDerivatives(int time, int thread) {
+        if(activated[thread].size() <= time) return null;
         return derivative[thread].get(time);
     }
 
     public Vector<NetworkValue> getEval(int time, int thread) {
+        if(activated[thread].size() <= time) return null;
         return eval[thread].get(time);
     }
 

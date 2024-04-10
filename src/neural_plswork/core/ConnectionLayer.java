@@ -115,7 +115,9 @@ public class ConnectionLayer {
 
     public void adjustWeights(double learning_rate, int steps, boolean descending, int thread) {
         for(int time = 0; time < steps; time++) {
-            Matrix<NetworkValue> transposed = srcLayer.getValues(time, thread).transpose();
+            Vector<NetworkValue> srcVals = srcLayer.getValues(time, thread);
+            if(srcVals == null) break;
+            Matrix<NetworkValue> transposed = srcVals.transpose();
             
             Matrix<NetworkValue> primaryGradients = destLayer.getEval(time, thread).multiply(transposed);
             Vector<NetworkValue> biasGradients = destLayer.getEval(time, thread).copy();
