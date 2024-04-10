@@ -20,7 +20,8 @@ public class BatchedTrainingDataset implements Iterable<TrainingDataset> {
     public BatchedTrainingDataset(TrainingDataset[] btd) {
         this.dataset_batch = btd;
         this.BATCH_NUM = btd.length;
-        this.BATCH_SIZE = btd[0].length;
+        if(btd.length == 0) BATCH_SIZE = 0;
+        else this.BATCH_SIZE = btd[0].length;
     }
 
     private void initialize_threads(TrainingDataset dataset) {

@@ -9,6 +9,7 @@ public class ThreadedAgent extends NeuralNetworkTrainer implements Runnable {
     private final MultithreadedTrainer parent;
     private final TrainingDataset td;
     private final int threadID;
+    private int threadIndex = 0;
 
     protected Procedure phase;
 
@@ -29,16 +30,16 @@ public class ThreadedAgent extends NeuralNetworkTrainer implements Runnable {
     public void train_epoch() {
         int index = 0;
         for(Vector<NetworkValue>[] sample: td) {
-            nn.predict(sample[0], threadID);
-            nn.calcEvals(sample[1], threadID, index++);
+            nn.predict(sample[0], threadIndex);
+            nn.calcEvals(sample[1], threadIndex, index++);
         }
 
-        nn.passEvals(threadID);
+        nn.passEvals(threadIndex);
 
     }
 
     public void adjustWeights() {
-        nn.adjustWeights(threadID);
+        nn.adjustWeights(threadIndex);
     }
 
     @Override
@@ -76,16 +77,18 @@ public class ThreadedAgent extends NeuralNetworkTrainer implements Runnable {
     public void run() {
         if(phase == Procedure.TRAIN) train_epoch();
         if(phase == Procedure.ADJUST) adjustWeights();
-        parent.finish(threadID);
+        parent.finish(threadID, threadIndex);
 
     }
 
-    public void setTrain() {
+    public void setTrain(int threadIndex) {
         phase = Procedure.TRAIN;
+        this.threadIndex = threadIndex;
     }
 
-    public void setAdjust() {
+    public void setAdjust(int threadIndex) {
         phase = Procedure.ADJUST;
+        this.threadIndex = threadIndex;
     }
 
     enum Procedure {

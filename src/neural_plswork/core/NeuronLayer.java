@@ -45,6 +45,7 @@ public class NeuronLayer {
             activated[i] = new RollingQueue<Vector<NetworkValue>>(historySize);
             derivative[i] = new RollingQueue<Matrix<NetworkValue>>(historySize);
             eval[i] = new RollingQueue<Vector<NetworkValue>>(historySize);
+            purgeEval(i);
         }
     }
 
@@ -69,8 +70,6 @@ public class NeuronLayer {
         unactivated[thread].push(netSum);
         activated[thread].push(activation.activate(netSum));
         derivative[thread].push(activation.derivative(netSum));
-
-        
         
     }
 
@@ -94,7 +93,7 @@ public class NeuronLayer {
 
         // Check to ensure no shallow copy errors occur here
         for(int i = 0; i < times; i++) {
-            eval[thread].pop();
+            if(eval[thread].size() == historySize) eval[thread].pop();
             eval[thread].push(zeros);
         }
     }

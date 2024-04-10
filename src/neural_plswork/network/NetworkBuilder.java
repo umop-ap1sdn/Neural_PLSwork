@@ -156,7 +156,7 @@ public class NetworkBuilder {
         if(hidden.size() > 0) prior = hidden.get (hidden.size() - 1).getExitLayers();
         
         output = new OutputUnitConstructor(evaluator).construct(prior, new ActivationFunction[]{activation}, new Integer[]{layerSize}, new Boolean[]{}, initArgs, penArgs, optimArgs, BATCH_SIZE, MAX_THREADS);
-        if(output.validityCheck(BATCH_SIZE, MAX_THREADS)) throw new InvalidNetworkConstructionException("Mismatching batch_size/max_threads found");
+        if(!output.validityCheck(BATCH_SIZE, MAX_THREADS)) throw new InvalidNetworkConstructionException("Mismatching batch_size/max_threads found");
 
         return true;
     }
@@ -181,7 +181,7 @@ public class NetworkBuilder {
         if(hidden.size() > 0) prior = hidden.get(hidden.size() - 1).getExitLayers();
         
         output = new OutputUnitConstructor(evaluator).construct(prior, activation, new Integer[]{layerSize}, new Boolean[]{}, initArgs, penArgs, optimArgs, BATCH_SIZE, MAX_THREADS);
-        if(output.validityCheck(BATCH_SIZE, MAX_THREADS)) throw new InvalidNetworkConstructionException("Mismatching batch_size/max_threads found");
+        if(!output.validityCheck(BATCH_SIZE, MAX_THREADS)) throw new InvalidNetworkConstructionException("Mismatching batch_size/max_threads found");
 
         return true;
     }
