@@ -77,12 +77,17 @@ public class Network {
         }
     }
 
-    public void adjustWeights(int thread) {
+    public void calculateGradients(int thread) {
         boolean descending = evaluator instanceof LossFunction;
-        output.adjustWeights(learning_rate, descending, thread);
+        output.calculateGradients(learning_rate, descending, thread);
         for(int i = hidden.length - 1; i >= 0; i--) {
-            hidden[i].adjustWeights(learning_rate, descending, thread);
+            hidden[i].calculateGradients(learning_rate, descending, thread);
         }
+    }
+
+    public void adjustWeights(int thread) {
+        output.adjustWeights(thread);
+        for(Unit u: hidden) u.adjustWeights(thread);
     }
 
     public void purgeEval(int thread) {

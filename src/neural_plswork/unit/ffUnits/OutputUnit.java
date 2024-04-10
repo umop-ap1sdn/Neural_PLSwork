@@ -12,8 +12,8 @@ public class OutputUnit extends Unit {
     
     OutputLayer layer;
 
-    public OutputUnit(OutputLayer nLayer, ConnectionLayer[] cLayers, int batchSize) {
-        super(new NeuronLayer[]{nLayer}, cLayers, batchSize);
+    public OutputUnit(OutputLayer nLayer, ConnectionLayer[] cLayers, int batchSize, int max_threads) {
+        super(new NeuronLayer[]{nLayer}, cLayers, batchSize, max_threads);
         layer = nLayer;
         
     }

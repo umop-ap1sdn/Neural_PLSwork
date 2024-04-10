@@ -113,7 +113,11 @@ public class ConnectionLayer {
         return forwardPass(srcLayer.getRecentValues(thread));
     }
 
-    public void adjustWeights(double learning_rate, int steps, boolean descending, int thread) {
+    @SuppressWarnings("unchecked")
+    public Matrix<NetworkValue>[] calculateGradients(double learning_rate, int steps, boolean descending, int thread) {
+        Matrix<NetworkValue> primaryDeltas = null;
+        Vector<NetworkValue> biasDeltas = null;
+        
         for(int time = 0; time < steps; time++) {
             Vector<NetworkValue> srcVals = srcLayer.getValues(time, thread);
             if(srcVals == null) break;
@@ -135,18 +139,28 @@ public class ConnectionLayer {
                 biasGradients = biasGradients.<NetworkValue, NetworkValue>add(biasPenalty).getAsVector();
             }
 
-            Matrix<NetworkValue> primaryDeltas = primaryOptimizer.computeDeltas(primaryGradients, learning_rate);
-            Vector<NetworkValue> biasDeltas = biasOptimizer.computeDeltas(biasGradients, learning_rate).getAsVector();
+            Matrix<NetworkValue> pDelta = primaryOptimizer.computeDeltas(primaryGradients, learning_rate);
+            Vector<NetworkValue> bDelta = biasOptimizer.computeDeltas(biasGradients, learning_rate).getAsVector();
 
             if(descending) {
-                primaryDeltas = primaryDeltas.scale(new NetworkValue(-1.0));
-                biasDeltas = biasDeltas.<NetworkValue, MatrixElement>scale(new NetworkValue(-1.0)).getAsVector();
+                pDelta = pDelta.scale(new NetworkValue(-1.0));
+                bDelta = bDelta.<NetworkValue, MatrixElement>scale(new NetworkValue(-1.0)).getAsVector();
             }
 
-            primaryLayer = primaryLayer.add(primaryDeltas);
-            if(srcLayer.getBias()) biasVector = biasVector.<NetworkValue, NetworkValue>add(biasDeltas).getAsVector();
+            if(primaryDeltas == null) primaryDeltas = pDelta;
+            else primaryDeltas = primaryDeltas.add(pDelta);
+
+            if(biasDeltas == null) biasDeltas = bDelta;
+            else biasDeltas = biasDeltas.<NetworkValue, NetworkValue>add(bDelta).getAsVector();
 
         }
+
+        return new Matrix[]{primaryDeltas, biasDeltas};
+    }
+
+    public void adjustWeights(Matrix<NetworkValue> primaryDeltas, Vector<NetworkValue> biasDeltas) {
+        primaryLayer = primaryLayer.add(primaryDeltas);
+        if(srcLayer.getBias()) biasVector = biasVector.<NetworkValue, NetworkValue>add(biasDeltas).getAsVector();
     }
 
     public double getPenaltySum() {

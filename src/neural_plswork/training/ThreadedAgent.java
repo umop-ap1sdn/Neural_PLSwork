@@ -38,6 +38,10 @@ public class ThreadedAgent extends NeuralNetworkTrainer implements Runnable {
 
     }
 
+    public void calculateGradients() {
+        nn.calculateGradients(threadIndex);
+    }
+
     public void adjustWeights() {
         nn.adjustWeights(threadIndex);
     }
@@ -75,10 +79,19 @@ public class ThreadedAgent extends NeuralNetworkTrainer implements Runnable {
 
     @Override
     public void run() {
-        if(phase == Procedure.TRAIN) train_epoch();
-        if(phase == Procedure.ADJUST) adjustWeights();
-        parent.finish(threadID, threadIndex);
 
+        if(phase == Procedure.TRAIN) {
+            train_epoch();
+            calculateGradients();
+        }
+
+        if(phase == Procedure.ADJUST) {
+            adjustWeights();
+        }
+        
+        
+        parent.finish(threadID, threadIndex);
+        
     }
 
     public void setTrain(int threadIndex) {

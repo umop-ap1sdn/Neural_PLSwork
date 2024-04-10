@@ -5,7 +5,10 @@ import neural_plswork.connection.optimizer.Optimizer;
 import neural_plswork.connection.penalize.Penalty;
 import neural_plswork.connection.penalize.WeightPenalizer;
 import neural_plswork.core.ConnectionLayer;
+import neural_plswork.core.NetworkValue;
 import neural_plswork.core.NeuronLayer;
+import neural_plswork.math.Matrix;
+import neural_plswork.math.Vector;
 
 public abstract class Unit {
     final protected NeuronLayer[] nLayers;
@@ -16,10 +19,17 @@ public abstract class Unit {
     private double DEFAULT_L1 = 0.1;
     private double DEFAULT_L2 = 0.1;
 
-    public Unit(NeuronLayer[] nLayers, ConnectionLayer[] cLayers, int batchSize) {
+    private Matrix<NetworkValue>[][] primaryGradients;
+    private Vector<NetworkValue>[][] biasGradients;
+
+    @SuppressWarnings("unchecked")
+    public Unit(NeuronLayer[] nLayers, ConnectionLayer[] cLayers, int batchSize, int max_threads) {
         this.nLayers = nLayers;
         this.cLayers = cLayers;
         this.batchSize = batchSize;
+
+        primaryGradients = new Matrix[cLayers.length][max_threads];
+        biasGradients = new Vector[cLayers.length][max_threads];
     }
 
     public void purgeEval(int thread) {
@@ -38,11 +48,22 @@ public abstract class Unit {
         for(NeuronLayer n: nLayers) n.clear();
     }
 
-    public void adjustWeights(double lr, boolean descending, int thread) {
+    public void calculateGradients(double lr, boolean descending, int thread) {
+        int index = 0;
         for(ConnectionLayer c: cLayers) {
-            c.adjustWeights(lr, batchSize, descending, thread);
+            Matrix<NetworkValue>[] gradients = c.calculateGradients(lr, batchSize, descending, thread);
+            primaryGradients[index][thread] = gradients[0];
+            biasGradients[index++][thread] = gradients[1].getAsVector();
         }
     }
+
+    public void adjustWeights(int thread) {
+        int index = 0;
+        for(ConnectionLayer c: cLayers) {
+            c.adjustWeights(primaryGradients[index][thread], biasGradients[index][thread]);
+            index++;
+        }
+    } 
 
     public final boolean validityCheck(int historySize, int MAX_THREADS) {
         for(NeuronLayer n: nLayers) {

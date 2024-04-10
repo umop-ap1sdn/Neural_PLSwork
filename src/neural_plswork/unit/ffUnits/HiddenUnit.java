@@ -9,8 +9,8 @@ import neural_plswork.unit.Unit;
 
 public class HiddenUnit extends Unit {
     
-    public HiddenUnit(NeuronLayer nLayer, ConnectionLayer[] cLayers, int batchSize) {
-        super(new NeuronLayer[]{nLayer}, cLayers, batchSize);
+    public HiddenUnit(NeuronLayer nLayer, ConnectionLayer[] cLayers, int batchSize, int max_threads) {
+        super(new NeuronLayer[]{nLayer}, cLayers, batchSize, max_threads);
         
     }
     

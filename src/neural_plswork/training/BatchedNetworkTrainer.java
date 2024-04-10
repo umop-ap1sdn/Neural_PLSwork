@@ -45,6 +45,7 @@ public class BatchedNetworkTrainer extends NeuralNetworkTrainer {
         }
 
         nn.passEvals(0);
+        nn.calculateGradients(0);
         nn.adjustWeights(0);
         index = (index + 1) % train_set.batch_num();
     }

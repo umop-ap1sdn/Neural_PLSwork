@@ -38,7 +38,7 @@ public class OutputUnitConstructor implements UnitConstructor {
                 optimizer[i % cLayers.length].copy(), penalty[i % cLayers.length].copy());
         }
 
-        return new OutputUnit(outputLayer, cLayers, historyLength);
+        return new OutputUnit(outputLayer, cLayers, historyLength, MAX_THREADS);
     }
     
 }

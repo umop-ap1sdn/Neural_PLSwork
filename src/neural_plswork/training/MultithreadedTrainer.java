@@ -76,26 +76,33 @@ public class MultithreadedTrainer extends NeuralNetworkTrainer {
     public void train_epoch() {
         running.clear();
         finished.clear();
+
         int index = 0;
         while(finished.size() < agents.length) {
-            while(running.size() < nn.max_threads() && index < agents.length) {
+            while(availableThreads.size() > 0 && index < agents.length) {
                 running.add(index);
                 agents[index].setTrain(availableThreads.pop());
-                threads[index++].run();
+                threads[index] = new Thread(agents[index]);
+                threads[index++].start();
+                
             }
-            
+            //if(index >= agents.length) System.out.println(finished.size());
         }
 
         running.clear();
         finished.clear();
 
         index = 0;
+
         while(finished.size() < agents.length) {
-            while(running.size() < nn.max_threads() && index < agents.length) {
+            while(availableThreads.size() > 0 && index < agents.length) {
                 running.add(index);
                 agents[index].setAdjust(availableThreads.pop());
-                threads[index++].run();
+                threads[index] = new Thread(agents[index]);
+                threads[index++].start();
+            
             }
+            
         }
 
         running.clear();
@@ -121,11 +128,12 @@ public class MultithreadedTrainer extends NeuralNetworkTrainer {
         return eval;
     }
 
-    protected void finish(int threadID, int threadIndex) {
-        running.remove(threadID);
-        finished.add(threadID);
+    protected synchronized void finish(int threadID, int threadIndex) {
         availableThreads.push(threadIndex);
         
+        running.remove(threadID);
+        finished.add(threadID);
+
     }
     
 }
