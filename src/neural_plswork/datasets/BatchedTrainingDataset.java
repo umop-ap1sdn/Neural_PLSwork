@@ -14,7 +14,7 @@ public class BatchedTrainingDataset implements Iterable<TrainingDataset> {
         this.BATCH_NUM = dataset.length() / BATCH_SIZE;
 
         this.dataset_batch = new TrainingDataset[BATCH_NUM];
-        initialize_threads(dataset);
+        initialize_batches(dataset);
     }
 
     public BatchedTrainingDataset(TrainingDataset[] btd) {
@@ -24,7 +24,7 @@ public class BatchedTrainingDataset implements Iterable<TrainingDataset> {
         else this.BATCH_SIZE = btd[0].length;
     }
 
-    private void initialize_threads(TrainingDataset dataset) {
+    private void initialize_batches(TrainingDataset dataset) {
         for(int i = 0; i < BATCH_NUM; i++) {
             dataset_batch[i] = dataset.slice(i * BATCH_SIZE, (i + 1) * BATCH_SIZE);
         }
