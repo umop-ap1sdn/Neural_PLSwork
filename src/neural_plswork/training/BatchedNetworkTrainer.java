@@ -39,6 +39,7 @@ public class BatchedNetworkTrainer extends NeuralNetworkTrainer {
 
     @Override
     public void train_batch() {
+        if(train_set.batch_num() == 0) return;
         TrainingDataset td = train_set.getDataset(index);
         int batchIndex = 0;
         for(Vector<NetworkValue>[] sample: td) {

@@ -1,7 +1,5 @@
 package neural_plswork.training.multithreaded;
 
-import java.util.ArrayList;
-
 import neural_plswork.datasets.BatchedTrainingDataset;
 import neural_plswork.datasets.TrainTestSplit;
 import neural_plswork.datasets.TrainingDataset;
@@ -17,7 +15,6 @@ public class MultithreadedTrainer extends NeuralNetworkTrainer {
     private final ThreadedAgent[] test_agents;
     private final Thread[] threads;
     
-    private ArrayList<Thread> running;
     private RollingQueue<Integer> availableThreads;
 
     int index = 0;
@@ -34,11 +31,9 @@ public class MultithreadedTrainer extends NeuralNetworkTrainer {
         this.test_set = split[1];
         
         this.agents = new ThreadedAgent[train_set.batch_num()];
-        if(test_set == null) this.test_agents = new ThreadedAgent[0];
-        else this.test_agents = new ThreadedAgent[test_set.batch_num()];
+        this.test_agents = new ThreadedAgent[test_set.batch_num()];
         this.threads = new Thread[train_set.batch_num()];
 
-        running = new ArrayList<>();
         availableThreads = new RollingQueue<>(nn.max_threads() * 2);
         prepareThreads();
     }
@@ -52,11 +47,9 @@ public class MultithreadedTrainer extends NeuralNetworkTrainer {
         this.test_set = split[1];
 
         this.agents = new ThreadedAgent[train_set.batch_num()];
-        if(test_set == null) this.test_agents = new ThreadedAgent[0];
-        else this.test_agents = new ThreadedAgent[test_set.batch_num()];
+        this.test_agents = new ThreadedAgent[test_set.batch_num()];
         this.threads = new Thread[train_set.batch_num()];
 
-        running = new ArrayList<>();
         availableThreads = new RollingQueue<>(nn.max_threads() * 2);
         prepareThreads();
     }
@@ -83,6 +76,7 @@ public class MultithreadedTrainer extends NeuralNetworkTrainer {
 
     @Override
     public void train_batch() {
+        if(train_set.batch_num() == 0) return;
         try {
             agents[index].setTrain(availableThreads.pop());
             threads[index] = new Thread(agents[index]);
@@ -104,29 +98,26 @@ public class MultithreadedTrainer extends NeuralNetworkTrainer {
 
     @Override
     public void train_epoch() {
+        if(train_set.batch_num() == 0) return;
         int index = 0;
         while(index < agents.length) {
             while(availableThreads.size() > 0 && index < agents.length) {
                 agents[index].setTrain(availableThreads.pop());
                 threads[index] = new Thread(agents[index]);
-                running.add(threads[index]);
                 threads[index].start();
                 index++;
             }
             
-            for(Thread t: running) {
+            for(Thread t: threads) {
                 try {
                     t.join();
                 } catch (InterruptedException e) {
                     System.err.println(e.getMessage());
                 }
             }
-
-            running.clear();
         }
 
         index = 0;
-        running.clear();
 
         // System.out.println(availableThreads);
         while(index < agents.length) {
@@ -134,12 +125,11 @@ public class MultithreadedTrainer extends NeuralNetworkTrainer {
             while(availableThreads.size() > 0 && index < agents.length) {
                 agents[index].setAdjust(availableThreads.pop());
                 threads[index] = new Thread(agents[index]);
-                running.add(threads[index]);
                 threads[index].start();
                 index++;
             }
             
-            for(Thread t: running) {
+            for(Thread t: threads) {
                 try {
                     t.join();
                 } catch (InterruptedException e) {
@@ -147,7 +137,7 @@ public class MultithreadedTrainer extends NeuralNetworkTrainer {
                 }
             }
 
-            running.clear();
+            
         }
     }
 
@@ -171,8 +161,7 @@ public class MultithreadedTrainer extends NeuralNetworkTrainer {
     }
 
     protected synchronized void finish(int threadID, int threadIndex) {
-        availableThreads.pushHead(threadIndex);  
-        
+        availableThreads.pushHead(threadIndex);
     }
     
 }

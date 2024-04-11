@@ -80,13 +80,18 @@ public class ThreadedAgent extends NeuralNetworkTrainer implements Runnable {
 
     @Override
     public void run() {
-        if(phase == Procedure.TRAIN) {
-            train_epoch();
-            calculateGradients();
-        }
+        try {
+            if(phase == Procedure.TRAIN) {
+                train_epoch();
+                calculateGradients();
+            }
 
-        if(phase == Procedure.ADJUST) {
-            adjustWeights();
+            if(phase == Procedure.ADJUST) {
+                adjustWeights();
+            }
+
+        } finally {
+            
         }
 
         parent.finish(threadID, threadIndex);
