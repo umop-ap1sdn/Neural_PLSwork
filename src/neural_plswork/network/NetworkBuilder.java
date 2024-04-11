@@ -3,6 +3,18 @@ package neural_plswork.network;
 import java.util.ArrayList;
 import java.util.Random;
 
+import neural_plswork.core.NeuronLayer;
+import neural_plswork.layers.basic.InputLayer;
+import neural_plswork.unit.constructor.HiddenUnitConstructor;
+import neural_plswork.unit.constructor.OutputUnitConstructor;
+import neural_plswork.unit.ffUnits.HiddenUnit;
+import neural_plswork.unit.ffUnits.OutputUnit;
+import neural_plswork.neuron.activations.Activation;
+import neural_plswork.neuron.activations.ActivationFunction;
+import neural_plswork.neuron.evaluation.Differentiable;
+import neural_plswork.neuron.evaluation.Evaluation;
+import neural_plswork.neuron.evaluation.loss.Loss;
+import neural_plswork.neuron.evaluation.loss.LossFunction;
 import neural_plswork.connection.initialize.Initializer;
 import neural_plswork.connection.initialize.UniformRandomInitializer;
 import neural_plswork.connection.initialize.WeightInitializer;
@@ -10,18 +22,6 @@ import neural_plswork.connection.optimizer.OptimizationFunction;
 import neural_plswork.connection.optimizer.Optimizer;
 import neural_plswork.connection.penalize.Penalty;
 import neural_plswork.connection.penalize.WeightPenalizer;
-import neural_plswork.core.NeuronLayer;
-import neural_plswork.layers.basic.InputLayer;
-import neural_plswork.neuron.activations.Activation;
-import neural_plswork.neuron.activations.ActivationFunction;
-import neural_plswork.neuron.evaluation.Differentiable;
-import neural_plswork.neuron.evaluation.Evaluation;
-import neural_plswork.neuron.evaluation.loss.Loss;
-import neural_plswork.neuron.evaluation.loss.LossFunction;
-import neural_plswork.unit.constructor.HiddenUnitConstructor;
-import neural_plswork.unit.constructor.OutputUnitConstructor;
-import neural_plswork.unit.ffUnits.HiddenUnit;
-import neural_plswork.unit.ffUnits.OutputUnit;
 
 public class NetworkBuilder {
     private Initializer DEFAULT_INITIALIZER;
@@ -46,6 +46,8 @@ public class NetworkBuilder {
     private double DEFAULT_L2 = 0.1;
 
     public NetworkBuilder(int MAX_THREADS, int BATCH_SIZE) {
+        if(MAX_THREADS < 1 || BATCH_SIZE < 1) throw new IllegalArgumentException("Must have at least 1 thread and a batch size of at least 1");
+        
         this.MAX_THREADS = MAX_THREADS;
         this.BATCH_SIZE = BATCH_SIZE;
 
@@ -62,6 +64,8 @@ public class NetworkBuilder {
     }
 
     public NetworkBuilder(int MAX_THREADS, int BATCH_SIZE, int randomSeed) {
+        if(MAX_THREADS < 1 || BATCH_SIZE < 1) throw new IllegalArgumentException("Must have at least 1 thread and a batch size of at least 1");
+
         this.MAX_THREADS = MAX_THREADS;
         this.BATCH_SIZE = BATCH_SIZE;
 
