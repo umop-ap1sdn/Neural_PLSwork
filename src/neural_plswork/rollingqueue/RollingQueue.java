@@ -43,6 +43,14 @@ public class RollingQueue<T> {
         return ret;
     }
 
+    public T popTail() throws IllegalStateException {
+        if(size <= 0) throw new IllegalStateException("Cannot pop from empty queue");
+        tail--;
+        if(tail < 0) tail += capacity;
+        size--;
+        return queue[tail];
+    }
+
     public void push(T value) throws IllegalStateException {
         if(size >= capacity) throw new IllegalStateException("Cannot push to full queue");
         queue[tail] = value;
