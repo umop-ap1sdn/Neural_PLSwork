@@ -15,7 +15,7 @@ public class ThreadedAgent extends NeuralNetworkTrainer implements Runnable {
     protected Procedure phase;
 
     public ThreadedAgent(Network nn, MultithreadedTrainer parent, TrainingDataset td, int threadID) {
-        super(nn);
+        super(nn, td);
         this.parent = parent;
         this.td = td;
         this.threadID = threadID;

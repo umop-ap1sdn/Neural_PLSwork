@@ -1,8 +1,9 @@
 package neural_plswork.training.multithreaded;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 
 import neural_plswork.datasets.BatchedTrainingDataset;
+import neural_plswork.datasets.TrainTestSplit;
 import neural_plswork.datasets.TrainingDataset;
 import neural_plswork.network.Network;
 import neural_plswork.rollingqueue.RollingQueue;
@@ -16,22 +17,46 @@ public class MultithreadedTrainer extends NeuralNetworkTrainer {
     private final ThreadedAgent[] test_agents;
     private final Thread[] threads;
     
-    private HashSet<Thread> running;
+    private ArrayList<Thread> running;
     private RollingQueue<Integer> availableThreads;
 
     int index = 0;
 
-    public MultithreadedTrainer(Network nn, BatchedTrainingDataset train_set, BatchedTrainingDataset test_set) {
-        super(nn);
-        this.train_set = train_set;
-        this.test_set = test_set;
+    private final double DEFAULT_TRAINING_RATIO = 0.8;
+
+    public MultithreadedTrainer(Network nn, TrainingDataset td) {
+        super(nn, td);
+
+        BatchedTrainingDataset btd = new BatchedTrainingDataset(td, nn.batch_size());
+        BatchedTrainingDataset[] split = TrainTestSplit.train_test_split(btd, DEFAULT_TRAINING_RATIO);
+
+        this.train_set = split[0];
+        this.test_set = split[1];
+        
         this.agents = new ThreadedAgent[train_set.batch_num()];
         if(test_set == null) this.test_agents = new ThreadedAgent[0];
         else this.test_agents = new ThreadedAgent[test_set.batch_num()];
         this.threads = new Thread[train_set.batch_num()];
 
-        running = new HashSet<>();
-        // finished = new HashSet<>();
+        running = new ArrayList<>();
+        availableThreads = new RollingQueue<>(nn.max_threads() * 2);
+        prepareThreads();
+    }
+
+    public MultithreadedTrainer(Network nn, TrainingDataset td, double training_ratio) {
+        super(nn, td);
+        BatchedTrainingDataset btd = new BatchedTrainingDataset(td, nn.batch_size());
+        BatchedTrainingDataset[] split = TrainTestSplit.train_test_split(btd, training_ratio);
+
+        this.train_set = split[0];
+        this.test_set = split[1];
+
+        this.agents = new ThreadedAgent[train_set.batch_num()];
+        if(test_set == null) this.test_agents = new ThreadedAgent[0];
+        else this.test_agents = new ThreadedAgent[test_set.batch_num()];
+        this.threads = new Thread[train_set.batch_num()];
+
+        running = new ArrayList<>();
         availableThreads = new RollingQueue<>(nn.max_threads() * 2);
         prepareThreads();
     }

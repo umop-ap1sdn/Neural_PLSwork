@@ -16,18 +16,20 @@ public class BatchedNetworkTrainer extends NeuralNetworkTrainer {
     private final double training_ratio;
     private int index = 0;
 
-    public BatchedNetworkTrainer(Network nn, BatchedTrainingDataset btd) {
-        super(nn);
+    public BatchedNetworkTrainer(Network nn, TrainingDataset td) {
+        super(nn, td);
         training_ratio = DEFAULT_TRAINING_RATIO;
+        BatchedTrainingDataset btd = new BatchedTrainingDataset(td, nn.batch_size());
         BatchedTrainingDataset[] split = TrainTestSplit.train_test_split(btd, training_ratio);
         train_set = split[0];
         test_set = split[1];
 
     }
 
-    public BatchedNetworkTrainer(Network nn, BatchedTrainingDataset btd, double training_ratio) {
-        super(nn);
+    public BatchedNetworkTrainer(Network nn, TrainingDataset td, double training_ratio) {
+        super(nn, td);
         this.training_ratio = training_ratio;
+        BatchedTrainingDataset btd = new BatchedTrainingDataset(td, nn.batch_size());
         BatchedTrainingDataset[] split = TrainTestSplit.train_test_split(btd, training_ratio);
         train_set = split[0];
         test_set = split[1];
