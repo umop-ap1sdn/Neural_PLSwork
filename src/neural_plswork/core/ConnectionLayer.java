@@ -13,8 +13,11 @@ import neural_plswork.network.InvalidNetworkConstructionException;
 
 public class ConnectionLayer {
     
-    Matrix<NetworkValue> primaryLayer;
-    Vector<NetworkValue> biasVector;
+    private Matrix<NetworkValue> primaryLayer;
+    private Vector<NetworkValue> biasVector;
+
+    private Matrix<NetworkValue> emptyLayer;
+    private Vector<NetworkValue> emptyBias;
 
     private NeuronLayer srcLayer;
     private NeuronLayer destLayer;
@@ -84,23 +87,30 @@ public class ConnectionLayer {
         int cols = srcLayer.size();
 
         NetworkValue[][] matrix = new NetworkValue[rows][cols];
+        NetworkValue[][] empty = new NetworkValue[rows][cols];
 
         for(int i = 0; i < rows; i++) {
             for(int j = 0; j < cols; j++) {
                 matrix[i][j] = initializer.getNextWeight(i, j);
+                empty[i][j] = new NetworkValue();
             }
         }
 
         this.primaryLayer = new Matrix<>(matrix);
+        this.emptyLayer = new Matrix<>(empty);
 
         NetworkValue[] vector = new NetworkValue[rows];
+        NetworkValue[] emptyVector = new NetworkValue[rows];
 
         for(int i = 0; i < rows; i++) {
             if(srcLayer.getBias()) vector[i] = initializer.getNextWeight(i, 0);
             else vector[i] = new NetworkValue();
+
+            emptyVector[i] = new NetworkValue();
         }
 
         this.biasVector = new Vector<>(vector);
+        this.emptyBias = new Vector<>(emptyVector);
     }
 
     public Vector<NetworkValue> forwardPass(Vector<NetworkValue> input) {
@@ -115,8 +125,8 @@ public class ConnectionLayer {
 
     @SuppressWarnings("unchecked")
     public Matrix<NetworkValue>[] calculateGradients(double learning_rate, int steps, boolean descending, int thread) {
-        Matrix<NetworkValue> primaryDeltas = null;
-        Vector<NetworkValue> biasDeltas = null;
+        Matrix<NetworkValue> primaryDeltas = emptyLayer;
+        Vector<NetworkValue> biasDeltas = emptyBias;
         
         for(int time = 0; time < steps; time++) {
             Vector<NetworkValue> srcVals = srcLayer.getValues(time, thread);

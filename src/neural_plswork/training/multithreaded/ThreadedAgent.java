@@ -88,8 +88,7 @@ public class ThreadedAgent extends NeuralNetworkTrainer implements Runnable {
         if(phase == Procedure.ADJUST) {
             adjustWeights();
         }
-        
-        
+
         parent.finish(threadID, threadIndex);
         
     }

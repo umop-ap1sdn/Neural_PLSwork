@@ -33,7 +33,7 @@ public class MultithreadedTrainer extends NeuralNetworkTrainer {
 
         running = new HashSet<>();
         // finished = new HashSet<>();
-        availableThreads = new RollingQueue<>(nn.max_threads() + 1);
+        availableThreads = new RollingQueue<>(nn.max_threads() * 2);
         prepareThreads();
     }
 
@@ -149,7 +149,8 @@ public class MultithreadedTrainer extends NeuralNetworkTrainer {
     }
 
     protected synchronized void finish(int threadID, int threadIndex) {
-        if(allowPush) availableThreads.push(threadIndex);  
+        if(allowPush) availableThreads.pushHead(threadIndex);  
+        
     }
     
 }

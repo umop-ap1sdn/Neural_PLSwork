@@ -53,7 +53,8 @@ public abstract class Unit {
         for(ConnectionLayer c: cLayers) {
             Matrix<NetworkValue>[] gradients = c.calculateGradients(lr, batchSize, descending, thread);
             primaryGradients[index][thread] = gradients[0];
-            biasGradients[index++][thread] = gradients[1].getAsVector();
+            biasGradients[index][thread] = gradients[1].getAsVector();
+            index++;
         }
     }
 
