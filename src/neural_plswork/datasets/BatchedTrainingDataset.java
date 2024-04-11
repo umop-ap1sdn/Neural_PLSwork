@@ -32,7 +32,7 @@ public class BatchedTrainingDataset implements Iterable<TrainingDataset> {
 
     public BatchedTrainingDataset slice(int start, int end) {
         TrainingDataset[] btd = new TrainingDataset[end - start];
-        for(int i = start; i < end; i++) {
+        for(int i = 0; i < btd.length; i++) {
             btd[i] = dataset_batch[i + start];
         }
 

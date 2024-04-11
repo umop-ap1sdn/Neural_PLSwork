@@ -11,10 +11,10 @@ public class TrainTestSplit {
     }
 
     public static BatchedTrainingDataset[] train_test_split(BatchedTrainingDataset btd, double training_ratio) {
-        int training_len = (int)(training_ratio * btd.BATCH_NUM);
+        int train_len = (int)(training_ratio * btd.BATCH_NUM);
         BatchedTrainingDataset[] ret = new BatchedTrainingDataset[2];
-        ret[0] = btd.slice(0, training_len);
-        ret[1] = btd.slice(training_len, btd.BATCH_NUM);
+        ret[0] = btd.slice(0, train_len);
+        ret[1] = btd.slice(train_len, btd.BATCH_NUM);
         return ret;
     }
 }
