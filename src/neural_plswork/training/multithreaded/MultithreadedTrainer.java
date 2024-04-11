@@ -18,7 +18,6 @@ public class MultithreadedTrainer extends NeuralNetworkTrainer {
     
     private HashSet<Thread> running;
     private RollingQueue<Integer> availableThreads;
-    boolean allowPush = false;
 
     int index = 0;
 
@@ -53,21 +52,20 @@ public class MultithreadedTrainer extends NeuralNetworkTrainer {
         }
 
         for(int i = 0; i < nn.max_threads(); i++) {
-            availableThreads.push(i);
+            availableThreads.pushHead(i);
         }
     }
 
     @Override
     public void train_batch() {
         try {
-            allowPush = false;
-            agents[index].setTrain(0);
+            agents[index].setTrain(availableThreads.pop());
             threads[index] = new Thread(agents[index]);
             threads[index].start();
 
             threads[index].join();
 
-            agents[index].setAdjust(0);
+            agents[index].setAdjust(availableThreads.pop());
             threads[index] = new Thread(agents[index]);
             threads[index].start();
 
@@ -81,7 +79,6 @@ public class MultithreadedTrainer extends NeuralNetworkTrainer {
 
     @Override
     public void train_epoch() {
-        allowPush = true;
         int index = 0;
         while(index < agents.length) {
             while(availableThreads.size() > 0 && index < agents.length) {
@@ -149,7 +146,7 @@ public class MultithreadedTrainer extends NeuralNetworkTrainer {
     }
 
     protected synchronized void finish(int threadID, int threadIndex) {
-        if(allowPush) availableThreads.pushHead(threadIndex);  
+        availableThreads.pushHead(threadIndex);  
         
     }
     
