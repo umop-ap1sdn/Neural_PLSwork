@@ -82,6 +82,11 @@ public class Column<T> {
         if(!(data instanceof Double[])) throw new InvalidColumnException("Cannot turn this column into a double column");
         return new DoubleColumn((Double[]) data);
     }
+
+    public IntegerColumn toIntegerColumn() {
+        if(!(data instanceof Double[])) throw new InvalidColumnException("Cannot turn this column into an integer column");
+        return new IntegerColumn((Integer[]) data);
+    }
     
     public StringColumn toStringColumn() {
         if(!(data instanceof String[])) throw new InvalidColumnException("Cannot turn this column into a String Column");

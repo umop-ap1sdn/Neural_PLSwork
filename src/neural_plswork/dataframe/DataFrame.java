@@ -135,6 +135,7 @@ public class DataFrame {
         for(int i = 0; i < data.length; i++) {
             if(this.data[i].data instanceof String[]) data[i] = this.data[i].toStringColumn();
             else if(this.data[i].data instanceof Double[]) data[i] = this.data[i].toDoubleColumn();
+            else if(this.data[i].data instanceof Integer[]) data[i] = this.data[i].toIntegerColumn();
             else if(this.data[i].data instanceof Boolean[]) data[i] = this.data[i].toBooleanColumn();
             else data[i] = this.data[i];
             
