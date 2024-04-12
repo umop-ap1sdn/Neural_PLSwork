@@ -50,6 +50,20 @@ public class DataFrame {
         return loc(labels);
     }
 
+    public <T> void fillEmpty(String label, T value) {
+        if(!labelMap.containsKey(label)) throw new DataFrameException("Input label not found");
+        fillEmpty(labelMap.get(label), value);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> void fillEmpty(int column, T value) {
+        try {
+            ((Column<T>)data[column]).fillEmpty(value);
+        } catch (ClassCastException e) {
+            throw new DataFrameException("Input types do not match");
+        }
+    }
+
     public DataFrame appendColumn(String label, Column<?> column) {
         if(column.size() != rows) throw new DataFrameException("Column attempting to be appended has a wrong length");
 
