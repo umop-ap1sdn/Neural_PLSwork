@@ -84,7 +84,7 @@ public class Column<T> {
     }
 
     public IntegerColumn toIntegerColumn() {
-        if(!(data instanceof Double[])) throw new InvalidColumnException("Cannot turn this column into an integer column");
+        if(!(data instanceof Integer[])) throw new InvalidColumnException("Cannot turn this column into an integer column");
         return new IntegerColumn((Integer[]) data);
     }
     

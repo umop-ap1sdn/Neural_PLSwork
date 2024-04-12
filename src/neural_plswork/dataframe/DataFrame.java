@@ -3,7 +3,6 @@ package neural_plswork.dataframe;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.HashMap;
 
 public class DataFrame {
@@ -14,7 +13,7 @@ public class DataFrame {
     protected final int rows;
     protected final int columns;
 
-    public DataFrame(String[] labels, Column<?>[] data) {
+    public DataFrame(String[] labels, Column<?>... data) {
         if(labels.length != data.length) throw new DataFrameException("Labels length must be equal to number of columns");
         this.labels = labels;
         this.data = data;
@@ -184,8 +183,7 @@ public class DataFrame {
         try {
             FileWriter fw = new FileWriter(writeTo);
             
-            String labelString = Arrays.toString(labels);
-            labelString = labelString.substring(1, labelString.length() - 1);
+            String labelString = getRow(-1);
             fw.write(labelString + "\n");
 
             for(int i = 0; i < rows; i++) {
@@ -204,11 +202,20 @@ public class DataFrame {
     public String getRow(int row) {
         if(columns == 0) return "";
         StringBuilder sb = new StringBuilder();
+        
+        if(row == -1) {
+            sb.append(labels[0]);
+            for(int i = 1; i < labels.length; i++) {
+                sb.append("," + labels[i]);
+            }
+
+            return sb.toString();
+        }
+
         sb.append(data[0].get(row).toString());
 
         for(int i = 1; i < columns; i++) {
-            sb.append(",");
-            sb.append(data[i].get(row).toString());
+            sb.append("," + data[i].get(row).toString());
         }
 
         return sb.toString();
@@ -226,5 +233,21 @@ public class DataFrame {
 
     public Column<?>[] getData() {
         return data;
+    }
+
+    @Override
+    public String toString() {
+        if(columns == 0) return "";
+        StringBuilder sb = new StringBuilder();
+        
+        String labelString = getRow(-1);
+        sb.append(labelString + "\n");
+
+        for(int i = 0; i < rows; i++) {
+            sb.append(getRow(i));
+            if(i < rows - 1) sb.append("\n");
+        }
+
+        return sb.toString();
     }
 }
