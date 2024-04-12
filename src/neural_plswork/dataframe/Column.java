@@ -20,11 +20,14 @@ public class Column<T> {
     }
 
     @SuppressWarnings("unchecked")
-    public Column<T> append(Column<T> other) {
+    public Column<T> append(Column<?> other) {
+        if(!this.data.getClass().equals(other.data.getClass())) return null;
+        Column<T> normal = (Column<T>) other;
+
         T[] appended = (T[]) new Object[data.length + other.data.length];
         for(int i = 0; i < appended.length; i++) {
             if(i < data.length) appended[i] = data[i];
-            else appended[i] = other.data[i - data.length];
+            else appended[i] = normal.data[i - data.length];
         }
 
         return new Column<>(appended);
@@ -74,4 +77,10 @@ public class Column<T> {
 
         return new Column<Double>(numbers);
     }
+
+    protected DoubleColumn getDoubleColumn() {
+        if(!(data instanceof Double[])) return null;
+        return new DoubleColumn((Double[]) data);
+    }
+    
 }
