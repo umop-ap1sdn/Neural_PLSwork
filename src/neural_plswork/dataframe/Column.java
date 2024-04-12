@@ -78,17 +78,17 @@ public class Column<T> {
         return new Column<Double>(numbers);
     }
 
-    public DoubleColumn getDoubleColumn() {
+    public DoubleColumn toDoubleColumn() {
         if(!(data instanceof Double[])) throw new InvalidColumnException("Cannot turn this column into a double column");
         return new DoubleColumn((Double[]) data);
     }
     
-    public StringColumn geStringColumn() {
+    public StringColumn toStringColumn() {
         if(!(data instanceof String[])) throw new InvalidColumnException("Cannot turn this column into a String Column");
         return new StringColumn((String[]) data);
     }
 
-    public BooleanColumn getBooleanColumn() {
+    public BooleanColumn toBooleanColumn() {
         if(!(data instanceof Boolean[])) throw new InvalidColumnException("Cannot turn this column into a Boolean Column");
         return new BooleanColumn((Boolean[]) data);
     }

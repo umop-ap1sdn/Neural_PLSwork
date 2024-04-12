@@ -1,5 +1,9 @@
 package neural_plswork.dataframe;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class DataFrame {
@@ -126,13 +130,87 @@ public class DataFrame {
         return new DataFrame(labels, data);
     }
 
-    public DataFrame numify() {
-        DoubleColumn[] data = new DoubleColumn[columns];
-        for(int i = 0; i < columns; i++) {
-            data[i] = this.data[i].numify().getDoubleColumn();
+    public DataFrame graduate() {
+        Column<?>[] data = new Column[this.data.length];
+        for(int i = 0; i < data.length; i++) {
+            if(this.data[i].data instanceof String[]) data[i] = this.data[i].toStringColumn();
+            else if(this.data[i].data instanceof Double[]) data[i] = this.data[i].toDoubleColumn();
+            else if(this.data[i].data instanceof Boolean[]) data[i] = this.data[i].toBooleanColumn();
+            else data[i] = this.data[i];
+            
         }
 
         return new DataFrame(labels, data);
+    }
+
+    public DataFrame numify() {
+        DoubleColumn[] data = new DoubleColumn[columns];
+        for(int i = 0; i < columns; i++) {
+            data[i] = this.data[i].numify().toDoubleColumn();
+        }
+
+        return new DataFrame(labels, data);
+    }
+
+    public boolean to_csv(String path, String name, boolean overwrite) {
+        File file = new File(path);
+        if(!file.exists()) file.mkdirs();
+
+        int extPoint = name.indexOf(".");
+        String fileName = name;
+        String extension = ".csv";
+        if(extPoint != -1) {
+            fileName = name.substring(0, extPoint);
+            extension = name.substring(extPoint);
+        }
+
+        File writeTo;
+
+        if(!overwrite) {
+            int id = 0;
+            File check;
+            do {
+                String trueName = fileName + id + extension;
+                check = new File(path + File.separator + trueName);
+                id++;
+            } while (check.exists());
+
+            writeTo = check;
+        } else {
+            writeTo = new File(path + File.separator + fileName + extension);
+        }
+
+        try {
+            FileWriter fw = new FileWriter(writeTo);
+            
+            String labelString = Arrays.toString(labels);
+            labelString = labelString.substring(1, labelString.length() - 1);
+            fw.write(labelString + "\n");
+
+            for(int i = 0; i < rows; i++) {
+                fw.write(getRow(i) + "\n");
+            }
+
+            fw.close();
+
+        } catch (IOException e) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public String getRow(int row) {
+        if(columns == 0) return "";
+        StringBuilder sb = new StringBuilder();
+        sb.append(data[0].get(row).toString());
+
+        for(int i = 1; i < columns; i++) {
+            sb.append(",");
+            sb.append(data[i].get(row).toString());
+        }
+
+        return sb.toString();
     }
 
     public Column<?> getColumn(String label) {
