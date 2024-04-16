@@ -143,13 +143,13 @@ public class DataFrame {
         return new DataFrame(labels, data);
     }
 
-    public DataFrame numify() {
+    public NumericalDataFrame numify() {
         DoubleColumn[] data = new DoubleColumn[columns];
         for(int i = 0; i < columns; i++) {
             data[i] = this.data[i].numify().toDoubleColumn();
         }
 
-        return new DataFrame(labels, data);
+        return new NumericalDataFrame(labels, data);
     }
 
     public boolean to_csv(String path, String name, boolean overwrite) {
@@ -212,10 +212,13 @@ public class DataFrame {
             return sb.toString();
         }
 
-        sb.append(data[0].get(row).toString());
+        Object point = data[0].get(row);
+        if(point != null) sb.append(data[0].get(row).toString());
 
         for(int i = 1; i < columns; i++) {
-            sb.append("," + data[i].get(row).toString());
+            point = data[i].get(row);
+            if(point != null) sb.append("," + data[i].get(row).toString());
+            else sb.append(",");
         }
 
         return sb.toString();
