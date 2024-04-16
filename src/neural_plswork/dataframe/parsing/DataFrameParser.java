@@ -87,7 +87,7 @@ public class DataFrameParser {
         String[][] output = new String[input[0].length][input.length];
 
         for(int i = 0; i < input.length; i++) {
-            for(int j = 0; j < input[0].length; j++) {
+            for(int j = 0; j < input[i].length; j++) {
                 output[j][i] = input[i][j];
             }
         }

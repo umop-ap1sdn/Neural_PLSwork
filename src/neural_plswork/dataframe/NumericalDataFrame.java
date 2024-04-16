@@ -12,7 +12,8 @@ public class NumericalDataFrame extends DataFrame {
     private void initArray(DoubleColumn[] data) {
         for(int i = 0; i < rows; i++) {
             for(int j = 0; j < columns; j++) {
-                dataPrim[i][j] = data[j].get(i);
+                if(data[j].get(i) == null) dataPrim[i][j] = 0.0;
+                else dataPrim[i][j] = data[j].get(i);
             }
         }
     }
