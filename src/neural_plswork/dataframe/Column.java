@@ -1,8 +1,9 @@
 package neural_plswork.dataframe;
 
 import java.util.HashMap;
+import java.util.Iterator;
 
-public class Column<T> {
+public class Column<T> implements Iterable<T>{
     protected T[] data;
     
     public Column(T[] data) {
@@ -96,5 +97,34 @@ public class Column<T> {
     public BooleanColumn toBooleanColumn() {
         if(!(data instanceof Boolean[])) throw new InvalidColumnException("Cannot turn this column into a Boolean Column");
         return new BooleanColumn((Boolean[]) data);
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        return new ColumnIterator<T>(this);
+    }
+
+    @SuppressWarnings("hiding")
+    class ColumnIterator<T> implements Iterator<T> {
+
+        private final Column<T> iterate;
+        private int row;
+    
+        private ColumnIterator(Column<T> iterate) {
+            this.iterate = iterate;
+            row = 0;
+        }
+    
+        @Override
+        public boolean hasNext() {
+            if(row == iterate.size()) return false;
+            return true;
+        }
+    
+        @Override
+        public T next() {
+            return iterate.get(row++);
+        }
+        
     }
 }
