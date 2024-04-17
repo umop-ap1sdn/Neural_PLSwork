@@ -29,4 +29,30 @@ public class DataPipeline {
         path = new ArrayList<>();
         revPath = new ArrayList<>();
     }
+
+    public void addTransformation(Transformation transformation) {
+        currentData = transformation.fit_transform(currentData);
+        path.add(transformation);
+        if(transformation instanceof Reversible) revPath.add(0, (Reversible) transformation);
+    }
+
+    public DoubleColumn[] transform(DoubleColumn[] input) {
+        DoubleColumn[] data = input;
+        for(Transformation t: path) data = t.transform(data);
+        return data;
+    }
+
+    public DoubleColumn[] transform(NumericalDataFrame ndf) {
+        return transform(ndf.getData());
+    }
+
+    public DoubleColumn[] reverse(DoubleColumn[] input) {
+        DoubleColumn[] data = input;
+        for(Reversible r: revPath) data = r.reverse(data);
+        return data;
+    }
+
+    public DoubleColumn[] reverse(NumericalDataFrame ndf) {
+        return reverse(ndf.getData());
+    }
 }
