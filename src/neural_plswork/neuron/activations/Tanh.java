@@ -32,4 +32,8 @@ public class Tanh implements ActivationFunction {
         return jacobian;
     }
     
+    @Override
+    public Tanh copy() {
+        return new Tanh();
+    }
 }

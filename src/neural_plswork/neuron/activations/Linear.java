@@ -24,4 +24,8 @@ public class Linear implements ActivationFunction {
         return jacobian;
     }
     
+    @Override
+    public Linear copy() {
+        return new Linear();
+    }
 }

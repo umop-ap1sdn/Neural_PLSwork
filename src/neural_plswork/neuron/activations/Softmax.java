@@ -51,5 +51,10 @@ public class Softmax implements ActivationFunction {
 
         return jacobian;
     }
+
+    @Override
+    public Softmax copy() {
+        return new Softmax();
+    }
     
 }

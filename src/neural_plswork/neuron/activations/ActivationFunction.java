@@ -2,9 +2,10 @@ package neural_plswork.neuron.activations;
 
 import neural_plswork.math.Matrix;
 import neural_plswork.math.Vector;
+import neural_plswork.core.Copiable;
 import neural_plswork.core.NetworkValue;
 
-public interface ActivationFunction {
+public interface ActivationFunction extends Copiable {
     
     public Vector<NetworkValue> activate(Vector<NetworkValue> unactivated);
     // public Vector<NetworkValue> derivative(Vector<NetworkValue> unactivated);
@@ -12,6 +13,7 @@ public interface ActivationFunction {
     // Change all functions to now create a jacobian matrix form derivative, mainly due to softmax activation
     public Matrix<NetworkValue> derivative(Vector<NetworkValue> unactivated);
 
+    public ActivationFunction copy();
 
     public static ActivationFunction getFunction(Activation activation) throws InvalidActivationException {
         if(activation == null) throw new InvalidActivationException("Activation enum is null");

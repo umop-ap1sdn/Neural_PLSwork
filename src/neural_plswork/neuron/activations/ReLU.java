@@ -28,5 +28,10 @@ public class ReLU implements ActivationFunction {
 
         return jacobian;
     }
+
+    @Override
+    public ReLU copy() {
+        return new ReLU();
+    }
     
 }

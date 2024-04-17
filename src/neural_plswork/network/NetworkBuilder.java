@@ -11,6 +11,7 @@ import neural_plswork.unit.ffUnits.HiddenUnit;
 import neural_plswork.unit.ffUnits.OutputUnit;
 import neural_plswork.neuron.activations.Activation;
 import neural_plswork.neuron.activations.ActivationFunction;
+import neural_plswork.neuron.activations.Sigmoid;
 import neural_plswork.neuron.evaluation.Differentiable;
 import neural_plswork.neuron.evaluation.Evaluation;
 import neural_plswork.neuron.evaluation.loss.Loss;
@@ -29,6 +30,8 @@ public class NetworkBuilder {
     private OptimizationFunction DEFAULT_OPTIMIZER = OptimizationFunction.getFunction(Optimizer.SGD);
     private final Differentiable DEFAULT_TRAINING_EVALUATOR;
     private final Evaluation DEFAULT_REPORTING_EVALUATOR;
+
+    private ActivationFunction DEFAULT_ACTIVATION;
 
     private Differentiable evaluator;
     private Evaluation reporter;
@@ -57,6 +60,8 @@ public class NetworkBuilder {
         this.evaluator = DEFAULT_TRAINING_EVALUATOR;
         this.reporter = DEFAULT_REPORTING_EVALUATOR;
 
+        DEFAULT_ACTIVATION = new Sigmoid();
+
         rand = new Random();
         DEFAULT_INITIALIZER = new UniformRandomInitializer(rand, -0.1, 0.1);
 
@@ -75,6 +80,8 @@ public class NetworkBuilder {
         this.evaluator = DEFAULT_TRAINING_EVALUATOR;
         this.reporter = DEFAULT_REPORTING_EVALUATOR;
 
+        DEFAULT_ACTIVATION = new Sigmoid();
+
         rand = new Random(randomSeed);
 
         DEFAULT_INITIALIZER = new UniformRandomInitializer(rand, -0.1, 0.1);
@@ -89,102 +96,52 @@ public class NetworkBuilder {
         return true;
     }
 
-    public boolean appendHiddenUnit(HiddenUnitConstructor constructor, ActivationFunction[] activations, Integer[] layerSizes, 
-        Boolean[] bias, Object[]...params) throws InvalidNetworkConstructionException {
+    public boolean appendHiddenUnit(HiddenUnitConstructor constructor, Integer[] layerSizes, Boolean[] bias, Object[]...params) throws InvalidNetworkConstructionException {
         
         if(input == null) throw new InvalidNetworkConstructionException("Hidden Unit must only be created after instantiating InputLayer");
         if(output != null) throw new InvalidNetworkConstructionException("Cannot add hidden layers after output has been instantiated");
         
-        Object[][] prepedParams = parseParams(params);
+        Object[][] preppedParams = parseParams(params);
 
-        Initializer[] initArgs = new Initializer[prepedParams[0].length];
-        Penalty[] penArgs = new Penalty[prepedParams[1].length];
-        OptimizationFunction[] optimArgs = new OptimizationFunction[prepedParams[2].length];
-
-        for(int i = 0; i < initArgs.length; i++) initArgs[i] = (Initializer) prepedParams[0][i];
-        for(int i = 0; i < penArgs.length; i++) penArgs[i] = (Penalty) prepedParams[1][i];
-        for(int i = 0; i < optimArgs.length; i++) optimArgs[i] = (OptimizationFunction) prepedParams[2][i];
+        ActivationFunction[] actArgs = new ActivationFunction[preppedParams[0].length];
+        Initializer[] initArgs = new Initializer[preppedParams[1].length];
+        Penalty[] penArgs = new Penalty[preppedParams[2].length];
+        OptimizationFunction[] optimArgs = new OptimizationFunction[preppedParams[3].length];
+        
+        for(int i = 0; i < actArgs.length; i++) actArgs[i] = (ActivationFunction) preppedParams[0][i];
+        for(int i = 0; i < initArgs.length; i++) initArgs[i] = (Initializer) preppedParams[1][i];
+        for(int i = 0; i < penArgs.length; i++) penArgs[i] = (Penalty) preppedParams[2][i];
+        for(int i = 0; i < optimArgs.length; i++) optimArgs[i] = (OptimizationFunction) preppedParams[3][i];
         
         NeuronLayer[] prior = {input};
         if(hidden.size() > 0) prior = hidden.get(hidden.size() - 1).getExitLayers();
         
-        hidden.add(constructor.construct(prior, activations, layerSizes, bias, initArgs, penArgs, optimArgs, BATCH_SIZE, MAX_THREADS));
+        hidden.add(constructor.construct(prior, actArgs, layerSizes, bias, initArgs, penArgs, optimArgs, BATCH_SIZE, MAX_THREADS));
         if(!hidden.get(hidden.size() - 1).validityCheck(BATCH_SIZE, MAX_THREADS)) throw new InvalidNetworkConstructionException("Mismatching batch_size/max_threads found");
         
         return true;
     }
 
-    public boolean appendHiddenUnit(HiddenUnitConstructor constructor, Activation[] activation, Integer[] layerSizes, 
-        Boolean[] bias, Object[]...params) throws InvalidNetworkConstructionException {
-        
-        if(input == null) throw new InvalidNetworkConstructionException("Hidden Unit must only be created after instantiating InputLayer");
-        if(output != null) throw new InvalidNetworkConstructionException("Cannot add hidden layers after output has been instantiated");
-        
-        ActivationFunction[] activations = convert(activation);
-        Object[][] prepedParams = parseParams(params);
-
-        Initializer[] initArgs = new Initializer[prepedParams[0].length];
-        Penalty[] penArgs = new Penalty[prepedParams[1].length];
-        OptimizationFunction[] optimArgs = new OptimizationFunction[prepedParams[2].length];
-
-        for(int i = 0; i < initArgs.length; i++) initArgs[i] = (Initializer) prepedParams[0][i];
-        for(int i = 0; i < penArgs.length; i++) penArgs[i] = (Penalty) prepedParams[1][i];
-        for(int i = 0; i < optimArgs.length; i++) optimArgs[i] = (OptimizationFunction) prepedParams[2][i];
-        
-        
-        NeuronLayer[] prior = {input};
-        if(hidden.size() > 0) prior = hidden.get(hidden.size() - 1).getExitLayers();
-        
-        hidden.add(constructor.construct(prior, activations, layerSizes, bias, initArgs, penArgs, optimArgs, BATCH_SIZE, MAX_THREADS));
-        if(!hidden.get(hidden.size() - 1).validityCheck(BATCH_SIZE, MAX_THREADS)) throw new InvalidNetworkConstructionException("Mismatching batch_size/max_threads found");
-        
-        return true;
-    }
-
-    public boolean appendOutputUnit(ActivationFunction activation, Integer layerSize, 
-        Object[]... params) throws InvalidNetworkConstructionException {
+    public boolean appendOutputUnit(Integer layerSize, Object[]... params) throws InvalidNetworkConstructionException {
 
         if(input == null) throw new InvalidNetworkConstructionException("Output must only be created after instantiating InputLayer");
     
-        Object[][] prepedParams = parseParams(params);
+        Object[][] preppedParams = parseParams(params);
 
-        Initializer[] initArgs = new Initializer[prepedParams[0].length];
-        Penalty[] penArgs = new Penalty[prepedParams[1].length];
-        OptimizationFunction[] optimArgs = new OptimizationFunction[prepedParams[2].length];
-
-        for(int i = 0; i < initArgs.length; i++) initArgs[i] = (Initializer) prepedParams[0][i];
-        for(int i = 0; i < penArgs.length; i++) penArgs[i] = (Penalty) prepedParams[1][i];
-        for(int i = 0; i < optimArgs.length; i++) optimArgs[i] = (OptimizationFunction) prepedParams[2][i];
+        ActivationFunction[] actArgs = new ActivationFunction[preppedParams[0].length];
+        Initializer[] initArgs = new Initializer[preppedParams[1].length];
+        Penalty[] penArgs = new Penalty[preppedParams[2].length];
+        OptimizationFunction[] optimArgs = new OptimizationFunction[preppedParams[3].length];
+        
+        for(int i = 0; i < actArgs.length; i++) actArgs[i] = (ActivationFunction) preppedParams[0][i];
+        for(int i = 0; i < initArgs.length; i++) initArgs[i] = (Initializer) preppedParams[1][i];
+        for(int i = 0; i < penArgs.length; i++) penArgs[i] = (Penalty) preppedParams[2][i];
+        for(int i = 0; i < optimArgs.length; i++) optimArgs[i] = (OptimizationFunction) preppedParams[3][i];
         
         NeuronLayer[] prior = {input};
         if(hidden.size() > 0) prior = hidden.get (hidden.size() - 1).getExitLayers();
         
-        output = new OutputUnitConstructor(evaluator).construct(prior, new ActivationFunction[]{activation}, new Integer[]{layerSize}, new Boolean[]{}, initArgs, penArgs, optimArgs, BATCH_SIZE, MAX_THREADS);
-        if(!output.validityCheck(BATCH_SIZE, MAX_THREADS)) throw new InvalidNetworkConstructionException("Mismatching batch_size/max_threads found");
-
-        return true;
-    }
-
-    public boolean appendOutputUnit(Activation activate, Integer layerSize, 
-        Object[]... params) throws InvalidNetworkConstructionException {
-
-        if(input == null) throw new InvalidNetworkConstructionException("Output must only be created after instantiating InputLayer");
-        
-        ActivationFunction[] activation = new ActivationFunction[]{ActivationFunction.getFunction(activate)};
-        Object[][] prepedParams = parseParams(params);
-
-        Initializer[] initArgs = new Initializer[prepedParams[0].length];
-        Penalty[] penArgs = new Penalty[prepedParams[1].length];
-        OptimizationFunction[] optimArgs = new OptimizationFunction[prepedParams[2].length];
-
-        for(int i = 0; i < initArgs.length; i++) initArgs[i] = (Initializer) prepedParams[0][i];
-        for(int i = 0; i < penArgs.length; i++) penArgs[i] = (Penalty) prepedParams[1][i];
-        for(int i = 0; i < optimArgs.length; i++) optimArgs[i] = (OptimizationFunction) prepedParams[2][i];
-        
-        NeuronLayer[] prior = {input};
-        if(hidden.size() > 0) prior = hidden.get(hidden.size() - 1).getExitLayers();
-        
-        output = new OutputUnitConstructor(evaluator).construct(prior, activation, new Integer[]{layerSize}, new Boolean[]{}, initArgs, penArgs, optimArgs, BATCH_SIZE, MAX_THREADS);
+        output = new OutputUnitConstructor(evaluator).construct(prior, actArgs, new Integer[]{layerSize}, new Boolean[]{}, initArgs, penArgs, optimArgs, BATCH_SIZE, MAX_THREADS);
         if(!output.validityCheck(BATCH_SIZE, MAX_THREADS)) throw new InvalidNetworkConstructionException("Mismatching batch_size/max_threads found");
 
         return true;
@@ -196,20 +153,24 @@ public class NetworkBuilder {
     }
 
     private Object[][] parseParams(Object[][] params) throws InvalidNetworkConstructionException {
-        if(params.length > 3) throw new InvalidNetworkConstructionException("Too many arguments given");
-        Object[][] ret = new Object[3][];
+        if(params == null) params = new Object[0][0];
+        if(params.length > 4) throw new InvalidNetworkConstructionException("Too many arguments given");
+        Object[][] ret = new Object[4][];
         for(int i = 0; i < ret.length; i++) {
-            if(i < params.length) {
+            if(i < params.length && params[i] != null) {
                 switch(i) {
                     case 0:
+                        if(params[i] instanceof Activation[]) ret[i] = (ActivationFunction[]) convert((Activation[]) params[i]);
+                        break;
+                    case 1:
                         if(params[i] instanceof WeightInitializer[]) ret[i] = (Initializer[]) convert((WeightInitializer[]) params[i]);
                         else ret[i] = params[i];
                         break;
-                    case 1:
-                        if(params[i] instanceof WeightPenalizer[]) ret[i] = convert((WeightPenalizer[]) params[i]);
+                    case 2:
+                        if(params[i] instanceof WeightPenalizer[]) ret[i] = (Penalty[]) convert((WeightPenalizer[]) params[i]);
                         else ret[i] = params[i];
                         break;
-                    case 2:
+                    case 3:
                         if(params[i] instanceof Optimizer[]) ret[i] = convert((Optimizer[]) params[i]);
                         else ret[i] = params[i];
                         break;
@@ -220,13 +181,16 @@ public class NetworkBuilder {
                 Object[] column = new Object[1];
                 
                 switch(i) {
-                    case 0: 
+                    case 0:
+                        column[0] = DEFAULT_ACTIVATION.copy();
+                        break;
+                    case 1: 
                         column[0] = DEFAULT_INITIALIZER.copy();
                         break;
-                    case 1:
+                    case 2:
                         column[0] = DEFAULT_PENALTY.copy();
                         break;
-                    case 2:
+                    case 3:
                         column[0] = DEFAULT_OPTIMIZER.copy();
                         break;
                 }
@@ -294,6 +258,14 @@ public class NetworkBuilder {
 
     public void setReporter(Evaluation eval) {
         this.reporter = eval;
+    }
+
+    public void setDefaultActivation(Activation activation) {
+        this.DEFAULT_ACTIVATION = ActivationFunction.getFunction(activation);
+    }
+
+    public void setDefaultActivation(ActivationFunction activation) {
+        this.DEFAULT_ACTIVATION = activation;
     }
 
     public void setDefaultInitializer(Initializer initializer) {

@@ -35,5 +35,10 @@ public class Sigmoid implements ActivationFunction {
     private static double sigmoid(double x) {
         return 1.0 / (1.0 + Math.exp(-1 * x));
     }
+
+    @Override
+    public Sigmoid copy() {
+        return new Sigmoid();
+    }
     
 }
