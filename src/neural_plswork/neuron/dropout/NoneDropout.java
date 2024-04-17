@@ -1,14 +1,18 @@
 package neural_plswork.neuron.dropout;
 
-import java.util.Arrays;
+import neural_plswork.core.NetworkValue;
+import neural_plswork.math.Vector;
 
 public class NoneDropout implements Dropout {
 
     @Override
-    public boolean[] dropout(int length) {
-        boolean[] ret = new boolean[length];
-        Arrays.fill(ret, false);
-        return ret;
+    public Vector<NetworkValue> dropout(Vector<NetworkValue> input) {
+        return input;
+    }
+
+    @Override
+    public void shuffle(int length) {
+        // Unused
     }
 
     @Override

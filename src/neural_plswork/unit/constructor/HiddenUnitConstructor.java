@@ -7,12 +7,13 @@ import neural_plswork.core.ConnectionLayer;
 import neural_plswork.core.NeuronLayer;
 import neural_plswork.network.InvalidNetworkConstructionException;
 import neural_plswork.neuron.activations.ActivationFunction;
+import neural_plswork.neuron.dropout.Dropout;
 import neural_plswork.unit.ffUnits.HiddenUnit;
 
 public class HiddenUnitConstructor implements UnitConstructor {
 
     @Override
-    public HiddenUnit construct(NeuronLayer[] prior, ActivationFunction[] activation, Integer[] layerSize,
+    public HiddenUnit construct(NeuronLayer[] prior, ActivationFunction[] activation, Dropout[] dropout, Integer[] layerSize,
             Boolean[] bias, Initializer[] initializer, Penalty[] penalty,
             OptimizationFunction[] optimizer, int historyLength, int MAX_THREADS) throws InvalidNetworkConstructionException {
         // HiddenUnit constructor
@@ -21,7 +22,7 @@ public class HiddenUnitConstructor implements UnitConstructor {
         // if(initializer.length != prior.length && optimizer.length != prior.length || penalty.length != prior.length)
         //     throw new InvalidNetworkConstructionException("ConnectionLayer parameters must be equal to number of ConnectionLayers");
         
-        NeuronLayer hiddenLayer = new NeuronLayer(activation[0], layerSize[0], historyLength, bias[0], MAX_THREADS);
+        NeuronLayer hiddenLayer = new NeuronLayer(activation[0], dropout[0], layerSize[0], historyLength, bias[0], MAX_THREADS);
 
         ConnectionLayer[] cLayers = new ConnectionLayer[prior.length];
 

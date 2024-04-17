@@ -1,10 +1,13 @@
 package neural_plswork.neuron.dropout;
 
 import neural_plswork.core.Copiable;
+import neural_plswork.core.NetworkValue;
+import neural_plswork.math.Vector;
 
 public interface Dropout extends Copiable {
 
-    public boolean[] dropout(int length);
+    public Vector<NetworkValue> dropout(Vector<NetworkValue> input);
+    public void shuffle(int length);
     public Dropout copy();
 
     public static Dropout getDropout(DropoutRegularizer dr, double p, int batch_size) throws InvalidDropoutException {

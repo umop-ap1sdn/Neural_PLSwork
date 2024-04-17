@@ -5,6 +5,8 @@ import java.util.Arrays;
 import neural_plswork.math.Matrix;
 import neural_plswork.math.Vector;
 import neural_plswork.neuron.activations.ActivationFunction;
+import neural_plswork.neuron.dropout.Dropout;
+import neural_plswork.neuron.dropout.NoneDropout;
 import neural_plswork.rollingqueue.RollingQueue;
 
 public class NeuronLayer {
@@ -15,6 +17,7 @@ public class NeuronLayer {
     private RollingQueue<Vector<NetworkValue>>[] eval;
 
     private final ActivationFunction activation;
+    private Dropout[] dropout;
 
     private final int layerSize;
     private final int historySize;
@@ -22,7 +25,7 @@ public class NeuronLayer {
 
     private final int MAX_THREADS;
 
-    public NeuronLayer(ActivationFunction activation, int layerSize, int historySize, boolean bias, int MAX_THREADS) {
+    public NeuronLayer(ActivationFunction activation, Dropout dropout, int layerSize, int historySize, boolean bias, int MAX_THREADS) {
         this.activation = activation;
         this.layerSize = layerSize;
         this.historySize = historySize;
@@ -31,6 +34,7 @@ public class NeuronLayer {
         this.MAX_THREADS = MAX_THREADS;
 
         initLists();
+        initDropout(dropout);
     }
 
     @SuppressWarnings("unchecked")
@@ -46,6 +50,14 @@ public class NeuronLayer {
             derivative[i] = new RollingQueue<Matrix<NetworkValue>>(historySize);
             eval[i] = new RollingQueue<Vector<NetworkValue>>(historySize);
             purgeEval(i);
+        }
+    }
+
+    private void initDropout(Dropout drop) {
+        this.dropout = new Dropout[MAX_THREADS];
+
+        for(int i = 0; i < MAX_THREADS; i++) {
+            dropout[i] = drop.copy();
         }
     }
 
@@ -68,8 +80,17 @@ public class NeuronLayer {
         if(derivative[thread].size() >= historySize) derivative[thread].pop();
         
         unactivated[thread].push(netSum);
-        activated[thread].push(activation.activate(netSum));
-        derivative[thread].push(activation.derivative(netSum));
+        
+        Vector<NetworkValue> activate = activation.activate(netSum);
+        Matrix<NetworkValue> deriv = activation.derivative(netSum);
+
+        if(!(dropout[thread] instanceof NoneDropout)) {
+            dropout[thread].shuffle(layerSize);
+            activate = dropout[thread].dropout(activate);
+        }
+
+        activated[thread].push(activate);
+        derivative[thread].push(deriv);
         
     }
 

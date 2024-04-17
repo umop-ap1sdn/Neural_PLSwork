@@ -5,6 +5,7 @@ import neural_plswork.core.NeuronLayer;
 import neural_plswork.math.Matrix;
 import neural_plswork.math.Vector;
 import neural_plswork.neuron.activations.ActivationFunction;
+import neural_plswork.neuron.dropout.NoneDropout;
 import neural_plswork.neuron.evaluation.Differentiable;
 
 public class OutputLayer extends NeuronLayer {
@@ -12,7 +13,7 @@ public class OutputLayer extends NeuronLayer {
     private Differentiable evaluation;
 
     public OutputLayer(Differentiable evaluation, ActivationFunction activation, int layerSize, int historySize, int MAX_THREADS) {
-        super(activation, layerSize, historySize, false, MAX_THREADS);
+        super(activation, new NoneDropout(), layerSize, historySize, false, MAX_THREADS);
         this.evaluation = evaluation;
     }
 
