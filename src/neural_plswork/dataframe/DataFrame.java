@@ -204,9 +204,11 @@ public class DataFrame {
         StringBuilder sb = new StringBuilder();
         
         if(row == -1) {
-            sb.append(labels[0]);
+            if(labels[0] != null) sb.append(labels[0]);
+            else sb.append("NA");
             for(int i = 1; i < labels.length; i++) {
-                sb.append("," + labels[i]);
+                if(labels[i] != null) sb.append("," + labels[i]);
+                else sb.append("NA");
             }
 
             return sb.toString();
@@ -214,11 +216,12 @@ public class DataFrame {
 
         Object point = data[0].get(row);
         if(point != null) sb.append(data[0].get(row).toString());
+        else sb.append("NA");
 
         for(int i = 1; i < columns; i++) {
             point = data[i].get(row);
             if(point != null) sb.append("," + data[i].get(row).toString());
-            else sb.append(",");
+            else sb.append(",NA");
         }
 
         return sb.toString();
