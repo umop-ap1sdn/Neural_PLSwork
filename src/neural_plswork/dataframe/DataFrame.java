@@ -84,6 +84,15 @@ public class DataFrame {
         return new DataFrame(labels, data);
     }
 
+    public DataFrame appendColumn(DataFrame other) {
+        DataFrame appended = this;
+        for(int i = 0; i < other.columns; i++) {
+            appended = appended.appendColumn(other.labels[i], other.data[i]);
+        }
+
+        return appended;
+    }
+
     public DataFrame append(Column<?>[] other) {
         if(other.length != columns) throw new DataFrameException("Appended array must have the same size");
         int otherRows = 0;
@@ -109,15 +118,6 @@ public class DataFrame {
         }
 
         return append(other.data);
-    }
-
-    public DataFrame appendColumn(DataFrame other) {
-        DataFrame appended = this;
-        for(int i = 0; i < other.columns; i++) {
-            appended = appended.appendColumn(other.labels[i], other.data[i]);
-        }
-
-        return appended;
     }
 
     public DataFrame slice(int start, int end) {

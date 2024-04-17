@@ -55,4 +55,8 @@ public class DataPipeline {
     public DoubleColumn[] reverse(NumericalDataFrame ndf) {
         return reverse(ndf.getData());
     }
+
+    public DoubleColumn[] getCurrent() {
+        return currentData;
+    }
 }

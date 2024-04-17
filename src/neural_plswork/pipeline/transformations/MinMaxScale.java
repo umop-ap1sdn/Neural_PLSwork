@@ -10,8 +10,6 @@ public class MinMaxScale implements Transformation, Reversible {
     private final double newMin;
     private final double newMax;
 
-    private static final double EPSILON = 1e-7;
-
     public MinMaxScale(double min, double max) {
         newMin = min;
         newMax = max;
@@ -40,7 +38,8 @@ public class MinMaxScale implements Transformation, Reversible {
         for(int i = 0; i < input.length; i++) {
             Double[] column = new Double[input[i].size()];
             for(int j = 0; j < column.length; j++) {
-                double val = (input[i].get(j) - mins[i]) / ((maxs[i] - mins[i]) + EPSILON);
+                double val = 0;
+                if(maxs[i] != mins[i]) val = (input[i].get(j) - mins[i]) / (maxs[i] - mins[i]);
                 val *= (newMax - newMin);
                 val += newMin;
                 column[j] = val;
@@ -60,7 +59,8 @@ public class MinMaxScale implements Transformation, Reversible {
         for(int i = 0; i < input.length; i++) {
             Double[] column = new Double[input[i].size()];
             for(int j = 0; j < column.length; j++) {
-                double val = (input[i].get(j) - newMin) / ((newMax - newMin) + EPSILON);
+                double val = 0;
+                if(newMax != newMin) val = (input[i].get(j) - newMin) / (newMax - newMin);
                 val *= (maxs[i] - mins[i]);
                 val += mins[i];
                 column[j] = val;
