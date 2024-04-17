@@ -21,4 +21,14 @@ public class NumericalDataFrame extends DataFrame {
     public double[][] getNumData() {
         return dataPrim;
     }
+
+    @Override
+    public DoubleColumn[] getData() {
+        DoubleColumn[] ret = new DoubleColumn[columns];
+        for(int i = 0; i < columns; i++) {
+            ret[i] = (DoubleColumn) data[i];
+        }
+
+        return ret;
+    }
 }

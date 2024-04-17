@@ -8,7 +8,7 @@ import java.util.HashMap;
 public class DataFrame {
     private final String[] labels;
     private final HashMap<String, Integer> labelMap;
-    private final Column<?>[] data;
+    protected final Column<?>[] data;
 
     protected final int rows;
     protected final int columns;
