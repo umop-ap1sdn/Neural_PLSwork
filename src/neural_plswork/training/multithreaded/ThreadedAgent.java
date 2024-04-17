@@ -9,16 +9,14 @@ import neural_plswork.training.NeuralNetworkTrainer;
 public class ThreadedAgent extends NeuralNetworkTrainer implements Runnable {
     private final MultithreadedTrainer parent;
     private final TrainingDataset td;
-    private final int threadID;
     private int threadIndex = 0;
 
     protected Procedure phase;
 
-    public ThreadedAgent(Network nn, MultithreadedTrainer parent, TrainingDataset td, int threadID) {
+    public ThreadedAgent(Network nn, MultithreadedTrainer parent, TrainingDataset td) {
         super(nn, td);
         this.parent = parent;
         this.td = td;
-        this.threadID = threadID;
         phase = Procedure.TRAIN;
     }
 
@@ -94,7 +92,7 @@ public class ThreadedAgent extends NeuralNetworkTrainer implements Runnable {
             
         }
 
-        parent.finish(threadID, threadIndex);
+        parent.finish(threadIndex);
         
     }
 
