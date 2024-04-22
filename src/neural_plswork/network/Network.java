@@ -181,13 +181,22 @@ public class Network {
     }
 
     public void setDropout(Dropout[] dropout, int layer) {
-        if(layer > hidden.length) output.setDropout(dropout);
-        else hidden[layer].setDropout(dropout);
+        hidden[layer].setDropout(dropout);
     }
 
     public void setDropout(DropoutRegularizer[] dropout, int layer) {
-        if(layer > hidden.length) output.setDropout(dropout);
-        else hidden[layer].setDropout(dropout);
+        hidden[layer].setDropout(dropout);
+    }
+
+    public void setAllDropout(Dropout[] dropout) {
+        for(Unit u: hidden) u.setDropout(dropout);
+    }
+
+    public void setAllDropout(DropoutRegularizer[] dropout) {
+        for(Unit u: hidden) u.setDropout(dropout);
+    }
+    public void removeDropout() {
+        for(Unit u: hidden) u.setDropout(new DropoutRegularizer[]{DropoutRegularizer.NONE});
     }
 
     public int batch_size() {

@@ -94,6 +94,6 @@ public class NetworkValue implements MatrixElement {
 
     @Override
     public String toString() {
-        return String.format("%.3f", value);
+        return String.format("%.5f", value);
     }
 }

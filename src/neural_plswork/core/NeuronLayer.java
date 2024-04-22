@@ -99,6 +99,7 @@ public class NeuronLayer {
         Matrix<NetworkValue> multiplied = weightsT.multiply(nextErrs);
         // Matrix<NetworkValue> pointwise = multiplied.pointwiseMultiply(derivative.get(time));
         multiplied = derivative[thread].get(time).multiply(multiplied);
+
         return multiplied.getAsVector();
     }
 
