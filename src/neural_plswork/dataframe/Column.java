@@ -101,11 +101,10 @@ public class Column<T> implements Iterable<T>{
 
     @Override
     public Iterator<T> iterator() {
-        return new ColumnIterator<T>(this);
+        return new ColumnIterator(this);
     }
 
-    @SuppressWarnings("hiding")
-    class ColumnIterator<T> implements Iterator<T> {
+    class ColumnIterator implements Iterator<T> {
 
         private final Column<T> iterate;
         private int row;

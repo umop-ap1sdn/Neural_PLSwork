@@ -1,6 +1,8 @@
 package neural_plswork.rollingqueue;
 
-public class RollingQueue<T> {
+import java.util.Iterator;
+
+public class RollingQueue<T> implements Iterable<T> {
     
     private T[] queue;
     private int head;
@@ -77,6 +79,11 @@ public class RollingQueue<T> {
     }
 
     @Override
+    public Iterator<T> iterator() {
+        return new RollingQueueIterator(this);
+    }
+
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("[");
@@ -89,4 +96,25 @@ public class RollingQueue<T> {
         sb.append("]");
         return sb.toString();
     }
+
+    class RollingQueueIterator implements Iterator<T> {
+
+        private int index = 0;
+        private RollingQueue<T> rq;
+        RollingQueueIterator(RollingQueue<T> rq) {
+            this.rq = rq;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return (index < rq.size());
+        }
+
+        @Override
+        public T next() {
+            return rq.get(index++);
+        }
+        
+    }
+
 }

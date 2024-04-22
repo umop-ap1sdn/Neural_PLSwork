@@ -205,11 +205,10 @@ public class Matrix<T extends MatrixElement> implements Iterable<T> {
 
     @Override
     public Iterator<T> iterator() {
-        return new MatrixIterator<T>(this);
+        return new MatrixIterator(this);
     }
-
-    @SuppressWarnings("hiding")
-    class MatrixIterator<T extends MatrixElement> implements Iterator<T> {
+    
+    class MatrixIterator implements Iterator<T> {
 
         private final Matrix<T> iterate;
         private int row;

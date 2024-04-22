@@ -167,7 +167,7 @@ public class NetworkBuilder {
         if(params.length > 5) throw new InvalidNetworkConstructionException("Too many arguments given");
         Object[][] ret = new Object[5][];
         for(int i = 0; i < ret.length; i++) {
-            if(i < params.length && params[i] != null) {
+            if(i < params.length && params[i] != null && params[i].length >= 1) {
                 switch(i) {
                     case 0:
                         if(params[i] instanceof Activation[]) ret[i] = (ActivationFunction[]) convert((Activation[]) params[i]);
