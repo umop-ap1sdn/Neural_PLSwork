@@ -161,4 +161,11 @@ public class NeuronLayer {
     public final int MAX_THREADS() {
         return this.MAX_THREADS;
     }
+
+    public void setDropout(Dropout dropout) {
+        for(int i = 0; i < MAX_THREADS; i++) {
+            this.dropout[i] = dropout.copy();
+        }
+    }
+
 }

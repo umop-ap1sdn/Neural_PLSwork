@@ -7,6 +7,8 @@ import neural_plswork.connection.penalize.WeightPenalizer;
 import neural_plswork.core.NetworkValue;
 import neural_plswork.layers.basic.InputLayer;
 import neural_plswork.math.Vector;
+import neural_plswork.neuron.dropout.Dropout;
+import neural_plswork.neuron.dropout.DropoutRegularizer;
 import neural_plswork.neuron.evaluation.Differentiable;
 import neural_plswork.neuron.evaluation.Evaluation;
 import neural_plswork.neuron.evaluation.loss.Loss;
@@ -177,6 +179,17 @@ public class Network {
         if(layer > hidden.length) output.setOptimizer(optimizer);
         else hidden[layer].setOptimizer(optimizer);
     }
+
+    public void setDropout(Dropout[] dropout, int layer) {
+        if(layer > hidden.length) output.setDropout(dropout);
+        else hidden[layer].setDropout(dropout);
+    }
+
+    public void setDropout(DropoutRegularizer[] dropout, int layer) {
+        if(layer > hidden.length) output.setDropout(dropout);
+        else hidden[layer].setDropout(dropout);
+    }
+
 
     public int batch_size() {
         return batch_size;

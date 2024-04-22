@@ -9,6 +9,8 @@ import neural_plswork.core.NetworkValue;
 import neural_plswork.core.NeuronLayer;
 import neural_plswork.math.Matrix;
 import neural_plswork.math.Vector;
+import neural_plswork.neuron.dropout.Dropout;
+import neural_plswork.neuron.dropout.DropoutRegularizer;
 
 public abstract class Unit {
     final protected NeuronLayer[] nLayers;
@@ -18,6 +20,7 @@ public abstract class Unit {
 
     private double DEFAULT_L1 = 0.1;
     private double DEFAULT_L2 = 0.1;
+    private double DEFAULT_P = 0.2;
 
     private Matrix<NetworkValue>[][] primaryGradients;
     private Vector<NetworkValue>[][] biasGradients;
@@ -81,26 +84,49 @@ public abstract class Unit {
 
     public void setPenalty(Penalty[] penalty) {
         for(int i = 0; i < cLayers.length; i++) {
+            if(penalty[i % penalty.length] == null) continue;
             cLayers[i].setPenalty(penalty[i % penalty.length]);
         }
     }
 
     public void setPenalty(WeightPenalizer[] penalty) {
         for(int i = 0; i < cLayers.length; i++) {
+            if(penalty[i % penalty.length] == null) continue;
             cLayers[i].setPenalty(Penalty.getPenalty(penalty[i % penalty.length], DEFAULT_L1, DEFAULT_L2));
         }
     }
 
     public void setOptimizer(OptimizationFunction[] optimizer) {
         for(int i = 0; i < cLayers.length; i++) {
+            if(optimizer[i % optimizer.length] == null) continue;
             cLayers[i].setOptimizer(optimizer[i % optimizer.length]);
         }
     }
 
     public void setOptimizer(Optimizer[] optimizer) {
         for(int i = 0; i < cLayers.length; i++) {
+            if(optimizer[i % optimizer.length] == null) continue;
             cLayers[i].setOptimizer(OptimizationFunction.getFunction(optimizer[i % optimizer.length]));
         }
+    }
+
+    public void setDropout(Dropout[] dropout) {
+        for(int i = 0; i < nLayers.length; i++) {
+            if(dropout[i % dropout.length] == null) continue;
+            nLayers[i].setDropout(dropout[i % dropout.length]);
+        }
+    }
+
+    public void setDropout(DropoutRegularizer[] dropout) {
+        for(int i = 0; i < nLayers.length; i++) {
+            if(dropout[i % dropout.length] == null) continue;
+            nLayers[i].setDropout(Dropout.getDropout(dropout[i % dropout.length], DEFAULT_P, batchSize));
+        }
+    }
+
+
+    public void setDefaultP(double p) {
+        this.DEFAULT_P = p;
     }
 
     public double getPenaltySum() {
