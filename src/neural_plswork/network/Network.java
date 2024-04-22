@@ -190,7 +190,6 @@ public class Network {
         else hidden[layer].setDropout(dropout);
     }
 
-
     public int batch_size() {
         return batch_size;
     }
