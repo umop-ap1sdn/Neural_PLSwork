@@ -33,6 +33,31 @@ public class DataFrame {
         }
     }
 
+    public DataFrame(String[] labels, Object[]... columns) {
+        if(labels.length != columns.length) throw new DataFrameException("Labels length must be equal to number of columns");
+        this.labels = labels;
+
+        Column<?>[] data = new Column[columns.length];
+
+        for(int i = 0; i < data.length; i++) data[i] = new Column<>(columns[i]);
+
+        this.data = data;
+
+        if(data.length > 0) this.rows = data[0].size();
+        else this.rows = 0;
+        this.columns = labels.length;
+
+        labelMap = new HashMap<>();
+        for(int i = 0; i < labels.length; i++) {
+            if(labelMap.containsKey(labels[i])) throw new DataFrameException("Cannot have identical labels in a data frame");
+            labelMap.put(labels[i], i);
+        }
+
+        for(Column<?> c: data) {
+            if(c.size() != rows) throw new DataFrameException("All columns must have the same length");
+        }
+    }
+
     public DataFrame loc(String... labels) {
         Column<?>[] located = new Column[labels.length];
         
