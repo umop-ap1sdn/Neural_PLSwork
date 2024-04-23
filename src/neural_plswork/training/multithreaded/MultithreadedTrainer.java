@@ -79,6 +79,8 @@ public class MultithreadedTrainer extends NeuralNetworkTrainer {
 
     @Override
     public void train_batch() {
+        nn.setDropoutEnable(true);
+
         if(train_set.batch_num() == 0) return;
         try {
             agents[index].setTrain(availableThreads.pop());
@@ -101,6 +103,9 @@ public class MultithreadedTrainer extends NeuralNetworkTrainer {
 
     @Override
     public void train_epoch() {
+        nn.setDropoutEnable(true);
+
+
         if(train_set.batch_num() == 0) return;
         int trainIndex = 0;
         int adjustIndex = 0;
@@ -155,6 +160,8 @@ public class MultithreadedTrainer extends NeuralNetworkTrainer {
 
     @Override
     public double computeTrainingEval() {
+        nn.setDropoutEnable(false);
+
         double eval = 0;
         for(ThreadedAgent ta: agents) {
             eval += ta.computeTrainingEval();
@@ -164,6 +171,8 @@ public class MultithreadedTrainer extends NeuralNetworkTrainer {
 
     @Override
     public double computeValidationEval() {
+        nn.setDropoutEnable(false);
+        
         double eval = 0;
         for(ThreadedAgent ta: test_agents) {
             eval += ta.computeValidationEval();

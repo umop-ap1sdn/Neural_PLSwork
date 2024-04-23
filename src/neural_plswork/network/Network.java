@@ -182,15 +182,8 @@ public class Network {
         hidden[layer].setDropout(dropout);
     }
 
-    public void setAllDropout(Dropout[] dropout) {
-        for(Unit u: hidden) u.setDropout(dropout);
-    }
-
-    public void setAllDropout(DropoutRegularizer[] dropout) {
-        for(Unit u: hidden) u.setDropout(dropout);
-    }
-    public void removeDropout() {
-        for(Unit u: hidden) u.setDropout(new DropoutRegularizer[]{DropoutRegularizer.NONE});
+    public void setDropoutEnable(boolean dropout_enabled) {
+        for(Unit u: hidden) u.setDropoutEnable(dropout_enabled);
     }
 
     public int batch_size() {

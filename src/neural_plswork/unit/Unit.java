@@ -116,6 +116,11 @@ public abstract class Unit {
         }
     }
 
+    public void setDropoutEnable(boolean dropout_enabled) {
+        for(NeuronLayer n: nLayers) {
+            n.setDropoutEnable(dropout_enabled);
+        }
+    }
 
     public void setDefaultP(double p) {
         this.DEFAULT_P = p;

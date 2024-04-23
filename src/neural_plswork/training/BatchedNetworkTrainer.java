@@ -39,6 +39,7 @@ public class BatchedNetworkTrainer extends NeuralNetworkTrainer {
 
     @Override
     public void train_batch() {
+        nn.setDropoutEnable(true);
         if(train_set.batch_num() == 0) return;
         TrainingDataset td = train_set.getDataset(index);
         int batchIndex = 0;
@@ -63,7 +64,8 @@ public class BatchedNetworkTrainer extends NeuralNetworkTrainer {
     @Override
     @SuppressWarnings("unchecked")
     public double computeTrainingEval() {
-
+        nn.setDropoutEnable(false);
+        
         double eval = 0;
         for(int i = 0; i < train_set.batch_num(); i++) {
             Vector<NetworkValue>[] y_pred = new Vector[nn.batch_size()];
@@ -84,6 +86,8 @@ public class BatchedNetworkTrainer extends NeuralNetworkTrainer {
     @Override
     @SuppressWarnings("unchecked")
     public double computeValidationEval() {
+        nn.setDropoutEnable(false);
+
         double eval = 0;
         for(int i = 0; i < test_set.batch_num(); i++) {
             Vector<NetworkValue>[] y_pred = new Vector[nn.batch_size()];

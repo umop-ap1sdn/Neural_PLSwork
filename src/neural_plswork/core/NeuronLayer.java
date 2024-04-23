@@ -15,6 +15,8 @@ public class NeuronLayer {
     public RollingQueue<Vector<NetworkValue>>[] eval;
 
     private final ActivationFunction activation;
+
+    private boolean dropout_enabled = true;
     private Dropout[] dropout;
 
     private final int layerSize;
@@ -81,7 +83,7 @@ public class NeuronLayer {
         Vector<NetworkValue> activate = activation.activate(netSum);
         Matrix<NetworkValue> deriv = activation.derivative(netSum);
 
-        if(!(dropout[thread] instanceof NoneDropout)) {
+        if(!(dropout[thread] instanceof NoneDropout) && dropout_enabled) {
             dropout[thread].shuffle(layerSize);
             activate = dropout[thread].dropout(activate);
         }
@@ -148,6 +150,10 @@ public class NeuronLayer {
         for(int i = 0; i < MAX_THREADS; i++) {
             this.dropout[i] = dropout.copy();
         }
+    }
+
+    public void setDropoutEnable(boolean dropout_enabled) {
+        this.dropout_enabled = dropout_enabled;
     }
 
 }
