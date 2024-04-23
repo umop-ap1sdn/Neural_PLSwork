@@ -35,7 +35,6 @@ public class OutputLayer extends NeuronLayer {
     @Override
     public void setEvals(Vector<NetworkValue> evals, int thread) {
         if(eval[thread].size() >= historySize) eval[thread].pop();
-        // evals.simplePrint();
         eval[thread].push(evals);
     }
 
