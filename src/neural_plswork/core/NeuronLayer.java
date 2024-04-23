@@ -128,7 +128,7 @@ public class NeuronLayer {
         return activated[thread].getLast();
     }
 
-    public Matrix<NetworkValue> getRecentDerivative(int thread) {
+    public Matrix<NetworkValue> getRecentDerivatives(int thread) {
         return derivative[thread].getLast();
     }
 

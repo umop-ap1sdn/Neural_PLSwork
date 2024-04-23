@@ -31,7 +31,7 @@ public class OutputUnit extends Unit {
     }
 
     public void calcEvals(Vector<NetworkValue> targets, int thread, int time) {
-        Vector<NetworkValue> evals = layer.calculateEval(targets, null, time, thread);
+        Vector<NetworkValue> evals = layer.calculateEval(targets, null, 0, thread);
         layer.setEvals(evals, time, thread);
     }
 
