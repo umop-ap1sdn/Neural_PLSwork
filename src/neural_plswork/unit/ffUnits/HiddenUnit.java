@@ -31,13 +31,13 @@ public class HiddenUnit extends Unit {
         Matrix<NetworkValue>[] evalMats = new Matrix[next.getEntryConnections().length];
         for(int i = 0; i < evalMats.length; i++) evalMats[i] = next.getEntryConnections()[i].getLayer().transpose();
 
-        for(int i = 0; i < batchSize; i++) {
+        for(int i = batchSize - 1; i >= 0; i--) {
             Vector<NetworkValue> eval = nLayers[0].calculateEval(next.getEntryLayers()[0].getEval(i, thread), evalMats[0], i, thread);
             for(int j = 1; j < evalMats.length; j++) {
                 eval = eval.<NetworkValue, NetworkValue>add(nLayers[0].calculateEval(next.getEntryLayers()[j].getEval(i, thread), evalMats[j], i, thread)).getAsVector();
             }
 
-            nLayers[0].setEvals(eval, i, thread);
+            nLayers[0].setEvals(eval, thread);
         }
     }
 

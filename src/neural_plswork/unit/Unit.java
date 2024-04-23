@@ -35,14 +35,6 @@ public abstract class Unit {
         biasGradients = new Vector[cLayers.length][max_threads];
     }
 
-    public void purgeEval(int thread) {
-        for(NeuronLayer n: nLayers) n.purgeEval(thread);
-    }
-
-    public void purgeEval(int thread, int times) {
-        for(NeuronLayer n: nLayers) n.purgeEval(thread, times);
-    }
-
     public void clear(int thread) {
         for(NeuronLayer n: nLayers) n.clear(thread);
     }

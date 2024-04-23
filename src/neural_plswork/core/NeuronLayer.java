@@ -1,7 +1,5 @@
 package neural_plswork.core;
 
-import java.util.Arrays;
-
 import neural_plswork.math.Matrix;
 import neural_plswork.math.Vector;
 import neural_plswork.neuron.activations.ActivationFunction;
@@ -14,13 +12,13 @@ public class NeuronLayer {
     private RollingQueue<Vector<NetworkValue>>[] unactivated;
     private RollingQueue<Vector<NetworkValue>>[] activated;
     private RollingQueue<Matrix<NetworkValue>>[] derivative;
-    private RollingQueue<Vector<NetworkValue>>[] eval;
+    public RollingQueue<Vector<NetworkValue>>[] eval;
 
     private final ActivationFunction activation;
     private Dropout[] dropout;
 
     private final int layerSize;
-    private final int historySize;
+    public final int historySize;
     private final boolean bias;
 
     private final int MAX_THREADS;
@@ -49,7 +47,6 @@ public class NeuronLayer {
             activated[i] = new RollingQueue<Vector<NetworkValue>>(historySize);
             derivative[i] = new RollingQueue<Matrix<NetworkValue>>(historySize);
             eval[i] = new RollingQueue<Vector<NetworkValue>>(historySize);
-            purgeEval(i);
         }
     }
 
@@ -103,25 +100,9 @@ public class NeuronLayer {
         return multiplied.getAsVector();
     }
 
-    public void setEvals(Vector<NetworkValue> evals, int time, int thread) {
-        eval[thread].set(time, evals);
-    }
-
-    public void purgeEval(int thread, int times) {
-        double[] empty = new double[layerSize];
-        Arrays.fill(empty, 0);
-        
-        Vector<NetworkValue> zeros = NetworkValue.arrToVector(empty);
-
-        // Check to ensure no shallow copy errors occur here
-        for(int i = 0; i < times; i++) {
-            if(eval[thread].size() == historySize) eval[thread].pop();
-            eval[thread].push(zeros);
-        }
-    }
-
-    public void purgeEval(int thread) {
-        purgeEval(thread, historySize);
+    public void setEvals(Vector<NetworkValue> evals, int thread) {
+        if(eval[thread].size() >= historySize) eval[thread].popTail();
+        eval[thread].pushHead(evals);
     }
 
     public Vector<NetworkValue> getRecentValues(int thread) {

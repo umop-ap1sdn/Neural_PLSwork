@@ -32,6 +32,13 @@ public class OutputLayer extends NeuronLayer {
         return evalMat.getAsVector();
     }
 
+    @Override
+    public void setEvals(Vector<NetworkValue> evals, int thread) {
+        if(eval[thread].size() >= historySize) eval[thread].pop();
+        // evals.simplePrint();
+        eval[thread].push(evals);
+    }
+
     public void setEvaluation(Differentiable evaluation) {
         this.evaluation = evaluation;
     }

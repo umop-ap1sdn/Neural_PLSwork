@@ -94,18 +94,6 @@ public class Network {
         for(Unit u: hidden) u.adjustWeights(thread);
     }
 
-    public void purgeEval(int thread) {
-        input.purgeEval(thread);
-        for(Unit u: hidden) u.purgeEval(thread);
-        output.purgeEval(thread);
-    }
-
-    public void purgeEval(int thread, int times) {
-        input.purgeEval(thread, times);
-        for(Unit u: hidden) u.purgeEval(thread, times);
-        output.purgeEval(thread, times);
-    }
-
     public void clear(int thread) {
         input.clear(thread);
         for(Unit u: hidden) u.clear(thread);
