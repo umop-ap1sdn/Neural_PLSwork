@@ -19,6 +19,8 @@ import neural_plswork.neuron.evaluation.Differentiable;
 import neural_plswork.neuron.evaluation.Evaluation;
 import neural_plswork.neuron.evaluation.loss.Loss;
 import neural_plswork.neuron.evaluation.loss.LossFunction;
+import neural_plswork.neuron.evaluation.objective.Objective;
+import neural_plswork.neuron.evaluation.objective.ObjectiveFunction;
 import neural_plswork.connection.initialize.Initializer;
 import neural_plswork.connection.initialize.UniformRandomInitializer;
 import neural_plswork.connection.initialize.WeightInitializer;
@@ -281,6 +283,10 @@ public class NetworkBuilder {
 
     public void setReporter(Loss loss) {
         this.reporter = LossFunction.getFunction(loss, BATCH_SIZE);
+    }
+
+    public void setReporter(Objective objective) {
+        this.reporter = ObjectiveFunction.getFunction(objective, BATCH_SIZE);
     }
 
     public void setReporter(Evaluation eval) {

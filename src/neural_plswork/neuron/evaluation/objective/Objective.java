@@ -2,8 +2,9 @@ package neural_plswork.neuron.evaluation.objective;
 
 public enum Objective {
     CUSTOM(0),
-    AUC(1),
-    ACCURACY(2),
+    ROC_AUC(1),
+    BINARY_ACCURACY(2),
+    ACCURACY(3),
     INVALID(-1);
 
 
@@ -17,8 +18,10 @@ public enum Objective {
             case 0:
                 return CUSTOM;
             case 1:
-                return AUC;
+                return ROC_AUC;
             case 2:
+                return BINARY_ACCURACY;
+            case 3:
                 return ACCURACY;
             default:
                 return INVALID;

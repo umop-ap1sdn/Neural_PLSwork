@@ -13,6 +13,8 @@ import neural_plswork.neuron.evaluation.Differentiable;
 import neural_plswork.neuron.evaluation.Evaluation;
 import neural_plswork.neuron.evaluation.loss.Loss;
 import neural_plswork.neuron.evaluation.loss.LossFunction;
+import neural_plswork.neuron.evaluation.objective.Objective;
+import neural_plswork.neuron.evaluation.objective.ObjectiveFunction;
 import neural_plswork.unit.Unit;
 import neural_plswork.unit.ffUnits.HiddenUnit;
 import neural_plswork.unit.ffUnits.OutputUnit;
@@ -141,6 +143,10 @@ public class Network {
         this.reporter = eval;
     }
 
+    public void setReporter(Objective objective) {
+        this.reporter = ObjectiveFunction.getFunction(objective, batch_size);
+    }
+    
     public void setReporter(Loss loss) {
         this.reporter = LossFunction.getFunction(loss, batch_size);
     }
