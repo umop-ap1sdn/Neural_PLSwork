@@ -134,6 +134,17 @@ public abstract class Unit {
 
         return sum;
     }
+
+    public String unitToString(int resolution) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(cLayers.length);
+        sb.append("\n");
+        for(ConnectionLayer c: cLayers) {
+            sb.append(c.layerToString(resolution));
+        }
+        sb.append("---\n");
+        return sb.toString();
+    }
     
     public abstract void forwardPass(int thread);
     public abstract void calcEvals(Unit next, int thread);

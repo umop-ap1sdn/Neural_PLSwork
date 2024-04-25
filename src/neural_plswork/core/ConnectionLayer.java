@@ -203,4 +203,24 @@ public class ConnectionLayer {
     public Matrix<NetworkValue> getLayer() {
         return this.primaryLayer;
     }
+
+    public String layerToString(int resolution) {
+        StringBuilder sb = new StringBuilder();
+        for(int i = 0; i < primaryLayer.getRows(); i++) {
+            sb.append(String.format("%." + resolution + "f", primaryLayer.getValue(i, 0).value));
+            for(int j = 1; j < primaryLayer.getColumns(); j++) {
+                sb.append(String.format(",%." + resolution + "f", primaryLayer.getValue(i, j).value));
+            }
+            sb.append("\n");
+        }
+        sb.append("-\n");
+        
+        sb.append(String.format("%." + resolution + "f", biasVector.getValue(0).value));
+        for(int i = 1; i < biasVector.getRows(); i++) {
+            sb.append(String.format(",%." + resolution + "f", biasVector.getValue(i).value));
+        }
+        sb.append("\n--\n");
+        
+        return sb.toString();
+    }
 }
