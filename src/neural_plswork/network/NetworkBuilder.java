@@ -104,6 +104,14 @@ public class NetworkBuilder {
         return true;
     }
 
+    protected static final int ACTIVATION_INDEX = 0;
+    protected static final int DROPOUT_INDEX = 1;
+    protected static final int INITIALIZER_INDEX = 2;
+    protected static final int PENALTY_INDEX = 3;
+    protected static final int OPTIMIZATION_INDEX = 4;
+    protected static final int NUM_PARAMS = 5;
+    
+
     public boolean appendHiddenUnit(HiddenUnitConstructor constructor, Integer[] layerSizes, Boolean[] bias, Object[]...params) throws InvalidNetworkConstructionException {
         
         if(input == null) throw new InvalidNetworkConstructionException("Hidden Unit must only be created after instantiating InputLayer");
@@ -111,17 +119,17 @@ public class NetworkBuilder {
         
         Object[][] preppedParams = parseParams(params);
 
-        ActivationFunction[] actArgs = new ActivationFunction[preppedParams[0].length];
-        Dropout[] dropArgs = new Dropout[preppedParams[0].length];
-        Initializer[] initArgs = new Initializer[preppedParams[1].length];
-        Penalty[] penArgs = new Penalty[preppedParams[2].length];
-        OptimizationFunction[] optimArgs = new OptimizationFunction[preppedParams[3].length];
+        ActivationFunction[] actArgs = new ActivationFunction[preppedParams[ACTIVATION_INDEX].length];
+        Dropout[] dropArgs = new Dropout[preppedParams[DROPOUT_INDEX].length];
+        Initializer[] initArgs = new Initializer[preppedParams[INITIALIZER_INDEX].length];
+        Penalty[] penArgs = new Penalty[preppedParams[PENALTY_INDEX].length];
+        OptimizationFunction[] optimArgs = new OptimizationFunction[preppedParams[OPTIMIZATION_INDEX].length];
         
-        for(int i = 0; i < actArgs.length; i++) actArgs[i] = (ActivationFunction) preppedParams[0][i];
-        for(int i = 0; i < dropArgs.length; i++) dropArgs[i] = (Dropout) preppedParams[1][i];
-        for(int i = 0; i < initArgs.length; i++) initArgs[i] = (Initializer) preppedParams[2][i];
-        for(int i = 0; i < penArgs.length; i++) penArgs[i] = (Penalty) preppedParams[3][i];
-        for(int i = 0; i < optimArgs.length; i++) optimArgs[i] = (OptimizationFunction) preppedParams[4][i];
+        for(int i = 0; i < actArgs.length; i++) actArgs[i] = (ActivationFunction) preppedParams[ACTIVATION_INDEX][i];
+        for(int i = 0; i < dropArgs.length; i++) dropArgs[i] = (Dropout) preppedParams[DROPOUT_INDEX][i];
+        for(int i = 0; i < initArgs.length; i++) initArgs[i] = (Initializer) preppedParams[INITIALIZER_INDEX][i];
+        for(int i = 0; i < penArgs.length; i++) penArgs[i] = (Penalty) preppedParams[PENALTY_INDEX][i];
+        for(int i = 0; i < optimArgs.length; i++) optimArgs[i] = (OptimizationFunction) preppedParams[OPTIMIZATION_INDEX][i];
         
         NeuronLayer[] prior = {input};
         if(hidden.size() > 0) prior = hidden.get(hidden.size() - 1).getExitLayers();
@@ -138,17 +146,17 @@ public class NetworkBuilder {
     
         Object[][] preppedParams = parseParams(params);
 
-        ActivationFunction[] actArgs = new ActivationFunction[preppedParams[0].length];
-        Dropout[] dropArgs = new Dropout[preppedParams[0].length];
-        Initializer[] initArgs = new Initializer[preppedParams[1].length];
-        Penalty[] penArgs = new Penalty[preppedParams[2].length];
-        OptimizationFunction[] optimArgs = new OptimizationFunction[preppedParams[3].length];
+        ActivationFunction[] actArgs = new ActivationFunction[preppedParams[ACTIVATION_INDEX].length];
+        Dropout[] dropArgs = new Dropout[preppedParams[DROPOUT_INDEX].length];
+        Initializer[] initArgs = new Initializer[preppedParams[INITIALIZER_INDEX].length];
+        Penalty[] penArgs = new Penalty[preppedParams[PENALTY_INDEX].length];
+        OptimizationFunction[] optimArgs = new OptimizationFunction[preppedParams[OPTIMIZATION_INDEX].length];
         
-        for(int i = 0; i < actArgs.length; i++) actArgs[i] = (ActivationFunction) preppedParams[0][i];
-        for(int i = 0; i < dropArgs.length; i++) dropArgs[i] = (Dropout) preppedParams[1][i];
-        for(int i = 0; i < initArgs.length; i++) initArgs[i] = (Initializer) preppedParams[2][i];
-        for(int i = 0; i < penArgs.length; i++) penArgs[i] = (Penalty) preppedParams[3][i];
-        for(int i = 0; i < optimArgs.length; i++) optimArgs[i] = (OptimizationFunction) preppedParams[4][i];
+        for(int i = 0; i < actArgs.length; i++) actArgs[i] = (ActivationFunction) preppedParams[ACTIVATION_INDEX][i];
+        for(int i = 0; i < dropArgs.length; i++) dropArgs[i] = (Dropout) preppedParams[DROPOUT_INDEX][i];
+        for(int i = 0; i < initArgs.length; i++) initArgs[i] = (Initializer) preppedParams[INITIALIZER_INDEX][i];
+        for(int i = 0; i < penArgs.length; i++) penArgs[i] = (Penalty) preppedParams[PENALTY_INDEX][i];
+        for(int i = 0; i < optimArgs.length; i++) optimArgs[i] = (OptimizationFunction) preppedParams[OPTIMIZATION_INDEX][i];
         
         NeuronLayer[] prior = {input};
         if(hidden.size() > 0) prior = hidden.get (hidden.size() - 1).getExitLayers();
@@ -166,28 +174,28 @@ public class NetworkBuilder {
 
     private Object[][] parseParams(Object[][] params) throws InvalidNetworkConstructionException {
         if(params == null) params = new Object[0][0];
-        if(params.length > 5) throw new InvalidNetworkConstructionException("Too many arguments given");
-        Object[][] ret = new Object[5][];
+        if(params.length > NUM_PARAMS) throw new InvalidNetworkConstructionException("Too many arguments given");
+        Object[][] ret = new Object[NUM_PARAMS][];
         for(int i = 0; i < ret.length; i++) {
             if(i < params.length && params[i] != null && params[i].length >= 1) {
                 switch(i) {
-                    case 0:
+                    case ACTIVATION_INDEX:
                         if(params[i] instanceof Activation[]) ret[i] = (ActivationFunction[]) convert((Activation[]) params[i]);
                         else ret[i] = params[i];
                         break;
-                    case 1:
+                    case DROPOUT_INDEX:
                         if(params[i] instanceof DropoutRegularizer[]) ret[i] = (Dropout[]) convert((DropoutRegularizer[]) params[i]);
                         else ret[i] = params[i];
                         break;
-                    case 2:
+                    case INITIALIZER_INDEX:
                         if(params[i] instanceof WeightInitializer[]) ret[i] = (Initializer[]) convert((WeightInitializer[]) params[i]);
                         else ret[i] = params[i];
                         break;
-                    case 3:
+                    case PENALTY_INDEX:
                         if(params[i] instanceof WeightPenalizer[]) ret[i] = (Penalty[]) convert((WeightPenalizer[]) params[i]);
                         else ret[i] = params[i];
                         break;
-                    case 4:
+                    case OPTIMIZATION_INDEX:
                         if(params[i] instanceof Optimizer[]) ret[i] = convert((Optimizer[]) params[i]);
                         else ret[i] = params[i];
                         break;
@@ -198,19 +206,19 @@ public class NetworkBuilder {
                 Object[] column = new Object[1];
                 
                 switch(i) {
-                    case 0:
+                    case ACTIVATION_INDEX:
                         column[0] = DEFAULT_ACTIVATION.copy();
                         break;
-                    case 1:
+                    case DROPOUT_INDEX:
                         column[0] = DEFAULT_DROPOUT.copy();
                         break;
-                    case 2: 
+                    case INITIALIZER_INDEX: 
                         column[0] = DEFAULT_INITIALIZER.copy();
                         break;
-                    case 3:
+                    case PENALTY_INDEX:
                         column[0] = DEFAULT_PENALTY.copy();
                         break;
-                    case 4:
+                    case OPTIMIZATION_INDEX:
                         column[0] = DEFAULT_OPTIMIZER.copy();
                         break;
                 }

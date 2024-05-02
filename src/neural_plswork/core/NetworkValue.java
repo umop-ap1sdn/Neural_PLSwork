@@ -4,6 +4,7 @@ import java.util.HashSet;
 
 import neural_plswork.math.MatrixElement;
 import neural_plswork.math.Vector;
+import neural_plswork.math.Matrix;
 import neural_plswork.math.constants.AdditiveIdentity;
 import neural_plswork.math.constants.ConstantElement;
 import neural_plswork.math.constants.IdentityElement;
@@ -95,5 +96,29 @@ public class NetworkValue implements MatrixElement {
     @Override
     public String toString() {
         return String.format("%.5f", value);
+    }
+
+    public static class NetworkValueParser {
+
+        public static Vector<NetworkValue> stringToVector(String stringVec) {
+            NetworkValue[] values = stringToArr(stringVec);
+            return new Vector<>(values);
+        }
+
+        public static Matrix<NetworkValue> stringToMatrix(String[] stringVecs) {
+            NetworkValue[][] values = new NetworkValue[stringVecs.length][];
+            for(int i = 0; i < stringVecs.length; i++) {
+                values[i] = stringToArr(stringVecs[i]);
+            }
+
+            return new Matrix<>(values);
+        }
+
+        private static NetworkValue[] stringToArr(String stringVec) {
+            String[] split = stringVec.split(",");
+            NetworkValue[] values = new NetworkValue[split.length];
+            for(int i = 0; i < split.length; i++) values[i] = new NetworkValue(Double.parseDouble(split[i]));
+            return values;
+        }
     }
 }

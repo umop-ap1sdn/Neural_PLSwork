@@ -103,7 +103,7 @@ public class ConnectionLayer {
         NetworkValue[] emptyVector = new NetworkValue[rows];
 
         for(int i = 0; i < rows; i++) {
-            if(srcLayer.getBias()) vector[i] = initializer.getNextWeight(i, 0);
+            if(srcLayer.getBias()) vector[i] = initializer.getNextWeight(i, -1);
             else vector[i] = new NetworkValue();
 
             emptyVector[i] = new NetworkValue();

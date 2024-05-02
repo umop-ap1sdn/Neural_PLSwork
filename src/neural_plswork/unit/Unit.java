@@ -142,7 +142,6 @@ public abstract class Unit {
         for(ConnectionLayer c: cLayers) {
             sb.append(c.layerToString(resolution));
         }
-        sb.append("---\n");
         return sb.toString();
     }
     

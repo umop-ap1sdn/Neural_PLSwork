@@ -94,7 +94,6 @@ public class ColumnConverter {
 
             try {
                 Double.parseDouble(s);
-                intEligible = false;
             } catch (NumberFormatException e) {
                 doubleEligible = false;
             }
