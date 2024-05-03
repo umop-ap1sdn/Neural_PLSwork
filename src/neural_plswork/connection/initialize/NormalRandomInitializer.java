@@ -10,6 +10,9 @@ public class NormalRandomInitializer implements Initializer {
     private final double variance;
     private final double sigma;
 
+    private static final double DEFAULT_MEAN = 0.0;
+    private static final double DEFAULT_VAR = 0.5;
+
     public NormalRandomInitializer(Random rand, double mean, double variance) {
         this.rand = rand;
         this.mean = mean;
@@ -18,38 +21,23 @@ public class NormalRandomInitializer implements Initializer {
     }
 
     public NormalRandomInitializer(long seed, double mean, double variance) {
-        this.rand = new Random(seed);
-        this.mean = mean;
-        this.variance = variance;
-        sigma = Math.sqrt(variance);
+        this(new Random(seed), mean, variance);
     }
 
     public NormalRandomInitializer(double mean, double variance) {
-        this.rand = new Random();
-        this.mean = mean;
-        this.variance = variance;
-        sigma = Math.sqrt(variance);
+        this(new Random(), mean, variance);
     }
 
     public NormalRandomInitializer(Random rand) {
-        this.rand = rand;
-        this.mean = 0;
-        this.variance = 0.1;
-        sigma = Math.sqrt(variance);
+        this(rand, DEFAULT_MEAN, DEFAULT_VAR);
     }
 
     public NormalRandomInitializer(long seed) {
-        this.rand = new Random(seed);
-        this.mean = 0.0;
-        this.variance = 0.1;
-        sigma = Math.sqrt(variance);
+        this(new Random(seed), DEFAULT_MEAN, DEFAULT_VAR);
     }
 
     public NormalRandomInitializer() {
-        this.rand = new Random();
-        this.mean = 0.0;
-        this.variance = 0.1;
-        sigma = Math.sqrt(variance);
+        this(new Random(), DEFAULT_MEAN, DEFAULT_VAR);
     }
 
     @Override

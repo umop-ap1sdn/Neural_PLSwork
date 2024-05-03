@@ -9,6 +9,9 @@ public class UniformRandomInitializer implements Initializer {
     private final double min;
     private final double max;
 
+    private static final double DEFAULT_MIN = 0.3;
+    private static final double DEFAULT_MAX = 0.3;
+
     public UniformRandomInitializer(Random rand, double min, double max) {
         this.rand = rand;
         this.min = min;
@@ -16,33 +19,23 @@ public class UniformRandomInitializer implements Initializer {
     }
 
     public UniformRandomInitializer(long seed, double min, double max) {
-        this.rand = new Random(seed);
-        this.min = min;
-        this.max = max;
+        this(new Random(seed), min, max);
     }
 
     public UniformRandomInitializer(double min, double max) {
-        this.rand = new Random();
-        this.min = min;
-        this.max = max;
+        this(new Random(), min, max);
     }
 
     public UniformRandomInitializer(Random rand) {
-        this.rand = rand;
-        this.min = -0.1;
-        this.max = 0.1;
+        this(rand, DEFAULT_MIN, DEFAULT_MAX);
     }
 
     public UniformRandomInitializer(long seed) {
-        this.rand = new Random(seed);
-        this.min = -0.1;
-        this.max = 0.1;
+        this(new Random(seed), DEFAULT_MIN, DEFAULT_MAX);
     }
 
     public UniformRandomInitializer() {
-        this.rand = new Random();
-        this.min = -0.1;
-        this.max = 0.1;
+        this(new Random(), DEFAULT_MIN, DEFAULT_MAX);
     }
 
     
