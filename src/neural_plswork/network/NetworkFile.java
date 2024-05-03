@@ -67,7 +67,7 @@ public class NetworkFile {
         return true;
     }
 
-    static class NetworkFileBuilder extends NetworkBuilder {
+    public static class NetworkFileBuilder extends NetworkBuilder {
 
         LinkedList<PredefinedInitializer[]> initializers;
 
@@ -143,8 +143,10 @@ public class NetworkFile {
 
         private Object[][] prepParams(Object[][] params) {
             Object[][] ret = new Object[NetworkBuilder.NUM_PARAMS][];
+            PredefinedInitializer[] next = null;
+            if(!initializers.isEmpty()) next = initializers.pollFirst();
             if(params == null) {
-                ret[INITIALIZER_INDEX] = initializers.pollFirst();
+                ret[INITIALIZER_INDEX] = next;
                 return ret;
             }
 
@@ -153,7 +155,7 @@ public class NetworkFile {
                 else ret[i] = null;
             }
             
-            if(ret[INITIALIZER_INDEX] == null) ret[INITIALIZER_INDEX] = initializers.pollFirst();
+            if(ret[INITIALIZER_INDEX] == null) ret[INITIALIZER_INDEX] = next;
 
             return ret;
         }
