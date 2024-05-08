@@ -67,6 +67,56 @@ public class NetworkFile {
         return true;
     }
 
+    public static boolean writeConfigFile(Network nn, String path, String name, boolean overwrite) {
+        File file = new File(path);
+        if(!file.exists()) file.mkdirs();
+
+        int extPoint = name.indexOf(".");
+        String fileName = name;
+        String extension = ".confs";
+        if(extPoint != -1) {
+            fileName = name.substring(0, extPoint);
+            extension = name.substring(extPoint);
+        }
+
+        File writeTo;
+
+        if(!overwrite) {
+            int id = 0;
+            File check;
+            do {
+                String trueName = fileName + id + extension;
+                check = new File(path + File.separator + trueName);
+                id++;
+            } while (check.exists());
+
+            writeTo = check;
+        } else {
+            writeTo = new File(path + File.separator + fileName + extension);
+        }
+
+        return writeConfigFile(nn, writeTo);
+    }
+
+    private static boolean writeConfigFile(Network nn, File writeTo) {
+        try (FileWriter fw = new FileWriter(writeTo, false)) {
+            String[] networkString = nn.networkConfigString();
+            for(String s: networkString) {
+                fw.write(s);
+                fw.flush();
+            }
+            
+            fw.close();
+
+        } catch (IOException e) {
+            return false;
+        }
+
+        return true;
+    }
+
+
+
     public static class NetworkFileBuilder extends NetworkBuilder {
 
         LinkedList<PredefinedInitializer[]> initializers;

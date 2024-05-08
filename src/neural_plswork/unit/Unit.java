@@ -144,6 +144,29 @@ public abstract class Unit {
         }
         return sb.toString();
     }
+
+    public String unitConfigString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(this.getClass());
+        sb.append("\n");
+        if(nLayers.length == 0) return sb.append("\n\n").toString();
+        
+        sb.append(nLayers[0].size());
+        for(int i = 1; i < nLayers.length; i++) {
+            sb.append(',');
+            sb.append(nLayers[i].size());
+        }
+        sb.append('\n');
+        
+        sb.append(nLayers[0].getBias());
+        for(int i = 1; i < nLayers.length; i++) {
+            sb.append(',');
+            sb.append(nLayers[i].getBias());
+        }
+        sb.append("\n");
+
+        return sb.toString();
+    }
     
     public abstract void forwardPass(int thread);
     public abstract void calcEvals(Unit next, int thread);

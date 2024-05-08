@@ -1,7 +1,5 @@
 package neural_plswork.network;
 
-import java.util.ArrayList;
-
 import neural_plswork.connection.optimizer.OptimizationFunction;
 import neural_plswork.connection.optimizer.Optimizer;
 import neural_plswork.connection.penalize.Penalty;
@@ -201,13 +199,22 @@ public class Network {
     }
 
     public String[] networkToString(int resolution) {
-        ArrayList<String> unitStrings = new ArrayList<>();
-        for(HiddenUnit h: hidden) unitStrings.add(h.unitToString(resolution));
-        unitStrings.add(output.unitToString(resolution));
-        
-        String[] ret = new String[unitStrings.size()];
+        String[] ret = new String[hidden.length + 1];
+        for(int i = 0; i < hidden.length; i++) {
+            ret[i] = hidden[i].unitToString(resolution);
+        }
+        ret[hidden.length] = output.unitToString(resolution);
 
-        ret = unitStrings.toArray(ret);
+        return ret;
+    }
+
+    public String[] networkConfigString() {
+        String[] ret = new String[hidden.length + 1];
+        for(int i = 0; i < hidden.length; i++) {
+            ret[i] = hidden[i].unitConfigString();
+        }
+        ret[hidden.length] = output.unitConfigString();
+        
         return ret;
     }
 }
