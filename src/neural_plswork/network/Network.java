@@ -209,11 +209,17 @@ public class Network {
     }
 
     public String[] networkConfigString() {
-        String[] ret = new String[hidden.length + 1];
+        String[] ret = new String[hidden.length + 2];
+
+        String inputString = input.getClass().getName();
+        inputString += "\n" + input.size();
+        inputString += "\n" + input.getBias() + "\n";
+        ret[0] = inputString;
+
         for(int i = 0; i < hidden.length; i++) {
-            ret[i] = hidden[i].unitConfigString();
+            ret[i + 1] = hidden[i].unitConfigString();
         }
-        ret[hidden.length] = output.unitConfigString();
+        ret[hidden.length + 1] = output.unitConfigString();
         
         return ret;
     }

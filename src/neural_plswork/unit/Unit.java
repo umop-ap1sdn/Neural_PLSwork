@@ -147,7 +147,7 @@ public abstract class Unit {
 
     public String unitConfigString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(this.getClass());
+        sb.append(this.getClass().getName());
         sb.append("\n");
         if(nLayers.length == 0) return sb.append("\n\n").toString();
         
