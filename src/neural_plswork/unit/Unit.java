@@ -11,6 +11,7 @@ import neural_plswork.math.Matrix;
 import neural_plswork.math.Vector;
 import neural_plswork.neuron.dropout.Dropout;
 import neural_plswork.neuron.dropout.DropoutRegularizer;
+import neural_plswork.unit.constructor.UnitConstructor;
 
 public abstract class Unit {
     final protected NeuronLayer[] nLayers;
@@ -25,8 +26,12 @@ public abstract class Unit {
     private Matrix<NetworkValue>[][] primaryGradients;
     private Vector<NetworkValue>[][] biasGradients;
 
+    private final UnitConstructor constructor;
+
     @SuppressWarnings("unchecked")
-    public Unit(NeuronLayer[] nLayers, ConnectionLayer[] cLayers, int batchSize, int max_threads) {
+    public Unit(UnitConstructor constructor, NeuronLayer[] nLayers, ConnectionLayer[] cLayers, int batchSize, int max_threads) {
+        this.constructor = constructor;
+
         this.nLayers = nLayers;
         this.cLayers = cLayers;
         this.batchSize = batchSize;
@@ -147,9 +152,9 @@ public abstract class Unit {
 
     public String unitConfigString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(this.getClass().getName());
+        sb.append(constructor.getClass().getName());
         sb.append("\n");
-        if(nLayers.length == 0) return sb.append("\n\n").toString();
+        if(nLayers.length == 0) return sb.append("\n\n\n").toString();
         
         sb.append(nLayers[0].size());
         for(int i = 1; i < nLayers.length; i++) {
@@ -162,6 +167,13 @@ public abstract class Unit {
         for(int i = 1; i < nLayers.length; i++) {
             sb.append(',');
             sb.append(nLayers[i].getBias());
+        }
+        sb.append("\n");
+
+        sb.append(nLayers[0].getActivation().getClass().getName());
+        for(int i = 1; i < nLayers.length; i++) {
+            sb.append(',');
+            sb.append(nLayers[i].getActivation().getClass().getName());
         }
         sb.append("\n");
 

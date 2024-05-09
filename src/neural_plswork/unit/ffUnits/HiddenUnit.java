@@ -1,5 +1,6 @@
 package neural_plswork.unit.ffUnits;
 
+import neural_plswork.unit.constructor.HiddenUnitConstructor;
 import neural_plswork.core.ConnectionLayer;
 import neural_plswork.core.NetworkValue;
 import neural_plswork.core.NeuronLayer;
@@ -9,8 +10,8 @@ import neural_plswork.unit.Unit;
 
 public class HiddenUnit extends Unit {
     
-    public HiddenUnit(NeuronLayer nLayer, ConnectionLayer[] cLayers, int batchSize, int max_threads) {
-        super(new NeuronLayer[]{nLayer}, cLayers, batchSize, max_threads);
+    public HiddenUnit(HiddenUnitConstructor constructor, NeuronLayer nLayer, ConnectionLayer[] cLayers, int batchSize, int max_threads) {
+        super(constructor, new NeuronLayer[]{nLayer}, cLayers, batchSize, max_threads);
         
     }
     

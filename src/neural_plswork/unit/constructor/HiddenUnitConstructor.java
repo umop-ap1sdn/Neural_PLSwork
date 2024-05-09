@@ -31,7 +31,7 @@ public class HiddenUnitConstructor implements UnitConstructor {
                 optimizer[i % cLayers.length].copy(), penalty[i % cLayers.length].copy());
         }
 
-        return new HiddenUnit(hiddenLayer, cLayers, historyLength, MAX_THREADS);
+        return new HiddenUnit(this, hiddenLayer, cLayers, historyLength, MAX_THREADS);
     }
     
 }

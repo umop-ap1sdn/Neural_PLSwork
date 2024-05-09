@@ -7,13 +7,14 @@ import neural_plswork.layers.basic.OutputLayer;
 import neural_plswork.math.Vector;
 import neural_plswork.neuron.evaluation.Differentiable;
 import neural_plswork.unit.Unit;
+import neural_plswork.unit.constructor.OutputUnitConstructor;
 
 public class OutputUnit extends Unit {
     
     OutputLayer layer;
 
-    public OutputUnit(OutputLayer nLayer, ConnectionLayer[] cLayers, int batchSize, int max_threads) {
-        super(new NeuronLayer[]{nLayer}, cLayers, batchSize, max_threads);
+    public OutputUnit(OutputUnitConstructor constructor, OutputLayer nLayer, ConnectionLayer[] cLayers, int batchSize, int max_threads) {
+        super(constructor, new NeuronLayer[]{nLayer}, cLayers, batchSize, max_threads);
         layer = nLayer;
         
     }

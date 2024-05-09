@@ -24,7 +24,6 @@ public class OutputUnitConstructor implements UnitConstructor {
     public OutputUnit construct(NeuronLayer[] prior, ActivationFunction[] activation, Dropout[] dropout, Integer[] layerSize,
             Boolean[] bias, Initializer[] initializer, Penalty[] penalty,
             OptimizationFunction[] optimizer, int historyLength, int MAX_THREADS) throws InvalidNetworkConstructionException {
-        // HiddenUnit constructor
         if(activation.length != 1 || layerSize.length != 1 || bias.length != 0) 
             throw new InvalidNetworkConstructionException("OutputUnit can only have 1 layer and no bias");
         // if(initializer.length != prior.length && optimizer.length != prior.length || penalty.length != prior.length)
@@ -39,7 +38,7 @@ public class OutputUnitConstructor implements UnitConstructor {
                 optimizer[i % cLayers.length].copy(), penalty[i % cLayers.length].copy());
         }
 
-        return new OutputUnit(outputLayer, cLayers, historyLength, MAX_THREADS);
+        return new OutputUnit(this, outputLayer, cLayers, historyLength, MAX_THREADS);
     }
     
 }

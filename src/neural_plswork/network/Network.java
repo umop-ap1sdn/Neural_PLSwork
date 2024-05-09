@@ -213,7 +213,8 @@ public class Network {
 
         String inputString = input.getClass().getName();
         inputString += "\n" + input.size();
-        inputString += "\n" + input.getBias() + "\n";
+        inputString += "\n" + input.getBias();
+        inputString += "\n" + input.getActivation().getClass().getName() + "\n";
         ret[0] = inputString;
 
         for(int i = 0; i < hidden.length; i++) {
