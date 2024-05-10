@@ -3,6 +3,7 @@ package neural_plswork.network;
 import java.io.BufferedReader;
 import java.util.LinkedList;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.io.FileReader;
 import java.io.File;
@@ -58,6 +59,29 @@ public class NetworkFileBuilder extends NetworkBuilder {
 
     public void uploadConfigs(String configs) {
         uploadConfigs(new File(configs));
+    }
+
+    public Network buildComplete() {
+        if(classes == null || sizes == null || bias == null) throw new InvalidNetworkConstructionException("Config file has not been initialized");
+        System.out.println(classes.pollFirst().getName());
+        defineInputLayer();
+        
+        try {
+            while(!classes.isEmpty()) {
+                Class<?> next = classes.pollFirst();
+                if(next == HiddenUnitConstructor.class) {
+                    HiddenUnitConstructor uc = (HiddenUnitConstructor) next.getDeclaredConstructor().newInstance();
+                    appendHiddenUnit(uc);
+                }
+                else appendOutputUnit();
+            }
+        } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+            System.err.println("[ERROR] An error occurred during construction.");
+            System.err.println("The build complete function only works if default constructors are available.");
+            return null;
+        }
+
+        return construct();
     }
 
     private static LinkedList<PredefinedInitializer[]> setupInitializers(File networkFile) throws InvalidNetworkConstructionException {
@@ -170,8 +194,11 @@ public class NetworkFileBuilder extends NetworkBuilder {
                 ActivationFunction af = (ActivationFunction) Class.forName(split[i]).getDeclaredConstructor().newInstance();
                 ret[i] = af;
             }
-        } catch (Exception e) {
+        } catch (ClassNotFoundException e) {
             System.err.println("[WARNING] Could not detect one or more activation types from line: " + line);
+            return null;
+        } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+            System.err.println("[WARNING] Could not instantiate activation function, can only instantiate if constructor is empty");
             return null;
         }
 
