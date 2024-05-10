@@ -63,7 +63,8 @@ public class NetworkFileBuilder extends NetworkBuilder {
 
     public Network buildComplete() {
         if(classes == null || sizes == null || bias == null) throw new InvalidNetworkConstructionException("Config file has not been initialized");
-        System.out.println(classes.pollFirst().getName());
+        // Purge input layer
+        classes.pollFirst().getName();
         defineInputLayer();
         
         try {
