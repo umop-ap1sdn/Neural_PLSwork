@@ -27,8 +27,18 @@ public interface MatrixElement {
      */
     public MatrixElement copy();
 
+    /**
+     * Function to confirm if 2 elements are compatible to be added
+     * @param other Other object to be compared to
+     * @return True if the 2 objects are compatible to be added
+     */
     public boolean addable(MatrixElement other);
 
+    /**
+     * Function to confirm if 2 elements are compatible to be multiplied
+     * @param other Other object to be compared to
+     * @return True if the 2 objects are compatible to be multiplied
+     */
     public boolean multipliable(MatrixElement other);
 
 }
